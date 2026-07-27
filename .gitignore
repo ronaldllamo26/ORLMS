@@ -1,0 +1,33 @@
+# Temporary files
+temp_docx/
+temp_template.zip
+template_text.txt
+
+# Document files (thesis/docs - not source code)
+*.doc
+*.rtf
+*.pdf
+chapter_1_english.txt
+Chapter_1_Final.rtf
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+venv/
+.env
+
+# IDE / Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+Thumbs.db
+.DS_Store
+desktop.ini
+
+# XAMPP / Apache logs
+*.log

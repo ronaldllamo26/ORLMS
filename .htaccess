@@ -1,0 +1,14 @@
+Options -Indexes
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteBase /Capstone/
+
+    # Allow direct access to existing files and directories
+    # (e.g. CSS, JS, images in /public/)
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+
+    # Route all other requests through index.php
+    RewriteRule ^(.*)$ index.php [QSA,L]
+</IfModule>
