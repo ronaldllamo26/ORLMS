@@ -3,7 +3,16 @@ temp_docx/
 temp_template.zip
 template_text.txt
 
-# Document files (thesis/docs - not source code)
+# Documentation / Design / Thesis files (keep local only)
+*.doc
+*.rtf
+*.pdf
+chapter_1_english.txt
+Chapter_1_Final.rtf
+BPA_Level_1_to_3.md
+requirements_questionnaire.html
+week_4_system_design_final.*
+workflow_diagram.md
 *.doc
 *.rtf
 *.pdf
