@@ -61,7 +61,7 @@ class Controller
      */
     protected function render(string $view, array $data = [], bool $useLayout = true): void
     {
-        $viewPath = APP_ROOT . '/views/' . $view . '.php';
+        $viewPath = ROOT . '/src/pages/' . $view . '.php';
 
         if (!file_exists($viewPath)) {
             die('ORLMS Error: View not found — ' . $view . '.php');
@@ -80,7 +80,7 @@ class Controller
             $content = ob_get_clean();
 
             // Pass it to the layout — the layout will echo $content
-            require_once APP_ROOT . '/views/layouts/main.php';
+            require_once ROOT . '/src/pages/layouts/main.php';
         } else {
             // Render the view directly (no layout) — used for login page
             require_once $viewPath;

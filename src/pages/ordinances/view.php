@@ -2,8 +2,10 @@
 /**
  * ORLMS - Ordinance Detail View
  *
- * Variables passed from OrdinanceController::view():
- *   $ordinance — single ordinance record with author_name
+ * @var array $ordinance
+ * @var array|false $aiReport
+ * @var array $reviewHistory
+ * @var array $committees
  */
 
 $userRole  = $_SESSION['user_role'] ?? '';

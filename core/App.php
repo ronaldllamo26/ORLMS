@@ -196,7 +196,7 @@ class App
     {
         http_response_code(404);
 
-        $notFoundView = APP_ROOT . '/views/errors/404.php';
+        $notFoundView = ROOT . '/src/pages/errors/404.php';
 
         if (file_exists($notFoundView)) {
             require_once $notFoundView;

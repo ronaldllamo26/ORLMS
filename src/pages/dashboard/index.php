@@ -2,11 +2,19 @@
 /**
  * ORLMS - Dashboard View
  *
- * Variables passed from DashboardController:
- *   $stats             — array of document counts
- *   $recentOrdinances  — array of latest 5 ordinances
- *   $recentResolutions — array of latest 5 resolutions
+ * @var array $stats
+ * @var array $recentOrdinances
+ * @var array $recentResolutions
+ * @var array $chartStatusData
+ * @var array $committeeStats
  */
+
+// Initialize variables to prevent IDE/Static analysis warnings
+$stats = $stats ?? [];
+$recentOrdinances = $recentOrdinances ?? [];
+$recentResolutions = $recentResolutions ?? [];
+$chartStatusData = $chartStatusData ?? [];
+$committeeStats = $committeeStats ?? [];
 
 // Helper: returns a CSS badge class based on document status
 function statusBadge(string $status): string {

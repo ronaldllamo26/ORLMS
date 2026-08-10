@@ -343,7 +343,7 @@ class PortalController extends Controller
 
     private function renderPublic(string $view, array $data = []): void
     {
-        $viewPath = APP_ROOT . '/views/' . $view . '.php';
+        $viewPath = ROOT . '/src/pages/' . $view . '.php';
 
         if (!empty($data)) {
             extract($data);
@@ -353,6 +353,6 @@ class PortalController extends Controller
         require_once $viewPath;
         $content = ob_get_clean();
 
-        require_once APP_ROOT . '/views/layouts/public.php';
+        require_once ROOT . '/src/pages/layouts/public.php';
     }
 }

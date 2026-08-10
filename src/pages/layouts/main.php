@@ -46,12 +46,12 @@ $pageTitle = $pageTitle ?? APP_SHORT;
     <!-- ═══════════════════════════════════════════════════════
          TOP NAVIGATION BAR
          ═══════════════════════════════════════════════════════ -->
-    <?php require_once APP_ROOT . '/views/layouts/navbar.php'; ?>
+    <?php require_once ROOT . '/src/pages/layouts/navbar.php'; ?>
 
     <!-- ═══════════════════════════════════════════════════════
          LEFT SIDEBAR
          ═══════════════════════════════════════════════════════ -->
-    <?php require_once APP_ROOT . '/views/layouts/sidebar.php'; ?>
+    <?php require_once ROOT . '/src/pages/layouts/sidebar.php'; ?>
 
     <!-- Mobile Sidebar Backdrop Overlay -->
     <div class="sidebar-overlay" id="sidebar-overlay"></div>

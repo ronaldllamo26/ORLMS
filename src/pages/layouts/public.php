@@ -4,6 +4,9 @@
  *
  * Used for public portal pages. Does not render the left navigation sidebar.
  * Displays a clean government branding header with a portal login shortcut.
+ *
+ * @var string $content
+ * @var string|null $pageTitle
  */
 
 $pageTitle = $pageTitle ?? APP_SHORT;

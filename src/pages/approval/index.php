@@ -2,8 +2,7 @@
 /**
  * ORLMS - Approval and Enactment List View
  *
- * Variables:
- *   $endorsed — merged array of endorsed/approved ordinances + resolutions
+ * @var array $endorsed
  */
 
 function approvalStatusBadge(string $status): string {

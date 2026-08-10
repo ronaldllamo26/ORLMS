@@ -2,8 +2,10 @@
 /**
  * ORLMS - Resolution Detail View
  *
- * Variables passed from ResolutionController::view():
- *   $resolution — single resolution record with author_name
+ * @var array $resolution
+ * @var array|false $aiReport
+ * @var array $reviewHistory
+ * @var array $committees
  */
 
 $userRole  = $_SESSION['user_role'] ?? '';

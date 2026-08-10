@@ -2,11 +2,10 @@
 /**
  * ORLMS - Review Document View
  *
- * Variables:
- *   $document      — the ordinance or resolution record
- *   $docType       — 'ordinance' or 'resolution'
- *   $aiReport      — latest AI validation report (or false)
- *   $reviewHistory — array of previous review actions
+ * @var array $document
+ * @var string $docType
+ * @var array|false $aiReport
+ * @var array $reviewHistory
  */
 
 $noField  = $docType === 'ordinance' ? 'ordinance_no' : 'resolution_no';
