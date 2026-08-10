@@ -109,6 +109,33 @@ function statusBadge(string $status): string {
 
 </div>
 
+<!-- ── Analytics Charts Row ───────────────────────────────── -->
+<div class="row row-2" style="margin-bottom: 28px; gap: 20px; display: flex !important; flex-wrap: wrap !important;">
+    <!-- Status Distribution Doughnut Chart -->
+    <div class="card" style="flex: 1; min-width: 300px; padding: 20px;">
+        <div class="card-header" style="border-bottom: 1px solid #e2e8f0; padding-bottom: 12px; margin-bottom: 20px; display: flex; align-items: center; justify-content: space-between;">
+            <h2 class="card-title" style="font-size: 15px; font-weight: 700; color: #0C2340; margin: 0;">
+                <i class="bi bi-pie-chart-fill me-2" style="color: #0084FF;"></i> Status Distribution
+            </h2>
+        </div>
+        <div style="height: 280px; position: relative; display: flex; justify-content: center; align-items: center;">
+            <canvas id="statusChart"></canvas>
+        </div>
+    </div>
+
+    <!-- Committee Distribution Bar Chart -->
+    <div class="card" style="flex: 1; min-width: 300px; padding: 20px;">
+        <div class="card-header" style="border-bottom: 1px solid #e2e8f0; padding-bottom: 12px; margin-bottom: 20px; display: flex; align-items: center; justify-content: space-between;">
+            <h2 class="card-title" style="font-size: 15px; font-weight: 700; color: #0C2340; margin: 0;">
+                <i class="bi bi-bar-chart-fill me-2" style="color: #F2A900;"></i> Committee Distribution
+            </h2>
+        </div>
+        <div style="height: 280px; position: relative;">
+            <canvas id="committeeChart"></canvas>
+        </div>
+    </div>
+</div>
+
 <!-- ── Recent Documents ───────────────────────────────────── -->
 <div class="row row-2">
 
@@ -237,3 +264,118 @@ function statusBadge(string $status): string {
     </div>
 
 </div>
+
+<!-- Chart.js and Initialization Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    // --- 1. Doughnut Chart: Status Distribution ---
+    const statusCtx = document.getElementById('statusChart').getContext('2d');
+    const statusData = <?= json_encode(array_values($chartStatusData)) ?>;
+    const statusLabels = <?= json_encode(array_keys($chartStatusData)) ?>;
+    const totalDocs = statusData.reduce((a, b) => a + b, 0);
+    
+    new Chart(statusCtx, {
+        type: 'doughnut',
+        data: {
+            labels: statusLabels,
+            datasets: [{
+                data: statusData,
+                backgroundColor: [
+                    '#64748b', // Slate for Drafts
+                    '#0084FF', // Sky Blue for In Review
+                    '#10b981', // Emerald/Green for Enacted
+                    '#F2A900', // Gold for Published
+                    '#ef4444'  // Red for Rejected
+                ],
+                borderWidth: 2,
+                borderColor: '#ffffff'
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    labels: {
+                        boxWidth: 10,
+                        padding: 10,
+                        font: { size: 11, family: "'Inter', sans-serif" }
+                    }
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            let label = context.label || '';
+                            let value = context.raw || 0;
+                            let percentage = totalDocs > 0 ? ((value / totalDocs) * 100).toFixed(1) + '%' : '0%';
+                            return ` ${label}: ${value} (${percentage})`;
+                        }
+                    }
+                }
+            },
+            cutout: '65%'
+        }
+    });
+
+    // --- 2. Bar Chart: Committee Distribution ---
+    const committeeCtx = document.getElementById('committeeChart').getContext('2d');
+    const committeeRaw = <?= json_encode($committeeStats) ?>;
+    
+    const committeeLabels = committeeRaw.map(item => {
+        let name = item.name || 'General';
+        // Clean up common long titles for cleaner graphs
+        return name.replace('Committee on ', '').replace(' and Privileges', '').replace(' Laws, ', '');
+    });
+    const ordinanceCounts = committeeRaw.map(item => parseInt(item.ordinance_count) || 0);
+    const resolutionCounts = committeeRaw.map(item => parseInt(item.resolution_count) || 0);
+
+    new Chart(committeeCtx, {
+        type: 'bar',
+        data: {
+            labels: committeeLabels,
+            datasets: [
+                {
+                    label: 'Ordinances',
+                    data: ordinanceCounts,
+                    backgroundColor: '#0C2340', // CSJDM Deep Blue
+                    borderRadius: 4
+                },
+                {
+                    label: 'Resolutions',
+                    data: resolutionCounts,
+                    backgroundColor: '#F2A900', // CSJDM Gold
+                    borderRadius: 4
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    labels: {
+                        boxWidth: 10,
+                        padding: 10,
+                        font: { size: 11, family: "'Inter', sans-serif" }
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    grid: { display: false }
+                },
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        stepSize: 1,
+                        precision: 0
+                    }
+                }
+            }
+        }
+    });
+});
+</script>

@@ -41,9 +41,10 @@ class OrdinanceModel extends Model
     public function getAllWithAuthor(): array
     {
         return $this->query(
-            "SELECT o.*, u.name AS author_name
+            "SELECT o.*, u.name AS author_name, c.name AS committee_name
              FROM ordinances o
              LEFT JOIN users u ON o.author_id = u.id
+             LEFT JOIN committees c ON o.committee_id = c.id
              ORDER BY o.created_at DESC"
         );
     }
@@ -57,9 +58,10 @@ class OrdinanceModel extends Model
     public function getByIdWithAuthor(int $id): array|false
     {
         return $this->query(
-            "SELECT o.*, u.name AS author_name
+            "SELECT o.*, u.name AS author_name, c.name AS committee_name
              FROM ordinances o
              LEFT JOIN users u ON o.author_id = u.id
+             LEFT JOIN committees c ON o.committee_id = c.id
              WHERE o.id = :id
              LIMIT 1",
             [':id' => $id],

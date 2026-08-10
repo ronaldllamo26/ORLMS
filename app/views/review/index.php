@@ -8,9 +8,9 @@
 
 function reviewStatusBadge(string $status): string {
     return match($status) {
-        'submitted', 'pending_review' => 'badge-submitted',
-        'reviewed'                    => 'badge-under-review',
-        default                       => 'badge-draft',
+        'submitted'    => 'badge-submitted',
+        'under_review' => 'badge-under-review',
+        default        => 'badge-draft',
     };
 }
 ?>
@@ -90,6 +90,11 @@ function reviewStatusBadge(string $status): string {
                            style="font-weight:600; color:var(--color-primary); font-size:13px;">
                             <?= htmlspecialchars($doc['doc_no'] ?? 'No Number') ?>
                         </a>
+                        <?php if (!empty($doc['committee_name'])): ?>
+                        <div style="font-size:11px; color:var(--color-accent); margin-top:2px; font-weight: 500;">
+                            <?= htmlspecialchars($doc['committee_name']) ?>
+                        </div>
+                        <?php endif; ?>
                     </td>
 
                     <td>

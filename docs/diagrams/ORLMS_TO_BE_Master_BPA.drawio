@@ -1,0 +1,262 @@
+<mxfile host="app.diagrams.net" type="device">
+  <diagram id="orlms-to-be-master" name="TO-BE Master BPA Flowchart">
+    <mxGraphModel dx="1422" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="1200" pageHeight="2400" math="0" shadow="1">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <!-- TITLE -->
+        <mxCell id="title" value="&lt;font style=&quot;font-size: 20px;&quot;&gt;&lt;b&gt;INTEGRATED TO-BE SYSTEM PROCESS FLOW (BPA)&lt;/b&gt;&lt;br&gt;Ordinance and Resolution Lifecycle Management System (ORLMS)&lt;/font&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fillColor=none;strokeColor=none;fontFamily=Segoe UI;fontColor=#1e3a5f;" vertex="1" parent="1">
+          <mxGeometry x="200" y="20" width="800" height="70" as="geometry"/>
+        </mxCell>
+
+        <!-- START -->
+        <mxCell id="s1" value="&lt;b&gt;START&lt;/b&gt;&lt;br&gt;User logs in to ORLMS&lt;br&gt;&lt;i&gt;(RBAC Session Created)&lt;/i&gt;" style="rounded=1;whiteSpace=wrap;html=1;arcSize=50;fillColor=#22c55e;strokeColor=#16a34a;fontColor=#ffffff;fontSize=11;fontFamily=Segoe UI;fontStyle=1;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="450" y="120" width="260" height="60" as="geometry"/>
+        </mxCell>
+
+        <!-- STEP 1: Encoding -->
+        <mxCell id="s2" value="&lt;b&gt;1. DOCUMENT FILING (Staff)&lt;/b&gt;&lt;br&gt;Staff encodes Ordinance/Resolution &amp;amp; uploads file&lt;br&gt;&lt;i&gt;(System sets status to &#39;draft&#39; / &#39;submitted&#39;)&lt;/i&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#3b82f6;fontColor=#1e3a5f;fontSize=11;fontFamily=Segoe UI;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="430" y="220" width="300" height="60" as="geometry"/>
+        </mxCell>
+
+        <!-- STEP 2: AI Check -->
+        <mxCell id="s3" value="&lt;b&gt;2. 🤖 AI VALIDATION ENGINE (Groq Cloud API)&lt;/b&gt;&lt;br&gt;Runs Automated Completeness Check &amp;amp;&lt;br&gt;Semantic Similarity Check against DB records" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ede9fe;strokeColor=#7c3aed;fontColor=#4c1d95;fontSize=11;fontFamily=Segoe UI;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="420" y="320" width="320" height="70" as="geometry"/>
+        </mxCell>
+
+        <!-- DECISION 1: AI PASS -->
+        <mxCell id="d1" value="&lt;b&gt;AI Validation&lt;br&gt;Passed?&lt;/b&gt;" style="rhombus;whiteSpace=wrap;html=1;fillColor=#fef3c7;strokeColor=#f59e0b;fontColor=#78350f;fontSize=11;fontFamily=Segoe UI;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="480" y="430" width="200" height="100" as="geometry"/>
+        </mxCell>
+
+        <!-- REVISE DRAFT -->
+        <mxCell id="rev" value="&lt;b&gt;RETURN FOR REVISION&lt;/b&gt;&lt;br&gt;Staff edits draft to resolve conflicts&lt;br&gt;or fill missing parts flagged by AI" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fee2e2;strokeColor=#ef4444;fontColor=#991b1b;fontSize=11;fontFamily=Segoe UI;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="780" y="450" width="240" height="60" as="geometry"/>
+        </mxCell>
+
+        <!-- STEP 3: 1st Reading -->
+        <mxCell id="s4" value="&lt;b&gt;3. FIRST READING &amp;amp; COMMITTEE REFERRAL&lt;/b&gt;&lt;br&gt;Secretary refers document to concerned committee&lt;br&gt;&lt;i&gt;(Status: &#39;under_review&#39; in database)&lt;/i&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#3b82f6;fontColor=#1e3a5f;fontSize=11;fontFamily=Segoe UI;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="430" y="570" width="300" height="60" as="geometry"/>
+        </mxCell>
+
+        <!-- STEP 4: Committee Work -->
+        <mxCell id="s5" value="&lt;b&gt;4. COMMITTEE REVIEW &amp;amp; DELIBERATION&lt;/b&gt;&lt;br&gt;Committee members conduct research/consultations&lt;br&gt;&lt;i&gt;(Committee reviews AI report &amp;amp; submits recommendation)&lt;/i&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#3b82f6;fontColor=#1e3a5f;fontSize=11;fontFamily=Segoe UI;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="420" y="670" width="320" height="70" as="geometry"/>
+        </mxCell>
+
+        <!-- DECISION 2: Committee recommendation -->
+        <mxCell id="d2" value="&lt;b&gt;Committee&lt;br&gt;Recommendation?&lt;/b&gt;" style="rhombus;whiteSpace=wrap;html=1;fillColor=#fef3c7;strokeColor=#f59e0b;fontColor=#78350f;fontSize=11;fontFamily=Segoe UI;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="475" y="780" width="210" height="110" as="geometry"/>
+        </mxCell>
+
+        <!-- REJECTED BY COMMITTEE -->
+        <mxCell id="crej" value="&lt;b&gt;REJECTED &amp;amp; ARCHIVED&lt;/b&gt;&lt;br&gt;Document ends process&lt;br&gt;&lt;i&gt;(Logged to review_logs &amp;amp; archive)&lt;/i&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fee2e2;strokeColor=#ef4444;fontColor=#991b1b;fontSize=11;fontFamily=Segoe UI;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="780" y="805" width="220" height="60" as="geometry"/>
+        </mxCell>
+
+        <!-- STEP 5: 2nd Reading -->
+        <mxCell id="s6" value="&lt;b&gt;5. SECOND READING (Debate &amp;amp; Amendments)&lt;/b&gt;&lt;br&gt;Plenary debate. Amendments proposed &amp;amp; approved&lt;br&gt;&lt;i&gt;(Status: &#39;endorsed&#39;)&lt;/i&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#3b82f6;fontColor=#1e3a5f;fontSize=11;fontFamily=Segoe UI;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="430" y="930" width="300" height="60" as="geometry"/>
+        </mxCell>
+
+        <!-- DECISION 3: Approved on 2nd Reading -->
+        <mxCell id="d3" value="&lt;b&gt;Approved on&lt;br&gt;2nd Reading?&lt;/b&gt;" style="rhombus;whiteSpace=wrap;html=1;fillColor=#fef3c7;strokeColor=#f59e0b;fontColor=#78350f;fontSize=11;fontFamily=Segoe UI;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="480" y="1030" width="200" height="100" as="geometry"/>
+        </mxCell>
+
+        <!-- OVERRIDE DECISION -->
+        <mxCell id="d4" value="&lt;b&gt;Override&lt;br&gt;2/3 Vote?&lt;/b&gt;" style="rhombus;whiteSpace=wrap;html=1;fillColor=#fef3c7;strokeColor=#f59e0b;fontColor=#78350f;fontSize=11;fontFamily=Segoe UI;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="780" y="1030" width="180" height="100" as="geometry"/>
+        </mxCell>
+
+        <!-- STEP 6: 3rd Reading -->
+        <mxCell id="s7" value="&lt;b&gt;6. THIRD &amp;amp; FINAL READING (Voting)&lt;/b&gt;&lt;br&gt;Official voting of SP Members&lt;br&gt;&lt;i&gt;(System tallies and saves votes in DB)&lt;/i&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#3b82f6;fontColor=#1e3a5f;fontSize=11;fontFamily=Segoe UI;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="430" y="1170" width="300" height="60" as="geometry"/>
+        </mxCell>
+
+        <!-- DECISION 4: Majority Vote -->
+        <mxCell id="d5" value="&lt;b&gt;Majority SP&lt;br&gt;Approved?&lt;/b&gt;" style="rhombus;whiteSpace=wrap;html=1;fillColor=#fef3c7;strokeColor=#f59e0b;fontColor=#78350f;fontSize=11;fontFamily=Segoe UI;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="480" y="1270" width="200" height="100" as="geometry"/>
+        </mxCell>
+
+        <!-- STEP 7: Executive Signature -->
+        <mxCell id="s8" value="&lt;b&gt;7. EXECUTIVE SIGNATURE / ATTESTATION&lt;/b&gt;&lt;br&gt;Approved document sent to LCE (Mayor/Governor)&lt;br&gt;&lt;i&gt;(Certified copy signed or vetoed)&lt;/i&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#3b82f6;fontColor=#1e3a5f;fontSize=11;fontFamily=Segoe UI;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="430" y="1410" width="300" height="60" as="geometry"/>
+        </mxCell>
+
+        <!-- DECISION 5: LCE signed -->
+        <mxCell id="d6" value="&lt;b&gt;LCE Signed?&lt;/b&gt;" style="rhombus;whiteSpace=wrap;html=1;fillColor=#fef3c7;strokeColor=#f59e0b;fontColor=#78350f;fontSize=11;fontFamily=Segoe UI;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="485" y="1510" width="190" height="100" as="geometry"/>
+        </mxCell>
+
+        <!-- VETO MESSAGE -->
+        <mxCell id="veto" value="&lt;b&gt;VETOED BY LCE&lt;/b&gt;&lt;br&gt;Sends Veto Message back&lt;br&gt;to SP Council for review" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fee2e2;strokeColor=#ef4444;fontColor=#991b1b;fontSize=11;fontFamily=Segoe UI;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="160" y="1530" width="220" height="60" as="geometry"/>
+        </mxCell>
+
+        <!-- STEP 8: Publication & Portal -->
+        <mxCell id="s9" value="&lt;b&gt;8. AI SUMMARY &amp;amp; PORTAL PUBLICATION&lt;/b&gt;&lt;br&gt;🤖 AI (Llama LLM) generates Plain-Language Summary&lt;br&gt;Published on guest-accessible Public Portal" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d1fae5;strokeColor=#10b981;fontColor=#065f46;fontSize=11;fontFamily=Segoe UI;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="420" y="1650" width="320" height="70" as="geometry"/>
+        </mxCell>
+
+        <!-- STEP 9: Provincial Review -->
+        <mxCell id="s10" value="&lt;b&gt;9. PROVINCIAL REVIEW (Sangguniang Panlalawigan)&lt;/b&gt;&lt;br&gt;Mandatory review for consistency with provincial policies&lt;br&gt;&lt;i&gt;(Status updated: approved/disapproved/with comments)&lt;/i&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#3b82f6;fontColor=#1e3a5f;fontSize=11;fontFamily=Segoe UI;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="410" y="1760" width="340" height="65" as="geometry"/>
+        </mxCell>
+
+        <!-- DECISION 6: Provincial Review outcome -->
+        <mxCell id="d7" value="&lt;b&gt;Provincial Review&lt;br&gt;Decision?&lt;/b&gt;" style="rhombus;whiteSpace=wrap;html=1;fillColor=#fef3c7;strokeColor=#f59e0b;fontColor=#78350f;fontSize=11;fontFamily=Segoe UI;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="475" y="1860" width="210" height="110" as="geometry"/>
+        </mxCell>
+
+        <!-- PROVINCIAL DISAPPROVAL -->
+        <mxCell id="pdis" value="&lt;b&gt;DISAPPROVED &amp;amp; VOIDED&lt;/b&gt;&lt;br&gt;Document marked void&lt;br&gt;&lt;i&gt;(Status: &#39;rejected&#39;)&lt;/i&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fee2e2;strokeColor=#ef4444;fontColor=#991b1b;fontSize=11;fontFamily=Segoe UI;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="780" y="1885" width="220" height="60" as="geometry"/>
+        </mxCell>
+
+        <!-- STEP 10: Enacted -->
+        <mxCell id="s11" value="&lt;b&gt;10. ENACTMENT &amp;amp; DATABASE ARCHIVING&lt;/b&gt;&lt;br&gt;Document becomes active municipal law&lt;br&gt;&lt;i&gt;(Status → &#39;enacted&#39;; Logged to audit_logs &amp;amp; archive)&lt;/i&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d1fae5;strokeColor=#10b981;fontColor=#065f46;fontSize=11;fontFamily=Segoe UI;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="420" y="2010" width="320" height="65" as="geometry"/>
+        </mxCell>
+
+        <!-- STEP 11: Monitoring -->
+        <mxCell id="s12" value="&lt;b&gt;11. IMPLEMENTATION MONITORING&lt;/b&gt;&lt;br&gt;Staff posts progress updates (Pending / Ongoing / Completed)&lt;br&gt;&lt;i&gt;(Logged in monitoring_logs for accountability)&lt;/i&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#3b82f6;fontColor=#1e3a5f;fontSize=11;fontFamily=Segoe UI;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="420" y="2110" width="320" height="65" as="geometry"/>
+        </mxCell>
+
+        <!-- END -->
+        <mxCell id="se" value="&lt;b&gt;END&lt;/b&gt;&lt;br&gt;Legislative Act Enacted &amp;amp; Monitored" style="rounded=1;whiteSpace=wrap;html=1;arcSize=50;fillColor=#1e3a5f;strokeColor=#0f172a;fontColor=#ffffff;fontSize=12;fontFamily=Segoe UI;fontStyle=1;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="460" y="2210" width="240" height="50" as="geometry"/>
+        </mxCell>
+
+        <!-- ============ EDGES (CONNECTORS) ============ -->
+        
+        <!-- Start -> File -->
+        <mxCell id="e1" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#374151;strokeWidth=2;fontSize=10;fontFamily=Segoe UI;" edge="1" source="s1" target="s2" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        
+        <!-- File -> AI Check -->
+        <mxCell id="e2" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#374151;strokeWidth=2;fontSize=10;fontFamily=Segoe UI;" edge="1" source="s2" target="s3" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        
+        <!-- AI Check -> Decision AI -->
+        <mxCell id="e3" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#374151;strokeWidth=2;fontSize=10;fontFamily=Segoe UI;" edge="1" source="s3" target="d1" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        
+        <!-- Decision AI -> Revise (No) -->
+        <mxCell id="e4" value="Flagged / Failed" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#ef4444;strokeWidth=2;fontSize=10;fontFamily=Segoe UI;fontColor=#ef4444;labelBackgroundColor=#ffffff;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" source="d1" target="rev" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        
+        <!-- Revise -> File (Loop back) -->
+        <mxCell id="e5" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#ef4444;strokeWidth=1;dashed=1;" edge="1" source="rev" target="s2" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points"><mxPoint x="900" y="250"/></Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Decision AI -> 1st Reading (Yes) -->
+        <mxCell id="e6" value="Passed" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#16a34a;strokeWidth=2;fontSize=10;fontFamily=Segoe UI;fontColor=#16a34a;labelBackgroundColor=#ffffff;" edge="1" source="d1" target="s4" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+
+        <!-- 1st Reading -> Committee Work -->
+        <mxCell id="e7" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#374151;strokeWidth=2;" edge="1" source="s4" target="s5" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+
+        <!-- Committee Work -> Decision Committee -->
+        <mxCell id="e8" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#374151;strokeWidth=2;" edge="1" source="s5" target="d2" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+
+        <!-- Decision Committee -> Rejected (Rejected) -->
+        <mxCell id="e9" value="Rejected" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#ef4444;strokeWidth=2;fontSize=10;fontFamily=Segoe UI;fontColor=#ef4444;labelBackgroundColor=#ffffff;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" source="d2" target="crej" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+
+        <!-- Decision Committee -> Returned (Returned) -->
+        <mxCell id="e10" value="Returned" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#f59e0b;strokeWidth=1;dashed=1;fontSize=10;fontFamily=Segoe UI;fontColor=#f59e0b;labelBackgroundColor=#ffffff;exitX=0.5;exitY=0;entryX=0;entryY=0.5;" edge="1" source="d2" target="s4" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points"><mxPoint x="580" y="760"/><mxPoint x="320" y="760"/><mxPoint x="320" y="600"/></Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Decision Committee -> 2nd Reading (Endorsed) -->
+        <mxCell id="e11" value="Endorsed" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#16a34a;strokeWidth=2;fontSize=10;fontFamily=Segoe UI;fontColor=#16a34a;labelBackgroundColor=#ffffff;" edge="1" source="d2" target="s6" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+
+        <!-- 2nd Reading -> Decision 2nd Reading -->
+        <mxCell id="e12" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#374151;strokeWidth=2;" edge="1" source="s6" target="d3" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+
+        <!-- Decision 2nd Reading -> Override (No) -->
+        <mxCell id="e13" value="Disapproved" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#ef4444;strokeWidth=2;fontSize=10;fontFamily=Segoe UI;fontColor=#ef4444;labelBackgroundColor=#ffffff;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" source="d3" target="d4" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+
+        <!-- Override -> 1st Reading (Not Overridden) -->
+        <mxCell id="e14" value="Not Overridden" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#ef4444;strokeWidth=1;dashed=1;fontSize=10;fontFamily=Segoe UI;fontColor=#ef4444;labelBackgroundColor=#ffffff;exitX=0.5;exitY=0;entryX=1;entryY=0.5;" edge="1" source="d4" target="s4" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points"><mxPoint x="870" y="600"/></Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Override -> 3rd Reading (Overridden) -->
+        <mxCell id="e15" value="Overridden" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#16a34a;strokeWidth=2;fontSize=10;fontFamily=Segoe UI;fontColor=#16a34a;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1;entryX=1;entryY=0.5;" edge="1" source="d4" target="s7" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points"><mxPoint x="870" y="1200"/></Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Decision 2nd Reading -> 3rd Reading (Yes) -->
+        <mxCell id="e16" value="Approved" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#16a34a;strokeWidth=2;fontSize=10;fontFamily=Segoe UI;fontColor=#16a34a;labelBackgroundColor=#ffffff;" edge="1" source="d3" target="s7" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+
+        <!-- 3rd Reading -> Decision Majority -->
+        <mxCell id="e17" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#374151;strokeWidth=2;" edge="1" source="s7" target="d5" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+
+        <!-- Decision Majority -> Rejected (No) -->
+        <mxCell id="e18" value="No" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#ef4444;strokeWidth=2;fontSize=10;fontFamily=Segoe UI;fontColor=#ef4444;labelBackgroundColor=#ffffff;exitX=1;exitY=0.5;" edge="1" source="d5" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="890" y="870" as="targetPoint"/>
+            <Array as="points"><mxPoint x="1050" y="1320"/><mxPoint x="1050" y="870"/></Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Decision Majority -> Executive (Yes) -->
+        <mxCell id="e19" value="Yes" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#16a34a;strokeWidth=2;fontSize=10;fontFamily=Segoe UI;fontColor=#16a34a;labelBackgroundColor=#ffffff;" edge="1" source="d5" target="s8" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+
+        <!-- Executive -> Decision LCE -->
+        <mxCell id="e20" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#374151;strokeWidth=2;" edge="1" source="s8" target="d6" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+
+        <!-- Decision LCE -> Veto (No) -->
+        <mxCell id="e21" value="Vetoed" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#ef4444;strokeWidth=2;fontSize=10;fontFamily=Segoe UI;fontColor=#ef4444;labelBackgroundColor=#ffffff;exitX=0;exitY=0.5;entryX=1;entryY=0.5;" edge="1" source="d6" target="veto" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+
+        <!-- Veto -> 1st Reading (Loop back for review) -->
+        <mxCell id="e22" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#ef4444;strokeWidth=1;dashed=1;exitX=0.5;exitY=0;entryX=0;entryY=0.5;" edge="1" source="veto" target="s4" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points"><mxPoint x="270" y="600"/></Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Decision LCE -> Publication (Yes) -->
+        <mxCell id="e23" value="Signed" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#16a34a;strokeWidth=2;fontSize=10;fontFamily=Segoe UI;fontColor=#16a34a;labelBackgroundColor=#ffffff;" edge="1" source="d6" target="s9" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+
+        <!-- Publication -> Provincial Review -->
+        <mxCell id="e24" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#374151;strokeWidth=2;" edge="1" source="s9" target="s10" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+
+        <!-- Provincial Review -> Decision Provincial -->
+        <mxCell id="e25" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#374151;strokeWidth=2;" edge="1" source="s10" target="d7" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+
+        <!-- Decision Provincial -> Disapproved (Disapproved) -->
+        <mxCell id="e26" value="Disapproved" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#ef4444;strokeWidth=2;fontSize=10;fontFamily=Segoe UI;fontColor=#ef4444;labelBackgroundColor=#ffffff;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" source="d7" target="pdis" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+
+        <!-- Decision Provincial -> 2nd Reading (With Comments) -->
+        <mxCell id="e27" value="With Comments" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#f59e0b;strokeWidth=1;dashed=1;fontSize=10;fontFamily=Segoe UI;fontColor=#f59e0b;labelBackgroundColor=#ffffff;exitX=0;exitY=0.5;entryX=0;entryY=0.5;" edge="1" source="d7" target="s6" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points"><mxPoint x="120" y="1915"/><mxPoint x="120" y="960"/></Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Decision Provincial -> Enacted (Approved) -->
+        <mxCell id="e28" value="Approved" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#16a34a;strokeWidth=2;fontSize=10;fontFamily=Segoe UI;fontColor=#16a34a;labelBackgroundColor=#ffffff;" edge="1" source="d7" target="s11" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+
+        <!-- Enacted -> Monitoring -->
+        <mxCell id="e29" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#374151;strokeWidth=2;" edge="1" source="s11" target="s12" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+
+        <!-- Monitoring -> End -->
+        <mxCell id="e30" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#374151;strokeWidth=2;" edge="1" source="s12" target="se" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+
+        <!-- ============ LEGEND / SIDE NOTE ============ -->
+        <mxCell id="note" value="&lt;b&gt;TO-BE INTEGRATED BPA PROCESS&lt;/b&gt;&lt;br&gt;&lt;br&gt;This diagram represents the unified,&lt;br&gt;AI-enhanced legislative workflow &lt;br&gt;under the ORLMS system.&lt;br&gt;&lt;br&gt;&lt;b&gt;Key Value-Add vs Manual:&lt;/b&gt;&lt;br&gt;• Instant Groq LLM verification&lt;br&gt;• Automatic duplicate/conflict detection&lt;br&gt;• Automated plain-language translation&lt;br&gt;• Real-time public transparency&lt;br&gt;• Seamless audit logs tracking" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;size=15;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;fontFamily=Segoe UI;align=left;spacingLeft=10;verticalAlign=top;spacingTop=5;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="40" y="220" width="280" height="200" as="geometry"/>
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

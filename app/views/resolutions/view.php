@@ -95,6 +95,13 @@ function viewResBadge(string $status): string {
                     <span class="doc-meta-label">Author</span>
                     <span class="doc-meta-value"><?= htmlspecialchars($resolution['author_name'] ?? 'Unknown') ?></span>
 
+                    <?php if (!empty($resolution['committee_name'])): ?>
+                    <span class="doc-meta-label">Committee</span>
+                    <span class="doc-meta-value" style="font-weight:600; color:var(--color-primary);">
+                        <?= htmlspecialchars($resolution['committee_name']) ?>
+                    </span>
+                    <?php endif; ?>
+
                     <span class="doc-meta-label">Date Filed</span>
                     <span class="doc-meta-value">
                         <?= $resolution['date_filed'] ? date('F d, Y', strtotime($resolution['date_filed'])) : '—' ?>
@@ -137,6 +144,33 @@ function viewResBadge(string $status): string {
 
     <!-- RIGHT: Status + AI Panel -->
     <div>
+        <!-- Committee Referral Card (Only for admin/staff when status is submitted/under_review) -->
+        <?php if (in_array($userRole, ['legislative_staff', 'super_admin']) && in_array($resolution['status'], ['submitted', 'under_review'])): ?>
+        <div class="card" style="margin-bottom:20px;">
+            <div class="card-header">
+                <h2 class="card-title">Committee Referral</h2>
+            </div>
+            <div class="card-body">
+                <form method="POST" action="<?= APP_ROOT_URL ?>/resolution/refer/<?= $resolution['id'] ?>">
+                    <div class="form-group" style="margin-bottom:12px;">
+                        <label for="committee_id" class="form-label" style="font-size:12px;">Select Committee</label>
+                        <select name="committee_id" id="committee_id" class="form-select" style="font-size:13px;" required>
+                            <option value="">-- Select Committee --</option>
+                            <?php foreach ($committees as $comm): ?>
+                                <option value="<?= $comm['id'] ?>" <?= ($resolution['committee_id'] == $comm['id']) ? 'selected' : '' ?>>
+                                    <?= htmlspecialchars($comm['name']) ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-sm" style="width:100%;">
+                        <?= $resolution['committee_id'] ? 'Re-refer to Committee' : 'Refer to Committee' ?>
+                    </button>
+                </form>
+            </div>
+        </div>
+        <?php endif; ?>
+
         <!-- Status Timeline -->
         <div class="card" style="margin-bottom:20px;">
             <div class="card-header"><h2 class="card-title">Document Status</h2></div>

@@ -14,7 +14,7 @@
 // VALIDATE REQUIRED DB CONSTANTS
 // These must already be defined in config/config.php before this file loads.
 // ─────────────────────────────────────────────────────────────────────────────
-$required_db_constants = ['DB_HOST', 'DB_USER', 'DB_PASS', 'DB_NAME', 'DB_CHARSET'];
+$required_db_constants = ['DB_HOST', 'DB_PORT', 'DB_USER', 'DB_PASS', 'DB_NAME', 'DB_CHARSET'];
 
 foreach ($required_db_constants as $constant) {
     if (!defined($constant)) {
@@ -26,4 +26,4 @@ foreach ($required_db_constants as $constant) {
 // DSN (Data Source Name)
 // Used by core/Database.php when creating the PDO connection.
 // ─────────────────────────────────────────────────────────────────────────────
-define('DB_DSN', 'mysql:host=' . DB_HOST . ';dbname=' . DB_NAME . ';charset=' . DB_CHARSET);
+define('DB_DSN', 'pgsql:host=' . DB_HOST . ';port=' . DB_PORT . ';dbname=' . DB_NAME);

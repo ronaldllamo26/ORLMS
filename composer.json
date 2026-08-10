@@ -1,0 +1,9 @@
+{
+    "name": "csjdm/orlms",
+    "description": "Ordinance and Resolution Lifecycle Management System for CSJDM, Bulacan",
+    "type": "project",
+    "license": "MIT",
+    "require": {
+        "phpmailer/phpmailer": "^6.9"
+    }
+}

@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ORLMS - Key Interview Questions</title>
+    <style>
+        :root {
+            --primary-color: #1e3a8a;
+            --secondary-color: #0f172a;
+            --accent-color: #2563eb;
+            --border-color: #e2e8f0;
+            --text-muted: #64748b;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            color: var(--secondary-color);
+            line-height: 1.6;
+            background-color: #ffffff;
+            padding: 0.8in;
+            margin: 0;
+        }
+
+        @page {
+            size: letter;
+            margin: 0.8in;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 20px;
+            margin-bottom: 40px;
+        }
+
+        .system-title {
+            font-size: 16pt;
+            font-weight: 800;
+            text-transform: uppercase;
+            color: var(--primary-color);
+            letter-spacing: 0.5px;
+        }
+
+        .doc-title {
+            font-size: 13pt;
+            font-weight: 700;
+            margin-top: 8px;
+            color: var(--secondary-color);
+        }
+
+        .subtitle {
+            font-size: 10pt;
+            color: var(--text-muted);
+            margin-top: 6px;
+            font-style: italic;
+        }
+
+        .notice-box {
+            background-color: #f0fdf4;
+            border-left: 4px solid #16a34a;
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 30px;
+            font-size: 10pt;
+            color: #14532d;
+        }
+
+        /* Questions List */
+        .question-card {
+            background: #ffffff;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 24px;
+            margin-bottom: 25px;
+            page-break-inside: avoid;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+
+        .question-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .checkbox-symbol {
+            font-family: monospace;
+            font-size: 13pt;
+            font-weight: 600;
+            color: var(--accent-color);
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .question-text {
+            font-size: 11pt;
+            font-weight: 700;
+            color: var(--secondary-color);
+            margin: 0;
+        }
+
+        .why-ask {
+            font-size: 9.5pt;
+            color: var(--text-muted);
+            margin-left: 28px;
+            margin-top: 6px;
+            padding-left: 12px;
+            border-left: 2px solid var(--border-color);
+        }
+
+        /* Answer line */
+        .answer-blank {
+            margin-left: 28px;
+            margin-top: 20px;
+            border-bottom: 1px dashed #cbd5e1;
+            height: 45px;
+        }
+
+        .footer {
+            margin-top: 50px;
+            border-top: 1px solid var(--border-color);
+            padding-top: 15px;
+            text-align: center;
+            font-size: 9pt;
+            color: var(--text-muted);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        
+        <!-- Header -->
+        <div class="header">
+            <div class="system-title">Ordinance and Resolution Lifecycle Management System (ORLMS)</div>
+            <div class="doc-title">Pinakamahalagang Requirements Validation Questions</div>
+            <div class="subtitle">Sangguniang Panlungsod, City of San Jose del Monte, Bulacan</div>
+        </div>
+
+        <div class="notice-box">
+            <strong>Gabay para sa Magtatanong:</strong> Ito ang 5 pinaka-kritikal na tanong na kailangang masagot ng SP Secretariat o Legislative Officers upang makumpleto ang disenyo at workflow ng ating system.
+        </div>
+
+        <!-- Question 1 -->
+        <div class="question-card">
+            <div class="question-header">
+                <span class="checkbox-symbol">[ ]</span>
+                <h3 class="question-text">Q1: Kailan po binibigyan ng permanenteng Ordinance/Resolution Number ang isang panukala?</h3>
+            </div>
+            <p style="margin: 0 0 0 28px; font-size: 10pt;">
+                Pagka-file pa lang po ba bilang Draft (e.g., system-generated temporary number muna), o kapag fully signed and enacted na ni Mayor (kung kailan ilalagay ang official format tuloy-tuloy gaya ng 2024-971-02)?
+            </p>
+            <div class="why-ask">
+                <strong>Bakit tinatanong:</strong> Para maitakda kung kailan mag-o-auto-generate ang permanenteng tracking number sa database (sa umpisa ba ng drafting o pagkatapos ng final approval).
+            </div>
+            <div class="answer-blank"></div>
+        </div>
+
+        <!-- Question 2 -->
+        <div class="question-card">
+            <div class="question-header">
+                <span class="checkbox-symbol">[ ]</span>
+                <h3 class="question-text">Q2: Mag-lo-log in ba si Mayor at si Vice Mayor sa system para pumirma o mag-veto?</h3>
+            </div>
+            <p style="margin: 0 0 0 28px; font-size: 10pt;">
+                May hiwalay ba silang portal para mag-approve/veto sa system, o ang Secretariat lamang ang mag-e-encode ng naging desisyon nila pagkatapos nilang pirmahan ang hard copy?
+            </p>
+            <div class="why-ask">
+                <strong>Bakit tinatanong:</strong> Upang malaman kung kailangan nating gumawa ng hiwalay na user interface/dashboard para sa Mayor's Office at Office of the Vice Mayor, o sapat na ang Secretariat access.
+            </div>
+            <div class="answer-blank"></div>
+        </div>
+
+        <!-- Question 3 -->
+        <div class="question-card">
+            <div class="question-header">
+                <span class="checkbox-symbol">[ ]</span>
+                <h3 class="question-text">Q3: Sa pag-record ng Session Voting, kailangan ba nating itala ang boto ng bawat Councilor?</h3>
+            </div>
+            <p style="margin: 0 0 0 28px; font-size: 10pt;">
+                Kailangan ba ng nominal voting record (halimbawa: Councilor A = Yes, Councilor B = No), o sapat na po na i-input ang kabuuang bilang ng boto (e.g., Yes = 10, No = 2, Abstain = 1)?
+            </p>
+            <div class="why-ask">
+                <strong>Bakit tinatanong:</strong> Para maiwasan ang paggawa ng kumplikadong grid ng mga pangalan kung ang kailangan lamang sa archives ay ang kabuuang bilang ng boto.
+            </div>
+            <div class="answer-blank"></div>
+        </div>
+
+        <!-- Question 4 -->
+        <div class="question-card">
+            <div class="question-header">
+                <span class="checkbox-symbol">[ ]</span>
+                <h3 class="question-text">Q4: Kapag higit sa isang komite ang sumusuri (Joint Committee), paano ang endorsement flow?</h3>
+            </div>
+            <p style="margin: 0 0 0 28px; font-size: 10pt;">
+                Kailangan ba ng hiwalay na approval o endorsement mula sa bawat Chair ng mga komiteng kasangkot sa system, o sapat na ang isang pinagsamang Committee Report na i-encode ng staff?
+            </p>
+            <div class="why-ask">
+                <strong>Bakit tinatanong:</strong> Upang maayos ang logic ng transition status mula sa "Under Committee Review" patungong "Calendar for Second Reading".
+            </div>
+            <div class="answer-blank"></div>
+        </div>
+
+        <!-- Question 5 -->
+        <div class="question-card">
+            <div class="question-header">
+                <span class="checkbox-symbol">[ ]</span>
+                <h3 class="question-text">Q5: Ano-ano ang mga mandatory parts ng dokumento na dapat suriin ng ating AI Validation engine?</h3>
+            </div>
+            <p style="margin: 0 0 0 28px; font-size: 10pt;">
+                Ano ang mga standard clauses na hindi pwedeng mawala sa inyong draft (e.g., Title, Whereas Clauses, Enacting Clause, Separability Clause, Penalty/Sanction Clause, Effectivity Clause)?
+            </p>
+            <div class="why-ask">
+                <strong>Bakit tinatanong:</strong> Upang mai-configure nang maayos ang system prompt ng ating Llama Model (AI Validator) para maging tumpak ang pag-check sa mga kulang na bahagi ng draft.
+            </div>
+            <div class="answer-blank"></div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            Ordinance and Resolution Lifecycle Management System (ORLMS) &copy; 2026. Sangguniang Panlungsod, CSJDM.
+        </div>
+
+    </div>
+
+</body>
+</html>

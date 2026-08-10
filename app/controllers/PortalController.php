@@ -165,6 +165,179 @@ class PortalController extends Controller
     }
 
     // ─────────────────────────────────────────────────────────────────────────
+    // VERIFY — Public document verification page
+    // ─────────────────────────────────────────────────────────────────────────
+
+    public function verify(string $type, string $id): void
+    {
+        if (!in_array($type, ['ordinance', 'resolution'])) {
+            $this->redirect('portal');
+        }
+
+        $db   = \Database::getInstance()->getConnection();
+        $stmt = $db->prepare(
+            "SELECT p.*,
+                    u.name AS published_by_name,
+                    CASE p.document_type
+                        WHEN 'ordinance'  THEN o.ordinance_no
+                        WHEN 'resolution' THEN r.resolution_no
+                    END AS doc_no,
+                    CASE p.document_type
+                        WHEN 'ordinance'  THEN o.title
+                        WHEN 'resolution' THEN r.title
+                    END AS doc_title,
+                    CASE p.document_type
+                        WHEN 'ordinance'  THEN o.content
+                        WHEN 'resolution' THEN r.content
+                    END AS doc_content,
+                    CASE p.document_type
+                        WHEN 'ordinance'  THEN o.subject
+                        WHEN 'resolution' THEN r.subject
+                    END AS doc_subject,
+                    CASE p.document_type
+                        WHEN 'ordinance'  THEN o.date_filed
+                        WHEN 'resolution' THEN r.date_filed
+                    END AS date_filed,
+                    CASE p.document_type
+                        WHEN 'ordinance'  THEN au.name
+                        WHEN 'resolution' THEN ru.name
+                    END AS author_name
+             FROM publications p
+             LEFT JOIN users u ON p.published_by = u.id
+             LEFT JOIN ordinances o ON p.document_type='ordinance' AND p.document_id=o.id
+             LEFT JOIN users au ON o.author_id = au.id
+             LEFT JOIN resolutions r ON p.document_type='resolution' AND p.document_id=r.id
+             LEFT JOIN users ru ON r.author_id = ru.id
+             WHERE p.document_type = :type AND p.document_id = :id
+             LIMIT 1"
+        );
+        $stmt->execute([':type' => $type, ':id' => (int) $id]);
+        $publication = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if (!$publication) {
+            $this->renderPublic('portal/verify_failed', [
+                'pageTitle' => 'Verification Failed',
+                'type'      => $type,
+                'id'        => $id,
+            ]);
+            return;
+        }
+
+        $this->renderPublic('portal/verify', [
+            'pageTitle'   => 'Verify: ' . ($publication['doc_no'] ?? 'Document'),
+            'publication' => $publication,
+        ]);
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // CHAT — AJAX endpoint for AI public chat validation
+    // ─────────────────────────────────────────────────────────────────────────
+
+    public function chat(): void
+    {
+        header('Content-Type: application/json');
+
+        $message = trim($_POST['message'] ?? '');
+        if (empty($message)) {
+            echo json_encode(['success' => false, 'reply' => 'Mag-type ng tanong po.']);
+            exit;
+        }
+
+        $db = \Database::getInstance()->getConnection();
+        
+        // Fetch all published documents, including their full text content, to feed to the AI context
+        $stmt = $db->query(
+            "SELECT p.document_type,
+                    CASE p.document_type
+                        WHEN 'ordinance'  THEN o.ordinance_no
+                        WHEN 'resolution' THEN r.resolution_no
+                    END AS doc_no,
+                    CASE p.document_type
+                        WHEN 'ordinance'  THEN o.title
+                        WHEN 'resolution' THEN r.title
+                    END AS doc_title,
+                    CASE p.document_type
+                        WHEN 'ordinance'  THEN o.content
+                        WHEN 'resolution' THEN r.content
+                    END AS doc_content,
+                    p.plain_summary
+             FROM publications p
+             LEFT JOIN ordinances o ON p.document_type = 'ordinance' AND p.document_id = o.id
+             LEFT JOIN resolutions r ON p.document_type = 'resolution' AND p.document_id = r.id
+             ORDER BY p.published_at DESC"
+        );
+        $docs = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        // Build a highly grounded, smart system prompt
+        $systemPrompt = "Ikaw si 'Tanya SP', ang matalino, magalang, at makabagong AI Legislative Assistant ng Sangguniang Panlungsod ng San Jose del Monte, Bulacan. " .
+                        "Ang iyong tungkulin ay sagutin ang mga katanungan ng mga mamamayan tungkol sa mga opisyal na ordinansa at resolusyon na nakarehistro sa ating system gamit ang malalim na detalye mula sa kanilang buong teksto.\n\n" .
+                        "MGA MAHAHALAGANG PANUNTUNAN (MANDATORY):\n" .
+                        "1. LIMITADO KA LAMANG sa pag-analisa at pagsagot gamit ang listahan ng mga opisyal na dokumento sa ibaba. HUWAG magbigay ng kahit anong impormasyon, regulasyon, o batas na wala sa listahang ito.\n" .
+                        "2. Kung ang tanong ng user ay labas sa mga nakalistang batas (halimbawa: mga pangkalahatang tanong sa science, recipes, programming, o trapiko sa ibang lungsod tulad ng Manila), HUWAG itong sagutin. Sa halip, ibigay LAMANG ang eksaktong tugon na ito:\n" .
+                        "   'Paumanhin po, ngunit ang aking tungkulin ay limitado lamang sa pagsagot sa mga tanong tungkol sa mga opisyal na ordinansa at resolusyon ng San Jose del Monte, Bulacan. Hindi ko po masasagot ang mga labas na usapin.'\n" .
+                        "3. PANGANGASIWA SA PAGSAGOT (MAS MATALINONG PAGPAPALIWANAG):\n" .
+                        "   - Suriin nang mabuti ang 'Full Document Text' ng batas na tumutugma sa tanong ng user.\n" .
+                        "   - Magbigay ng detalyado, komprehensibo, ngunit madaling maunawaang sagot. Halimbawa, kung may tinatanong na multa o oras, ibigay ang eksaktong halaga at curfew na nakasaad sa batas.\n" .
+                        "   - Gumamit ng markdown formatting para maging madaling basahin ang sagot:\n" .
+                        "     * Gamitin ang **bold text** para i-highlight ang mga mahahalagang salita tulad ng halaga ng multa, oras, o mga kondisyon.\n" .
+                        "     * Gamitin ang bulleted lists o numbered lists kapag naglilista ng mga multa (e.g. 1st Offense, 2nd Offense), mga bawal, o mga hakbang.\n" .
+                        "   - Laging banggitin ang opisyal na Document No. (hal. Ordinance No. ORD-2026-0006) at ang opisyal na pamagat (Title) nito sa simula o dulo ng iyong paliwanag.\n" .
+                        "   - Panatilihing magalang, propesyonal, at gumamit ng 'po' at 'opo'. Sumagot sa natural na Tagalog o Taglish.\n\n" .
+                        "LISTAHAN NG MGA OPISYAL NA PUBLISHED DOCUMENTS SA ATING DATABASE:\n";
+
+        if (empty($docs)) {
+            $systemPrompt .= "(Kasalukuyang walang nakarehistrong published documents sa database.)";
+        } else {
+            foreach ($docs as $doc) {
+                $docTypeLabel = $doc['document_type'] === 'ordinance' ? 'ORDINANCE' : 'RESOLUTION';
+                $systemPrompt .= "- [{$docTypeLabel} {$doc['doc_no']}]\n" .
+                                 "  Title: {$doc['doc_title']}\n" .
+                                 "  Summary: {$doc['plain_summary']}\n" .
+                                 "  Full Document Text:\n  " . str_replace("\n", "\n  ", $doc['doc_content']) . "\n\n";
+            }
+        }
+
+        // Prepare the payload for Groq
+        $payload = json_encode([
+            'model'       => GROQ_MODEL,
+            'messages'    => [
+                ['role' => 'system', 'content' => $systemPrompt],
+                ['role' => 'user',   'content' => $message],
+            ],
+            'temperature' => 0.2, // Low temperature = highly factual, zero hallucination
+            'max_tokens'  => 1000, // Increase max tokens slightly to allow detailed explanations
+        ]);
+
+        $ch = curl_init(GROQ_API_URL);
+        curl_setopt_array($ch, [
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_POST           => true,
+            CURLOPT_POSTFIELDS     => $payload,
+            CURLOPT_TIMEOUT        => 30,
+            CURLOPT_HTTPHEADER     => [
+                'Content-Type: application/json',
+                'Authorization: Bearer ' . GROQ_API_KEY,
+            ],
+        ]);
+
+        $response  = curl_exec($ch);
+        $httpCode  = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $curlError = curl_error($ch);
+        curl_close($ch);
+
+        if ($curlError || $httpCode !== 200) {
+            echo json_encode(['success' => false, 'reply' => 'Paumanhin po, nagkaroon ng aberya sa pagkonekta sa AI assistant. Subukan muli mamaya.']);
+            exit;
+        }
+
+        $responseData = json_decode($response, true);
+        $reply = $responseData['choices'][0]['message']['content'] ?? 'Paumanhin po, hindi ko mahanap ang tugma sa aking rekord.';
+
+        echo json_encode(['success' => true, 'reply' => $reply]);
+        exit;
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────
     // PRIVATE RENDERER FOR PUBLIC VIEWS (WITHOUT SIDEBAR)
     // ─────────────────────────────────────────────────────────────────────────
 

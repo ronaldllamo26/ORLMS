@@ -41,9 +41,10 @@ class ResolutionModel extends Model
     public function getAllWithAuthor(): array
     {
         return $this->query(
-            "SELECT r.*, u.name AS author_name
+            "SELECT r.*, u.name AS author_name, c.name AS committee_name
              FROM resolutions r
              LEFT JOIN users u ON r.author_id = u.id
+             LEFT JOIN committees c ON r.committee_id = c.id
              ORDER BY r.created_at DESC"
         );
     }
@@ -57,9 +58,10 @@ class ResolutionModel extends Model
     public function getByIdWithAuthor(int $id): array|false
     {
         return $this->query(
-            "SELECT r.*, u.name AS author_name
+            "SELECT r.*, u.name AS author_name, c.name AS committee_name
              FROM resolutions r
              LEFT JOIN users u ON r.author_id = u.id
+             LEFT JOIN committees c ON r.committee_id = c.id
              WHERE r.id = :id
              LIMIT 1",
             [':id' => $id],

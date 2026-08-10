@@ -108,8 +108,8 @@ $roleLabel    = $roleLabels[$role] ?? ucfirst(str_replace('_', ' ', $role));
             </a>
         </li>
 
-        <!-- Review & Endorsement — committee_member + super_admin -->
-        <?php if ($hasRole(['committee_member', 'super_admin'])): ?>
+        <!-- Review & Endorsement — committee_member + sp_member + super_admin -->
+        <?php if ($hasRole(['committee_member', 'sp_member', 'super_admin'])): ?>
         <li>
             <a href="<?= APP_ROOT_URL ?>/review"
                class="<?= $isActive('/review') ?>">
@@ -145,6 +145,16 @@ $roleLabel    = $roleLabels[$role] ?? ucfirst(str_replace('_', ' ', $role));
                 Publications
             </a>
         </li>
+
+        <!-- Post-Enactment Tracking — legislative_staff + super_admin -->
+        <?php if ($hasRole(['legislative_staff', 'super_admin'])): ?>
+        <li>
+            <a href="<?= APP_ROOT_URL ?>/post_enactment"
+               class="<?= $isActive('/post_enactment') ?>">
+                Post-Enactment Tracking
+            </a>
+        </li>
+        <?php endif; ?>
 
         <!-- Archive — all roles -->
         <li>

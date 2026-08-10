@@ -1,0 +1,1044 @@
+<mxfile host="app.diagrams.net" pages="12">
+  <diagram id="p1" name="1. Authentication">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="1100" pageHeight="900" math="0" shadow="1">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="t" value="&lt;b&gt;BPA Level 2 — Authentication Subsystem&lt;/b&gt;&lt;br&gt;Actor: All Users (Legislative Staff, Committee Member, SP Member, Super Admin)" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=14;fontFamily=Segoe UI;fontColor=#1e3a5f;" vertex="1" parent="1">
+          <mxGeometry x="80" y="10" width="600" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="s1" value="&lt;b&gt;START&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;arcSize=50;fillColor=#22c55e;strokeColor=#16a34a;fontColor=#fff;fontSize=12;fontFamily=Segoe UI;fontStyle=1;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="270" y="80" width="160" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="s2" value="User opens ORLMS&lt;br&gt;Login Page (index.php)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#3b82f6;fontColor=#1e3a5f;fontSize=11;fontFamily=Segoe UI;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="230" y="150" width="240" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="s3" value="Enter Email &amp;amp; Password" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f1f5f9;strokeColor=#94a3b8;fontColor=#334155;fontSize=11;fontFamily=Segoe UI;shadow=1;dashed=1;" vertex="1" parent="1">
+          <mxGeometry x="230" y="230" width="240" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="s4" value="System queries &lt;b&gt;users&lt;/b&gt; table&lt;br&gt;Verify bcrypt hashed password" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d1fae5;strokeColor=#10b981;fontColor=#065f46;fontSize=11;fontFamily=Segoe UI;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="220" y="305" width="260" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="d1" value="&lt;b&gt;Valid&lt;br&gt;Credentials?&lt;/b&gt;" style="rhombus;whiteSpace=wrap;html=1;fillColor=#fef3c7;strokeColor=#f59e0b;fontColor=#78350f;fontSize=11;fontFamily=Segoe UI;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="260" y="385" width="180" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="s5" value="Show Error Message&lt;br&gt;&lt;i&gt;&#39;Invalid email or password&#39;&lt;/i&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fecaca;strokeColor=#ef4444;fontColor=#991b1b;fontSize=11;fontFamily=Segoe UI;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="530" y="405" width="200" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="d2" value="&lt;b&gt;User&lt;br&gt;is_active?&lt;/b&gt;" style="rhombus;whiteSpace=wrap;html=1;fillColor=#fef3c7;strokeColor=#f59e0b;fontColor=#78350f;fontSize=11;fontFamily=Segoe UI;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="260" y="510" width="180" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="s6" value="Account Deactivated&lt;br&gt;&lt;i&gt;&#39;Contact administrator&#39;&lt;/i&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fecaca;strokeColor=#ef4444;fontColor=#991b1b;fontSize=11;fontFamily=Segoe UI;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="530" y="530" width="200" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="s7" value="Create PHP Session&lt;br&gt;&lt;i&gt;(Store user_id, name, email, role)&lt;/i&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#3b82f6;fontColor=#1e3a5f;fontSize=11;fontFamily=Segoe UI;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="220" y="635" width="260" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="s8" value="Log login action to &lt;b&gt;audit_logs&lt;/b&gt;&lt;br&gt;&lt;i&gt;(user_id, &#39;LOGIN&#39;, ip_address)&lt;/i&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d1fae5;strokeColor=#10b981;fontColor=#065f46;fontSize=11;fontFamily=Segoe UI;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="220" y="715" width="260" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="s9" value="Redirect to Role-Specific Dashboard&lt;br&gt;&lt;i&gt;(RBAC determines accessible modules)&lt;/i&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#3b82f6;fontColor=#1e3a5f;fontSize=11;fontFamily=Segoe UI;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="210" y="795" width="280" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="se" value="&lt;b&gt;END&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;arcSize=50;fillColor=#1e3a5f;strokeColor=#0f172a;fontColor=#fff;fontSize=12;fontFamily=Segoe UI;fontStyle=1;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="270" y="875" width="160" height="40" as="geometry" />
+        </mxCell>
+        <!-- Edges -->
+        <mxCell id="e1" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#374151;strokeWidth=2;" edge="1" source="s1" target="s2" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e2" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#374151;strokeWidth=2;" edge="1" source="s2" target="s3" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e3" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#374151;strokeWidth=2;" edge="1" source="s3" target="s4" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e4" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#374151;strokeWidth=2;" edge="1" source="s4" target="d1" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e5" value="&lt;b&gt;No&lt;/b&gt;" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#ef4444;strokeWidth=2;fontColor=#ef4444;labelBackgroundColor=#fff;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" source="d1" target="s5" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e5b" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#ef4444;strokeWidth=1;dashed=1;exitX=0.5;exitY=0;entryX=1;entryY=0.5;" edge="1" source="s5" target="s3" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="630" y="253" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e6" value="&lt;b&gt;Yes&lt;/b&gt;" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#16a34a;strokeWidth=2;fontColor=#16a34a;labelBackgroundColor=#fff;" edge="1" source="d1" target="d2" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e7" value="&lt;b&gt;No&lt;/b&gt;" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#ef4444;strokeWidth=2;fontColor=#ef4444;labelBackgroundColor=#fff;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" source="d2" target="s6" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e8" value="&lt;b&gt;Yes&lt;/b&gt;" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#16a34a;strokeWidth=2;fontColor=#16a34a;labelBackgroundColor=#fff;" edge="1" source="d2" target="s7" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e9" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#374151;strokeWidth=2;" edge="1" source="s7" target="s8" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e10" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#374151;strokeWidth=2;" edge="1" source="s8" target="s9" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e11" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#374151;strokeWidth=2;" edge="1" source="s9" target="se" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="p2" name="2. User Management">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="1100" pageHeight="1000" math="0" shadow="1">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="t" value="&lt;b&gt;BPA Level 2 — User Management Subsystem&lt;/b&gt;&lt;br&gt;Actor: Super Admin" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=14;fontFamily=Segoe UI;fontColor=#1e3a5f;" vertex="1" parent="1">
+          <mxGeometry x="100" y="10" width="550" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="s1" value="&lt;b&gt;START&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;arcSize=50;fillColor=#22c55e;strokeColor=#16a34a;fontColor=#fff;fontSize=12;fontFamily=Segoe UI;fontStyle=1;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="270" y="80" width="160" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="s2" value="Super Admin opens&lt;br&gt;User Management Module" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#3b82f6;fontColor=#1e3a5f;fontSize=11;fontFamily=Segoe UI;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="230" y="150" width="240" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="s3" value="View list of all users&lt;br&gt;&lt;i&gt;(name, email, role, status)&lt;/i&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#3b82f6;fontColor=#1e3a5f;fontSize=11;fontFamily=Segoe UI;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="230" y="230" width="240" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="d1" value="&lt;b&gt;Action?&lt;/b&gt;" style="rhombus;whiteSpace=wrap;html=1;fillColor=#fef3c7;strokeColor=#f59e0b;fontColor=#78350f;fontSize=12;fontFamily=Segoe UI;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="275" y="310" width="150" height="90" as="geometry" />
+        </mxCell>
+        <!-- Create User Branch -->
+        <mxCell id="c1" value="Fill form: Name, Email,&lt;br&gt;Password, Role&lt;br&gt;&lt;i&gt;(super_admin / legislative_staff /&lt;br&gt;committee_member / sp_member)&lt;/i&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f1f5f9;strokeColor=#94a3b8;fontColor=#334155;fontSize=10;fontFamily=Segoe UI;shadow=1;dashed=1;" vertex="1" parent="1">
+          <mxGeometry x="10" y="440" width="220" height="75" as="geometry" />
+        </mxCell>
+        <mxCell id="c2" value="Validate input &amp;amp;&lt;br&gt;check email uniqueness" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#3b82f6;fontColor=#1e3a5f;fontSize=10;fontFamily=Segoe UI;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="20" y="545" width="200" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="c3" value="Hash password (bcrypt)&lt;br&gt;INSERT into &lt;b&gt;users&lt;/b&gt; table" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d1fae5;strokeColor=#10b981;fontColor=#065f46;fontSize=10;fontFamily=Segoe UI;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="20" y="620" width="200" height="45" as="geometry" />
+        </mxCell>
+        <!-- Edit User Branch -->
+        <mxCell id="ed1" value="Select user → Edit fields&lt;br&gt;&lt;i&gt;(name, email, role)&lt;/i&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f1f5f9;strokeColor=#94a3b8;fontColor=#334155;fontSize=10;fontFamily=Segoe UI;shadow=1;dashed=1;" vertex="1" parent="1">
+          <mxGeometry x="250" y="440" width="200" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="ed2" value="UPDATE &lt;b&gt;users&lt;/b&gt; table&lt;br&gt;&lt;i&gt;(save old_value for audit)&lt;/i&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d1fae5;strokeColor=#10b981;fontColor=#065f46;fontSize=10;fontFamily=Segoe UI;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="250" y="520" width="200" height="45" as="geometry" />
+        </mxCell>
+        <!-- Deactivate Branch -->
+        <mxCell id="de1" value="Select user →&lt;br&gt;Confirm deactivation" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f1f5f9;strokeColor=#94a3b8;fontColor=#334155;fontSize=10;fontFamily=Segoe UI;shadow=1;dashed=1;" vertex="1" parent="1">
+          <mxGeometry x="490" y="440" width="190" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="de2" value="SET is_active = 0&lt;br&gt;in &lt;b&gt;users&lt;/b&gt; table" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d1fae5;strokeColor=#10b981;fontColor=#065f46;fontSize=10;fontFamily=Segoe UI;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="490" y="520" width="190" height="45" as="geometry" />
+        </mxCell>
+        <!-- Merge -->
+        <mxCell id="s8" value="Log action to &lt;b&gt;audit_logs&lt;/b&gt;&lt;br&gt;&lt;i&gt;(CREATE/UPDATE/DEACTIVATE, old_value, new_value)&lt;/i&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d1fae5;strokeColor=#10b981;fontColor=#065f46;fontSize=11;fontFamily=Segoe UI;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="190" y="710" width="320" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="s9" value="Display success message&lt;br&gt;Refresh user list" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#3b82f6;fontColor=#1e3a5f;fontSize=11;fontFamily=Segoe UI;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="230" y="790" width="240" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="se" value="&lt;b&gt;END&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;arcSize=50;fillColor=#1e3a5f;strokeColor=#0f172a;fontColor=#fff;fontSize=12;fontFamily=Segoe UI;fontStyle=1;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="270" y="865" width="160" height="40" as="geometry" />
+        </mxCell>
+        <!-- Edges -->
+        <mxCell id="e1" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#374151;strokeWidth=2;" edge="1" source="s1" target="s2" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e2" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#374151;strokeWidth=2;" edge="1" source="s2" target="s3" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e3" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#374151;strokeWidth=2;" edge="1" source="s3" target="d1" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e4" value="&lt;b&gt;Create&lt;/b&gt;" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#3b82f6;strokeWidth=2;fontColor=#3b82f6;labelBackgroundColor=#fff;exitX=0;exitY=0.5;entryX=0.5;entryY=0;" edge="1" source="d1" target="c1" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e5" value="&lt;b&gt;Edit&lt;/b&gt;" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#f59e0b;strokeWidth=2;fontColor=#f59e0b;labelBackgroundColor=#fff;" edge="1" source="d1" target="ed1" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e6" value="&lt;b&gt;Deactivate&lt;/b&gt;" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#ef4444;strokeWidth=2;fontColor=#ef4444;labelBackgroundColor=#fff;exitX=1;exitY=0.5;entryX=0.5;entryY=0;" edge="1" source="d1" target="de1" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e7" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#374151;strokeWidth=2;" edge="1" source="c1" target="c2" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e8" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#374151;strokeWidth=2;" edge="1" source="c2" target="c3" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e9" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#374151;strokeWidth=2;" edge="1" source="ed1" target="ed2" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e10" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#374151;strokeWidth=2;" edge="1" source="de1" target="de2" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e11" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#374151;strokeWidth=2;entryX=0.2;entryY=0;" edge="1" source="c3" target="s8" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e12" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#374151;strokeWidth=2;entryX=0.5;entryY=0;" edge="1" source="ed2" target="s8" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e13" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#374151;strokeWidth=2;entryX=0.8;entryY=0;" edge="1" source="de2" target="s8" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e14" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#374151;strokeWidth=2;" edge="1" source="s8" target="s9" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e15" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#374151;strokeWidth=2;" edge="1" source="s9" target="se" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="p3" name="3. Ordinance Drafting &amp; Filing">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="1100" pageHeight="1000" math="0" shadow="1">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="t" value="&lt;b&gt;BPA Level 2 — Ordinance Drafting &amp;amp; Filing Subsystem&lt;/b&gt;&lt;br&gt;Actor: Legislative Staff" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=14;fontFamily=Segoe UI;fontColor=#1e3a5f;" vertex="1" parent="1">
+          <mxGeometry x="80" y="10" width="600" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="s1" value="&lt;b&gt;START&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;arcSize=50;fillColor=#22c55e;strokeColor=#16a34a;fontColor=#fff;fontSize=12;fontFamily=Segoe UI;fontStyle=1;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="270" y="80" width="160" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="s2" value="Legislative Staff opens&lt;br&gt;Ordinance Module" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#3b82f6;fontColor=#1e3a5f;fontSize=11;fontFamily=Segoe UI;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="230" y="150" width="240" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="s3" value="Click &#39;Create New Ordinance&#39;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#3b82f6;fontColor=#1e3a5f;fontSize=11;fontFamily=Segoe UI;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="230" y="230" width="240" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="s4" value="Fill Ordinance Form:&lt;br&gt;&lt;i&gt;• Ordinance No. • Title • Subject&lt;br&gt;• Content/Body • Upload File Attachment&lt;/i&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f1f5f9;strokeColor=#94a3b8;fontColor=#334155;fontSize=11;fontFamily=Segoe UI;shadow=1;dashed=1;" vertex="1" parent="1">
+          <mxGeometry x="210" y="300" width="280" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="s5" value="System auto-sets:&lt;br&gt;&lt;i&gt;date_filed = today, status = &#39;draft&#39;&lt;/i&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#3b82f6;fontColor=#1e3a5f;fontSize=11;fontFamily=Segoe UI;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="220" y="400" width="260" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="s6" value="INSERT into &lt;b&gt;ordinances&lt;/b&gt; table" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d1fae5;strokeColor=#10b981;fontColor=#065f46;fontSize=11;fontFamily=Segoe UI;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="230" y="480" width="240" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="d1" value="&lt;b&gt;Ready to&lt;br&gt;Submit?&lt;/b&gt;" style="rhombus;whiteSpace=wrap;html=1;fillColor=#fef3c7;strokeColor=#f59e0b;fontColor=#78350f;fontSize=12;fontFamily=Segoe UI;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="270" y="555" width="160" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="s7" value="Save as Draft&lt;br&gt;&lt;i&gt;(can edit later)&lt;/i&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f1f5f9;strokeColor=#94a3b8;fontColor=#334155;fontSize=11;fontFamily=Segoe UI;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="530" y="575" width="160" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="s8" value="Assign to Committee&lt;br&gt;SET committee_id" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#3b82f6;fontColor=#1e3a5f;fontSize=11;fontFamily=Segoe UI;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="230" y="680" width="240" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="s9" value="UPDATE status = &#39;submitted&#39;&lt;br&gt;in &lt;b&gt;ordinances&lt;/b&gt; table" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d1fae5;strokeColor=#10b981;fontColor=#065f46;fontSize=11;fontFamily=Segoe UI;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="220" y="755" width="260" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="s10" value="Log action to &lt;b&gt;audit_logs&lt;/b&gt;&lt;br&gt;&lt;i&gt;(SUBMIT_ORDINANCE)&lt;/i&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d1fae5;strokeColor=#10b981;fontColor=#065f46;fontSize=11;fontFamily=Segoe UI;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="230" y="830" width="240" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="se" value="&lt;b&gt;END&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;arcSize=50;fillColor=#1e3a5f;strokeColor=#0f172a;fontColor=#fff;fontSize=12;fontFamily=Segoe UI;fontStyle=1;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="270" y="910" width="160" height="40" as="geometry" />
+        </mxCell>
+        <!-- Edges -->
+        <mxCell id="e1" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#374151;strokeWidth=2;" edge="1" source="s1" target="s2" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e2" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#374151;strokeWidth=2;" edge="1" source="s2" target="s3" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e3" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#374151;strokeWidth=2;" edge="1" source="s3" target="s4" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e4" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#374151;strokeWidth=2;" edge="1" source="s4" target="s5" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e5" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#374151;strokeWidth=2;" edge="1" source="s5" target="s6" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e6" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#374151;strokeWidth=2;" edge="1" source="s6" target="d1" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e7" value="&lt;b&gt;No&lt;/b&gt;" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#f59e0b;strokeWidth=2;fontColor=#f59e0b;labelBackgroundColor=#fff;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" source="d1" target="s7" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e8" value="&lt;b&gt;Yes&lt;/b&gt;" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#16a34a;strokeWidth=2;fontColor=#16a34a;labelBackgroundColor=#fff;" edge="1" source="d1" target="s8" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e9" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#374151;strokeWidth=2;" edge="1" source="s8" target="s9" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e10" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#374151;strokeWidth=2;" edge="1" source="s9" target="s10" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e11" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#374151;strokeWidth=2;" edge="1" source="s10" target="se" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="p4" name="4. Resolution Drafting &amp; Filing">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="1100" pageHeight="1000" math="0" shadow="1">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="t" value="&lt;b&gt;BPA Level 2 — Resolution Drafting &amp;amp; Filing Subsystem&lt;/b&gt;&lt;br&gt;Actor: Legislative Staff" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=14;fontFamily=Segoe UI;fontColor=#1e3a5f;" vertex="1" parent="1">
+          <mxGeometry x="80" y="10" width="600" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="s1" value="&lt;b&gt;START&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;arcSize=50;fillColor=#22c55e;strokeColor=#16a34a;fontColor=#fff;fontSize=12;fontFamily=Segoe UI;fontStyle=1;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="270" y="80" width="160" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="s2" value="Legislative Staff opens&lt;br&gt;Resolution Module" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#3b82f6;fontColor=#1e3a5f;fontSize=11;fontFamily=Segoe UI;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="230" y="150" width="240" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="s3" value="Click &#39;Create New Resolution&#39;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#3b82f6;fontColor=#1e3a5f;fontSize=11;fontFamily=Segoe UI;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="230" y="230" width="240" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="s4" value="Fill Resolution Form:&lt;br&gt;&lt;i&gt;• Resolution No. • Title • Subject&lt;br&gt;• Content/Body • Upload File Attachment&lt;/i&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f1f5f9;strokeColor=#94a3b8;fontColor=#334155;fontSize=11;fontFamily=Segoe UI;shadow=1;dashed=1;" vertex="1" parent="1">
+          <mxGeometry x="210" y="300" width="280" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="s5" value="System auto-sets:&lt;br&gt;&lt;i&gt;date_filed = today, status = &#39;draft&#39;&lt;/i&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#3b82f6;fontColor=#1e3a5f;fontSize=11;fontFamily=Segoe UI;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="220" y="400" width="260" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="s6" value="INSERT into &lt;b&gt;resolutions&lt;/b&gt; table" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d1fae5;strokeColor=#10b981;fontColor=#065f46;fontSize=11;fontFamily=Segoe UI;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="230" y="480" width="240" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="d1" value="&lt;b&gt;Ready to&lt;br&gt;Submit?&lt;/b&gt;" style="rhombus;whiteSpace=wrap;html=1;fillColor=#fef3c7;strokeColor=#f59e0b;fontColor=#78350f;fontSize=12;fontFamily=Segoe UI;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="270" y="555" width="160" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="s7" value="Save as Draft&lt;br&gt;&lt;i&gt;(can edit later)&lt;/i&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f1f5f9;strokeColor=#94a3b8;fontColor=#334155;fontSize=11;fontFamily=Segoe UI;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="530" y="575" width="160" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="s8" value="Assign to Committee&lt;br&gt;SET committee_id" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#3b82f6;fontColor=#1e3a5f;fontSize=11;fontFamily=Segoe UI;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="230" y="680" width="240" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="s9" value="UPDATE status = &#39;submitted&#39;&lt;br&gt;in &lt;b&gt;resolutions&lt;/b&gt; table" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d1fae5;strokeColor=#10b981;fontColor=#065f46;fontSize=11;fontFamily=Segoe UI;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="220" y="755" width="260" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="s10" value="Log action to &lt;b&gt;audit_logs&lt;/b&gt;&lt;br&gt;&lt;i&gt;(SUBMIT_RESOLUTION)&lt;/i&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d1fae5;strokeColor=#10b981;fontColor=#065f46;fontSize=11;fontFamily=Segoe UI;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="230" y="830" width="240" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="se" value="&lt;b&gt;END&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;arcSize=50;fillColor=#1e3a5f;strokeColor=#0f172a;fontColor=#fff;fontSize=12;fontFamily=Segoe UI;fontStyle=1;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="270" y="910" width="160" height="40" as="geometry" />
+        </mxCell>
+        <!-- Edges -->
+        <mxCell id="e1" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#374151;strokeWidth=2;" edge="1" source="s1" target="s2" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e2" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#374151;strokeWidth=2;" edge="1" source="s2" target="s3" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e3" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#374151;strokeWidth=2;" edge="1" source="s3" target="s4" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e4" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#374151;strokeWidth=2;" edge="1" source="s4" target="s5" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e5" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#374151;strokeWidth=2;" edge="1" source="s5" target="s6" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e6" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#374151;strokeWidth=2;" edge="1" source="s6" target="d1" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e7" value="&lt;b&gt;No&lt;/b&gt;" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#f59e0b;strokeWidth=2;fontColor=#f59e0b;labelBackgroundColor=#fff;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" source="d1" target="s7" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e8" value="&lt;b&gt;Yes&lt;/b&gt;" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#16a34a;strokeWidth=2;fontColor=#16a34a;labelBackgroundColor=#fff;" edge="1" source="d1" target="s8" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e9" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#374151;strokeWidth=2;" edge="1" source="s8" target="s9" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e10" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#374151;strokeWidth=2;" edge="1" source="s9" target="s10" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e11" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#374151;strokeWidth=2;" edge="1" source="s10" target="se" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="p5" name="5. AI Validation Engine">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="1100" pageHeight="1200" math="0" shadow="1">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="t" value="&lt;b&gt;BPA Level 2 — AI Validation Engine Subsystem&lt;/b&gt;&lt;br&gt;Actor: Legislative Staff | System: Groq Cloud API (Llama LLM)" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=14;fontFamily=Segoe UI;fontColor=#1e3a5f;" vertex="1" parent="1">
+          <mxGeometry x="60" y="10" width="650" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="s1" value="&lt;b&gt;START&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;arcSize=50;fillColor=#22c55e;strokeColor=#16a34a;fontColor=#fff;fontSize=12;fontFamily=Segoe UI;fontStyle=1;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="270" y="80" width="160" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="s2" value="Staff selects submitted&lt;br&gt;Ordinance / Resolution" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#3b82f6;fontColor=#1e3a5f;fontSize=11;fontFamily=Segoe UI;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="220" y="150" width="260" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="s3" value="Click &#39;Run AI Validation&#39;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#3b82f6;fontColor=#1e3a5f;fontSize=11;fontFamily=Segoe UI;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="230" y="230" width="240" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="s4" value="System extracts document content&lt;br&gt;from &lt;b&gt;ordinances&lt;/b&gt; / &lt;b&gt;resolutions&lt;/b&gt; table" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d1fae5;strokeColor=#10b981;fontColor=#065f46;fontSize=11;fontFamily=Segoe UI;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="200" y="300" width="300" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="s5" value="Send document content to&lt;br&gt;&lt;b&gt;Groq Cloud API&lt;/b&gt; (Llama LLM)&lt;br&gt;&lt;i&gt;via HTTPS request&lt;/i&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ede9fe;strokeColor=#7c3aed;fontColor=#4c1d95;fontSize=11;fontFamily=Segoe UI;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="210" y="380" width="280" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="s6" value="🤖 AI Completeness Check:&lt;br&gt;&lt;i&gt;Scan for Title, Enacting Clause,&lt;br&gt;Penal Clause, Effectivity Date, etc.&lt;/i&gt;&lt;br&gt;→ Returns &lt;b&gt;completeness_score&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ede9fe;strokeColor=#7c3aed;fontColor=#4c1d95;fontSize=10;fontFamily=Segoe UI;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="200" y="475" width="300" height="75" as="geometry" />
+        </mxCell>
+        <mxCell id="s7" value="🤖 AI Similarity Check:&lt;br&gt;&lt;i&gt;Cross-reference against ALL existing&lt;br&gt;ordinances &amp;amp; resolutions in database&lt;/i&gt;&lt;br&gt;→ Returns &lt;b&gt;similarity_score&lt;/b&gt; &amp;amp; &lt;b&gt;similar_document_id&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ede9fe;strokeColor=#7c3aed;fontColor=#4c1d95;fontSize=10;fontFamily=Segoe UI;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="190" y="580" width="320" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="d1" value="&lt;b&gt;Validation&lt;br&gt;Status?&lt;/b&gt;" style="rhombus;whiteSpace=wrap;html=1;fillColor=#fef3c7;strokeColor=#f59e0b;fontColor=#78350f;fontSize=11;fontFamily=Segoe UI;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="270" y="695" width="160" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="r1" value="&lt;b&gt;PASSED&lt;/b&gt;&lt;br&gt;All complete, no conflicts" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d1fae5;strokeColor=#10b981;fontColor=#065f46;fontSize=10;fontFamily=Segoe UI;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="70" y="710" width="160" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="r2" value="&lt;b&gt;FLAGGED&lt;/b&gt;&lt;br&gt;⚠ Missing sections or&lt;br&gt;similar document found" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fef3c7;strokeColor=#f59e0b;fontColor=#78350f;fontSize=10;fontFamily=Segoe UI;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="480" y="700" width="180" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="r3" value="&lt;b&gt;FAILED&lt;/b&gt;&lt;br&gt;Major issues detected" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fecaca;strokeColor=#ef4444;fontColor=#991b1b;fontSize=10;fontFamily=Segoe UI;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="480" y="775" width="180" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="s8" value="Save report to &lt;b&gt;ai_validation_reports&lt;/b&gt;&lt;br&gt;&lt;i&gt;(completeness_score, similarity_score,&lt;br&gt;completeness_details, similarity_details,&lt;br&gt;ai_summary, recommendation)&lt;/i&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d1fae5;strokeColor=#10b981;fontColor=#065f46;fontSize=10;fontFamily=Segoe UI;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="200" y="840" width="300" height="75" as="geometry" />
+        </mxCell>
+        <mxCell id="s9" value="Display AI Report to Staff&lt;br&gt;&lt;i&gt;(scores, details, recommendation)&lt;/i&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#3b82f6;fontColor=#1e3a5f;fontSize=11;fontFamily=Segoe UI;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="210" y="945" width="280" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="d2" value="&lt;b&gt;Staff&lt;br&gt;Decision?&lt;/b&gt;" style="rhombus;whiteSpace=wrap;html=1;fillColor=#fef3c7;strokeColor=#f59e0b;fontColor=#78350f;fontSize=11;fontFamily=Segoe UI;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="270" y="1025" width="160" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="s10" value="Forward to&lt;br&gt;Committee Review" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#3b82f6;fontColor=#1e3a5f;fontSize=11;fontFamily=Segoe UI;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="120" y="1045" width="160" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="s11" value="Return to&lt;br&gt;Drafting Module" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fecaca;strokeColor=#ef4444;fontColor=#991b1b;fontSize=11;fontFamily=Segoe UI;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="480" y="1045" width="160" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="se" value="&lt;b&gt;END&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;arcSize=50;fillColor=#1e3a5f;strokeColor=#0f172a;fontColor=#fff;fontSize=12;fontFamily=Segoe UI;fontStyle=1;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="270" y="1150" width="160" height="40" as="geometry" />
+        </mxCell>
+        <!-- Edges -->
+        <mxCell id="e1" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#374151;strokeWidth=2;" edge="1" source="s1" target="s2" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e2" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#374151;strokeWidth=2;" edge="1" source="s2" target="s3" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e3" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#374151;strokeWidth=2;" edge="1" source="s3" target="s4" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e4" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#374151;strokeWidth=2;" edge="1" source="s4" target="s5" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e5" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#374151;strokeWidth=2;" edge="1" source="s5" target="s6" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e6" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#374151;strokeWidth=2;" edge="1" source="s6" target="s7" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e7" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#374151;strokeWidth=2;" edge="1" source="s7" target="d1" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e8" value="&lt;b&gt;Passed&lt;/b&gt;" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#16a34a;strokeWidth=2;fontColor=#16a34a;labelBackgroundColor=#fff;exitX=0;exitY=0.5;entryX=1;entryY=0.5;" edge="1" source="d1" target="r1" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e9" value="&lt;b&gt;Flagged&lt;/b&gt;" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#f59e0b;strokeWidth=2;fontColor=#f59e0b;labelBackgroundColor=#fff;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" source="d1" target="r2" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e9b" value="&lt;b&gt;Failed&lt;/b&gt;" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#ef4444;strokeWidth=2;fontColor=#ef4444;labelBackgroundColor=#fff;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" source="d1" target="r3" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="460" y="740" />
+              <mxPoint x="460" y="798" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e10" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#374151;strokeWidth=1;entryX=0.2;entryY=0;" edge="1" source="r1" target="s8" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e11" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#374151;strokeWidth=1;entryX=0.8;entryY=0;" edge="1" source="r2" target="s8" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e11b" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#374151;strokeWidth=1;entryX=0.9;entryY=0;" edge="1" source="r3" target="s8" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e12" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#374151;strokeWidth=2;" edge="1" source="s8" target="s9" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e13" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#374151;strokeWidth=2;" edge="1" source="s9" target="d2" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e14" value="&lt;b&gt;Proceed&lt;/b&gt;" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#16a34a;strokeWidth=2;fontColor=#16a34a;labelBackgroundColor=#fff;exitX=0;exitY=0.5;entryX=1;entryY=0.5;" edge="1" source="d2" target="s10" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e15" value="&lt;b&gt;Revise&lt;/b&gt;" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#ef4444;strokeWidth=2;fontColor=#ef4444;labelBackgroundColor=#fff;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" source="d2" target="s11" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e16" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#374151;strokeWidth=2;entryX=0.3;entryY=0;" edge="1" source="s10" target="se" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e17" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#374151;strokeWidth=2;entryX=0.7;entryY=0;" edge="1" source="s11" target="se" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="p6" name="6. Committee Review &amp; Endorsement">
+    <mxGraphModel dx="1178" dy="654" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="1100" pageHeight="1050" math="0" shadow="1">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="t" parent="1" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=14;fontFamily=Segoe UI;fontColor=#1e3a5f;" value="&lt;b&gt;BPA Level 2 — Committee Review &amp;amp; Endorsement Subsystem&lt;/b&gt;&lt;br&gt;Actor: Committee Chair &amp;amp; Committee Members" vertex="1">
+          <mxGeometry height="50" width="650" x="60" y="10" as="geometry" />
+        </mxCell>
+        <mxCell id="s1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;arcSize=50;fillColor=#22c55e;strokeColor=#16a34a;fontColor=#fff;fontSize=12;fontFamily=Segoe UI;fontStyle=1;shadow=1;" value="&lt;b&gt;START&lt;/b&gt;" vertex="1">
+          <mxGeometry height="40" width="160" x="270" y="80" as="geometry" />
+        </mxCell>
+        <mxCell id="s2" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#3b82f6;fontColor=#1e3a5f;fontSize=11;fontFamily=Segoe UI;shadow=1;" value="Document assigned to Committee&lt;br&gt;&lt;i&gt;(committee_id set in ordinances/resolutions)&lt;/i&gt;" vertex="1">
+          <mxGeometry height="50" width="300" x="200" y="150" as="geometry" />
+        </mxCell>
+        <mxCell id="s3" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#3b82f6;fontColor=#1e3a5f;fontSize=11;fontFamily=Segoe UI;shadow=1;" value="Committee Chair opens&lt;br&gt;Review Module" vertex="1">
+          <mxGeometry height="50" width="240" x="230" y="230" as="geometry" />
+        </mxCell>
+        <mxCell id="s4" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#3b82f6;fontColor=#1e3a5f;fontSize=11;fontFamily=Segoe UI;shadow=1;" value="View document content &amp;amp;&lt;br&gt;AI Validation Report&lt;br&gt;&lt;i&gt;(from ai_validation_reports table)&lt;/i&gt;" vertex="1">
+          <mxGeometry height="60" width="280" x="210" y="315" as="geometry" />
+        </mxCell>
+        <mxCell id="s5" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#3b82f6;fontColor=#1e3a5f;fontSize=11;fontFamily=Segoe UI;shadow=1;" value="Committee deliberation:&lt;br&gt;&lt;i&gt;Meetings, Hearings,&lt;br&gt;Public Consultations, Research&lt;/i&gt;" vertex="1">
+          <mxGeometry height="65" width="260" x="220" y="410" as="geometry" />
+        </mxCell>
+        <mxCell id="s6" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f1f5f9;strokeColor=#94a3b8;fontColor=#334155;fontSize=11;fontFamily=Segoe UI;shadow=1;dashed=1;" value="Enter review action &amp;amp; reason" vertex="1">
+          <mxGeometry height="40" width="240" x="230" y="510" as="geometry" />
+        </mxCell>
+        <mxCell id="d1" parent="1" style="rhombus;whiteSpace=wrap;html=1;fillColor=#fef3c7;strokeColor=#f59e0b;fontColor=#78350f;fontSize=11;fontFamily=Segoe UI;shadow=1;" value="&lt;b&gt;Committee&lt;br&gt;Recommendation?&lt;/b&gt;" vertex="1">
+          <mxGeometry height="100" width="190" x="255" y="585" as="geometry" />
+        </mxCell>
+        <mxCell id="r1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d1fae5;strokeColor=#10b981;fontColor=#065f46;fontSize=10;fontFamily=Segoe UI;shadow=1;" value="&lt;b&gt;ENDORSE&lt;/b&gt;&lt;br&gt;Status → &#39;endorsed&#39;&lt;br&gt;Forward to SP for Reading" vertex="1">
+          <mxGeometry height="60" width="170" x="50" y="605" as="geometry" />
+        </mxCell>
+        <mxCell id="r2" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fef3c7;strokeColor=#f59e0b;fontColor=#78350f;fontSize=10;fontFamily=Segoe UI;shadow=1;" value="&lt;b&gt;RETURN&lt;/b&gt;&lt;br&gt;Status → &#39;under_review&#39;&lt;br&gt;Return to Staff with feedback" vertex="1">
+          <mxGeometry height="60" width="190" x="590" y="545" as="geometry" />
+        </mxCell>
+        <mxCell id="r3" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fecaca;strokeColor=#ef4444;fontColor=#991b1b;fontSize=10;fontFamily=Segoe UI;shadow=1;" value="&lt;b&gt;REJECT&lt;/b&gt;&lt;br&gt;Status → &#39;rejected&#39;&lt;br&gt;Document archived" vertex="1">
+          <mxGeometry height="55" width="180" x="590" y="775" as="geometry" />
+        </mxCell>
+        <mxCell id="s8" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d1fae5;strokeColor=#10b981;fontColor=#065f46;fontSize=11;fontFamily=Segoe UI;shadow=1;" value="INSERT into &lt;b&gt;review_logs&lt;/b&gt;&lt;br&gt;&lt;i&gt;(document_type, document_id, action, reason, reviewed_by)&lt;/i&gt;" vertex="1">
+          <mxGeometry height="50" width="360" x="170" y="780" as="geometry" />
+        </mxCell>
+        <mxCell id="s9" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d1fae5;strokeColor=#10b981;fontColor=#065f46;fontSize=11;fontFamily=Segoe UI;shadow=1;" value="Log action to &lt;b&gt;audit_logs&lt;/b&gt;" vertex="1">
+          <mxGeometry height="40" width="240" x="230" y="860" as="geometry" />
+        </mxCell>
+        <mxCell id="se" parent="1" style="rounded=1;whiteSpace=wrap;html=1;arcSize=50;fillColor=#1e3a5f;strokeColor=#0f172a;fontColor=#fff;fontSize=12;fontFamily=Segoe UI;fontStyle=1;shadow=1;" value="&lt;b&gt;END&lt;/b&gt;" vertex="1">
+          <mxGeometry height="40" width="160" x="270" y="935" as="geometry" />
+        </mxCell>
+        <mxCell id="e1" edge="1" parent="1" source="s1" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#374151;strokeWidth=2;" target="s2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e2" edge="1" parent="1" source="s2" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#374151;strokeWidth=2;" target="s3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e3" edge="1" parent="1" source="s3" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#374151;strokeWidth=2;" target="s4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e4" edge="1" parent="1" source="s4" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#374151;strokeWidth=2;" target="s5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e5" edge="1" parent="1" source="s5" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#374151;strokeWidth=2;" target="s6">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e6" edge="1" parent="1" source="s6" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#374151;strokeWidth=2;" target="d1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e7" edge="1" parent="1" source="d1" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#16a34a;strokeWidth=2;fontColor=#16a34a;labelBackgroundColor=#fff;exitX=0;exitY=0.5;entryX=1;entryY=0.5;" target="r1" value="&lt;b&gt;Endorse&lt;/b&gt;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e8" edge="1" parent="1" source="d1" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#f59e0b;strokeWidth=2;fontColor=#f59e0b;labelBackgroundColor=#fff;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" target="r2" value="&lt;b&gt;Return&lt;/b&gt;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="445" y="570" />
+              <mxPoint x="517.5" y="570" />
+              <mxPoint x="517.5" y="575" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e8b" edge="1" parent="1" source="d1" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#ef4444;strokeWidth=2;fontColor=#ef4444;labelBackgroundColor=#fff;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" target="r3" value="&lt;b&gt;Reject&lt;/b&gt;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="445" y="703" />
+              <mxPoint x="590" y="703" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e9" edge="1" parent="1" source="r1" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#374151;strokeWidth=1;entryX=0.2;entryY=0;" target="s8">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e10" edge="1" parent="1" source="r2" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#374151;strokeWidth=1;entryX=0.7;entryY=0;" target="s8">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="685" y="640" />
+              <mxPoint x="530" y="640" />
+              <mxPoint x="530" y="740" />
+              <mxPoint x="410" y="740" />
+              <mxPoint x="410" y="780" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e10b" edge="1" parent="1" source="r3" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#374151;strokeWidth=1;entryX=0.9;entryY=0;" target="s8">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e11" edge="1" parent="1" source="s8" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#374151;strokeWidth=2;" target="s9">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e12" edge="1" parent="1" source="s9" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#374151;strokeWidth=2;" target="se">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="p7" name="7. Approval &amp; Voting">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="1100" pageHeight="1100" math="0" shadow="1">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="t" value="&lt;b&gt;BPA Level 2 — Approval &amp;amp; Voting Subsystem&lt;/b&gt;&lt;br&gt;Actor: SP Members (Sangguniang Panlungsod Members)" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=14;fontFamily=Segoe UI;fontColor=#1e3a5f;" vertex="1" parent="1">
+          <mxGeometry x="80" y="10" width="600" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="s1" value="&lt;b&gt;START&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;arcSize=50;fillColor=#22c55e;strokeColor=#16a34a;fontColor=#fff;fontSize=12;fontFamily=Segoe UI;fontStyle=1;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="270" y="80" width="160" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="s2" value="Endorsed document presented&lt;br&gt;for 2nd Reading" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#3b82f6;fontColor=#1e3a5f;fontSize=11;fontFamily=Segoe UI;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="220" y="150" width="260" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="s3" value="SP Members review, discuss,&lt;br&gt;and debate the document" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#3b82f6;fontColor=#1e3a5f;fontSize=11;fontFamily=Segoe UI;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="220" y="230" width="260" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="d1" value="&lt;b&gt;Approved on&lt;br&gt;2nd Reading?&lt;/b&gt;" style="rhombus;whiteSpace=wrap;html=1;fillColor=#fef3c7;strokeColor=#f59e0b;fontColor=#78350f;fontSize=11;fontFamily=Segoe UI;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="265" y="315" width="170" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="d2" value="&lt;b&gt;Override&lt;br&gt;2/3 Vote?&lt;/b&gt;" style="rhombus;whiteSpace=wrap;html=1;fillColor=#fef3c7;strokeColor=#f59e0b;fontColor=#78350f;fontSize=11;fontFamily=Segoe UI;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="530" y="315" width="160" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="rej" value="Return to Committee&lt;br&gt;&lt;i&gt;(Not Overridden)&lt;/i&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fecaca;strokeColor=#ef4444;fontColor=#991b1b;fontSize=10;fontFamily=Segoe UI;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="540" y="450" width="160" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="s4" value="&lt;b&gt;3rd and Final Reading / Votation&lt;/b&gt;&lt;br&gt;SP Members cast official votes" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#3b82f6;fontColor=#1e3a5f;fontSize=11;fontFamily=Segoe UI;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="220" y="450" width="260" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="s5" value="Record votes in system&lt;br&gt;&lt;i&gt;(vote per SP member logged)&lt;/i&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#3b82f6;fontColor=#1e3a5f;fontSize=11;fontFamily=Segoe UI;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="230" y="535" width="240" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="d3" value="&lt;b&gt;Majority&lt;br&gt;Approved?&lt;/b&gt;" style="rhombus;whiteSpace=wrap;html=1;fillColor=#fef3c7;strokeColor=#f59e0b;fontColor=#78350f;fontSize=11;fontFamily=Segoe UI;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="270" y="620" width="160" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="ap" value="&lt;b&gt;APPROVED&lt;/b&gt;&lt;br&gt;Status → &#39;approved&#39;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d1fae5;strokeColor=#10b981;fontColor=#065f46;fontSize=11;fontFamily=Segoe UI;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="230" y="745" width="240" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="rj" value="&lt;b&gt;REJECTED&lt;/b&gt;&lt;br&gt;Status → &#39;rejected&#39;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fecaca;strokeColor=#ef4444;fontColor=#991b1b;fontSize=11;fontFamily=Segoe UI;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="530" y="645" width="170" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="s6" value="INSERT into &lt;b&gt;review_logs&lt;/b&gt; &amp;amp; &lt;b&gt;audit_logs&lt;/b&gt;&lt;br&gt;&lt;i&gt;(action, votes, reason)&lt;/i&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d1fae5;strokeColor=#10b981;fontColor=#065f46;fontSize=11;fontFamily=Segoe UI;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="195" y="825" width="310" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="s7" value="Generate certified copy&lt;br&gt;&lt;i&gt;(SP Secretary &amp;amp; Presiding Officer)&lt;/i&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#3b82f6;fontColor=#1e3a5f;fontSize=11;fontFamily=Segoe UI;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="220" y="910" width="260" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="se" value="&lt;b&gt;END&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;arcSize=50;fillColor=#1e3a5f;strokeColor=#0f172a;fontColor=#fff;fontSize=12;fontFamily=Segoe UI;fontStyle=1;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="270" y="995" width="160" height="40" as="geometry" />
+        </mxCell>
+        <!-- Edges -->
+        <mxCell id="e1" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#374151;strokeWidth=2;" edge="1" source="s1" target="s2" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e2" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#374151;strokeWidth=2;" edge="1" source="s2" target="s3" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e3" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#374151;strokeWidth=2;" edge="1" source="s3" target="d1" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e4" value="&lt;b&gt;Yes&lt;/b&gt;" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#16a34a;strokeWidth=2;fontColor=#16a34a;labelBackgroundColor=#fff;" edge="1" source="d1" target="s4" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e5" value="&lt;b&gt;No&lt;/b&gt;" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#ef4444;strokeWidth=2;fontColor=#ef4444;labelBackgroundColor=#fff;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" source="d1" target="d2" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e6" value="&lt;b&gt;Overridden&lt;/b&gt;" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#16a34a;strokeWidth=2;fontColor=#16a34a;labelBackgroundColor=#fff;exitX=0;exitY=1;entryX=1;entryY=0;" edge="1" source="d2" target="s4" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e7" value="&lt;b&gt;Not Overridden&lt;/b&gt;" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#ef4444;strokeWidth=2;fontColor=#ef4444;labelBackgroundColor=#fff;" edge="1" source="d2" target="rej" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e8" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#374151;strokeWidth=2;" edge="1" source="s4" target="s5" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e9" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#374151;strokeWidth=2;" edge="1" source="s5" target="d3" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e10" value="&lt;b&gt;Yes&lt;/b&gt;" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#16a34a;strokeWidth=2;fontColor=#16a34a;labelBackgroundColor=#fff;" edge="1" source="d3" target="ap" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e11" value="&lt;b&gt;No&lt;/b&gt;" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#ef4444;strokeWidth=2;fontColor=#ef4444;labelBackgroundColor=#fff;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" source="d3" target="rj" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e12" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#374151;strokeWidth=2;" edge="1" source="ap" target="s6" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e12b" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#374151;strokeWidth=1;entryX=0.8;entryY=0;" edge="1" source="rj" target="s6" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e13" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#374151;strokeWidth=2;" edge="1" source="s6" target="s7" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e14" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#374151;strokeWidth=2;" edge="1" source="s7" target="se" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="p8" name="8. Amendments">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="1100" pageHeight="1000" math="0" shadow="1">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="t" value="&lt;b&gt;BPA Level 2 — Amendments Subsystem&lt;/b&gt;&lt;br&gt;Actors: Legislative Staff, Committee Members" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=14;fontFamily=Segoe UI;fontColor=#1e3a5f;" vertex="1" parent="1">
+          <mxGeometry x="100" y="10" width="550" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="s1" value="&lt;b&gt;START&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;arcSize=50;fillColor=#22c55e;strokeColor=#16a34a;fontColor=#fff;fontSize=12;fontFamily=Segoe UI;fontStyle=1;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="270" y="80" width="160" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="s2" value="Select existing Ordinance&lt;br&gt;or Resolution to amend" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#3b82f6;fontColor=#1e3a5f;fontSize=11;fontFamily=Segoe UI;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="220" y="150" width="260" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="s3" value="Click &#39;Propose Amendment&#39;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#3b82f6;fontColor=#1e3a5f;fontSize=11;fontFamily=Segoe UI;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="230" y="230" width="240" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="s4" value="Fill Amendment Form:&lt;br&gt;&lt;i&gt;• Amendment No. • Description&lt;br&gt;• Specific Changes (old vs new text)&lt;/i&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f1f5f9;strokeColor=#94a3b8;fontColor=#334155;fontSize=11;fontFamily=Segoe UI;shadow=1;dashed=1;" vertex="1" parent="1">
+          <mxGeometry x="210" y="300" width="280" height="65" as="geometry" />
+        </mxCell>
+        <mxCell id="s5" value="INSERT into &lt;b&gt;amendments&lt;/b&gt; table&lt;br&gt;status = &#39;draft&#39;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d1fae5;strokeColor=#10b981;fontColor=#065f46;fontSize=11;fontFamily=Segoe UI;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="220" y="395" width="260" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="d1" value="&lt;b&gt;Submit&lt;br&gt;Amendment?&lt;/b&gt;" style="rhombus;whiteSpace=wrap;html=1;fillColor=#fef3c7;strokeColor=#f59e0b;fontColor=#78350f;fontSize=11;fontFamily=Segoe UI;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="270" y="475" width="160" height="85" as="geometry" />
+        </mxCell>
+        <mxCell id="sv" value="Save as Draft" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f1f5f9;strokeColor=#94a3b8;fontColor=#334155;fontSize=11;fontFamily=Segoe UI;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="530" y="495" width="140" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="s6" value="Status → &#39;submitted&#39;&lt;br&gt;Route to Committee for review" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#3b82f6;fontColor=#1e3a5f;fontSize=11;fontFamily=Segoe UI;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="220" y="600" width="260" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="d2" value="&lt;b&gt;Committee&lt;br&gt;Decision?&lt;/b&gt;" style="rhombus;whiteSpace=wrap;html=1;fillColor=#fef3c7;strokeColor=#f59e0b;fontColor=#78350f;fontSize=11;fontFamily=Segoe UI;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="270" y="690" width="160" height="85" as="geometry" />
+        </mxCell>
+        <mxCell id="a1" value="&lt;b&gt;APPROVED&lt;/b&gt;&lt;br&gt;Apply changes to&lt;br&gt;original document" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d1fae5;strokeColor=#10b981;fontColor=#065f46;fontSize=10;fontFamily=Segoe UI;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="80" y="700" width="160" height="55" as="geometry" />
+        </mxCell>
+        <mxCell id="a2" value="&lt;b&gt;REJECTED&lt;/b&gt;&lt;br&gt;Record reason" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fecaca;strokeColor=#ef4444;fontColor=#991b1b;fontSize=10;fontFamily=Segoe UI;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="500" y="705" width="160" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="s8" value="Log action to &lt;b&gt;audit_logs&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d1fae5;strokeColor=#10b981;fontColor=#065f46;fontSize=11;fontFamily=Segoe UI;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="230" y="810" width="240" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="se" value="&lt;b&gt;END&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;arcSize=50;fillColor=#1e3a5f;strokeColor=#0f172a;fontColor=#fff;fontSize=12;fontFamily=Segoe UI;fontStyle=1;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="270" y="885" width="160" height="40" as="geometry" />
+        </mxCell>
+        <!-- Edges -->
+        <mxCell id="e1" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#374151;strokeWidth=2;" edge="1" source="s1" target="s2" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e2" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#374151;strokeWidth=2;" edge="1" source="s2" target="s3" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e3" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#374151;strokeWidth=2;" edge="1" source="s3" target="s4" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e4" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#374151;strokeWidth=2;" edge="1" source="s4" target="s5" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e5" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#374151;strokeWidth=2;" edge="1" source="s5" target="d1" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e6" value="&lt;b&gt;No&lt;/b&gt;" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#f59e0b;strokeWidth=2;fontColor=#f59e0b;labelBackgroundColor=#fff;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" source="d1" target="sv" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e7" value="&lt;b&gt;Yes&lt;/b&gt;" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#16a34a;strokeWidth=2;fontColor=#16a34a;labelBackgroundColor=#fff;" edge="1" source="d1" target="s6" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e8" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#374151;strokeWidth=2;" edge="1" source="s6" target="d2" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e9" value="&lt;b&gt;Approved&lt;/b&gt;" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#16a34a;strokeWidth=2;fontColor=#16a34a;labelBackgroundColor=#fff;exitX=0;exitY=0.5;entryX=1;entryY=0.5;" edge="1" source="d2" target="a1" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e10" value="&lt;b&gt;Rejected&lt;/b&gt;" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#ef4444;strokeWidth=2;fontColor=#ef4444;labelBackgroundColor=#fff;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" source="d2" target="a2" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e11" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#374151;strokeWidth=1;entryX=0.2;entryY=0;" edge="1" source="a1" target="s8" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e12" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#374151;strokeWidth=1;entryX=0.8;entryY=0;" edge="1" source="a2" target="s8" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e13" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#374151;strokeWidth=2;" edge="1" source="s8" target="se" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="p9" name="9. Publication &amp; Public Portal">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="1100" pageHeight="1100" math="0" shadow="1">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="t" value="&lt;b&gt;BPA Level 2 — Publication &amp;amp; Public Portal Subsystem&lt;/b&gt;&lt;br&gt;Actors: Legislative Staff (publish) | Citizens/Public (view)" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=14;fontFamily=Segoe UI;fontColor=#1e3a5f;" vertex="1" parent="1">
+          <mxGeometry x="60" y="10" width="650" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="s1" value="&lt;b&gt;START&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;arcSize=50;fillColor=#22c55e;strokeColor=#16a34a;fontColor=#fff;fontSize=12;fontFamily=Segoe UI;fontStyle=1;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="270" y="80" width="160" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="s2" value="Document status = &#39;approved&#39;&lt;br&gt;or &#39;enacted&#39;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#3b82f6;fontColor=#1e3a5f;fontSize=11;fontFamily=Segoe UI;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="220" y="150" width="260" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="s3" value="Staff clicks &#39;Publish Document&#39;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#3b82f6;fontColor=#1e3a5f;fontSize=11;fontFamily=Segoe UI;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="230" y="230" width="240" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="s4" value="System sends document content to&lt;br&gt;&lt;b&gt;Groq Cloud API&lt;/b&gt; (Llama LLM)&lt;br&gt;for Plain-Language Summary generation" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ede9fe;strokeColor=#7c3aed;fontColor=#4c1d95;fontSize=11;fontFamily=Segoe UI;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="195" y="300" width="310" height="65" as="geometry" />
+        </mxCell>
+        <mxCell id="s5" value="🤖 AI generates citizen-friendly&lt;br&gt;plain-language summary&lt;br&gt;&lt;i&gt;(translates legal jargon to simple language)&lt;/i&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ede9fe;strokeColor=#7c3aed;fontColor=#4c1d95;fontSize=11;fontFamily=Segoe UI;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="200" y="400" width="300" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="s6" value="Staff reviews &amp;amp; edits summary" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f1f5f9;strokeColor=#94a3b8;fontColor=#334155;fontSize=11;fontFamily=Segoe UI;shadow=1;dashed=1;" vertex="1" parent="1">
+          <mxGeometry x="230" y="495" width="240" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="s7" value="Enter Publication Reference No.&lt;br&gt;Upload official publication file" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f1f5f9;strokeColor=#94a3b8;fontColor=#334155;fontSize=11;fontFamily=Segoe UI;shadow=1;dashed=1;" vertex="1" parent="1">
+          <mxGeometry x="215" y="570" width="270" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="s8" value="INSERT into &lt;b&gt;publications&lt;/b&gt; table&lt;br&gt;&lt;i&gt;(publication_ref, plain_summary, file_path)&lt;/i&gt;&lt;br&gt;UPDATE document status → &#39;published&#39;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d1fae5;strokeColor=#10b981;fontColor=#065f46;fontSize=10;fontFamily=Segoe UI;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="190" y="655" width="320" height="65" as="geometry" />
+        </mxCell>
+        <mxCell id="s9" value="Document visible on &lt;b&gt;Public Portal&lt;/b&gt;&lt;br&gt;&lt;i&gt;(Guest-accessible website)&lt;/i&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#3b82f6;fontColor=#1e3a5f;fontSize=11;fontFamily=Segoe UI;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="215" y="755" width="270" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="s10" value="Citizens can:&lt;br&gt;• Search laws by keyword&lt;br&gt;• Read plain-language summaries&lt;br&gt;• Download official documents" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#3b82f6;fontColor=#1e3a5f;fontSize=10;fontFamily=Segoe UI;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="215" y="840" width="270" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="se" value="&lt;b&gt;END&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;arcSize=50;fillColor=#1e3a5f;strokeColor=#0f172a;fontColor=#fff;fontSize=12;fontFamily=Segoe UI;fontStyle=1;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="270" y="945" width="160" height="40" as="geometry" />
+        </mxCell>
+        <!-- Edges -->
+        <mxCell id="e1" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#374151;strokeWidth=2;" edge="1" source="s1" target="s2" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e2" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#374151;strokeWidth=2;" edge="1" source="s2" target="s3" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e3" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#374151;strokeWidth=2;" edge="1" source="s3" target="s4" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e4" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#374151;strokeWidth=2;" edge="1" source="s4" target="s5" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e5" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#374151;strokeWidth=2;" edge="1" source="s5" target="s6" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e6" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#374151;strokeWidth=2;" edge="1" source="s6" target="s7" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e7" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#374151;strokeWidth=2;" edge="1" source="s7" target="s8" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e8" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#374151;strokeWidth=2;" edge="1" source="s8" target="s9" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e9" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#374151;strokeWidth=2;" edge="1" source="s9" target="s10" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e10" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#374151;strokeWidth=2;" edge="1" source="s10" target="se" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="p10" name="10. Implementation Monitoring">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="1100" pageHeight="900" math="0" shadow="1">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="t" value="&lt;b&gt;BPA Level 2 — Implementation Monitoring Subsystem&lt;/b&gt;&lt;br&gt;Actor: Legislative Staff / Super Admin" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=14;fontFamily=Segoe UI;fontColor=#1e3a5f;" vertex="1" parent="1">
+          <mxGeometry x="80" y="10" width="600" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="s1" value="&lt;b&gt;START&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;arcSize=50;fillColor=#22c55e;strokeColor=#16a34a;fontColor=#fff;fontSize=12;fontFamily=Segoe UI;fontStyle=1;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="270" y="80" width="160" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="s2" value="Select enacted Ordinance&lt;br&gt;or Resolution" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#3b82f6;fontColor=#1e3a5f;fontSize=11;fontFamily=Segoe UI;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="220" y="150" width="260" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="s3" value="Click &#39;Add Monitoring Log&#39;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#3b82f6;fontColor=#1e3a5f;fontSize=11;fontFamily=Segoe UI;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="230" y="230" width="240" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="s4" value="Set Implementation Status:&lt;br&gt;&lt;i&gt;• Pending • Ongoing&lt;br&gt;• Completed • Delayed&lt;/i&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f1f5f9;strokeColor=#94a3b8;fontColor=#334155;fontSize=11;fontFamily=Segoe UI;shadow=1;dashed=1;" vertex="1" parent="1">
+          <mxGeometry x="215" y="300" width="270" height="65" as="geometry" />
+        </mxCell>
+        <mxCell id="s5" value="Add implementation notes / remarks" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f1f5f9;strokeColor=#94a3b8;fontColor=#334155;fontSize=11;fontFamily=Segoe UI;shadow=1;dashed=1;" vertex="1" parent="1">
+          <mxGeometry x="220" y="400" width="260" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="s6" value="INSERT into &lt;b&gt;monitoring_logs&lt;/b&gt; table&lt;br&gt;&lt;i&gt;(implementation_status, notes, logged_by)&lt;/i&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d1fae5;strokeColor=#10b981;fontColor=#065f46;fontSize=11;fontFamily=Segoe UI;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="195" y="475" width="310" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="d1" value="&lt;b&gt;Implementation&lt;br&gt;Complete?&lt;/b&gt;" style="rhombus;whiteSpace=wrap;html=1;fillColor=#fef3c7;strokeColor=#f59e0b;fontColor=#78350f;fontSize=11;fontFamily=Segoe UI;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="265" y="560" width="170" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="s7" value="Schedule next&lt;br&gt;monitoring update" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#3b82f6;fontColor=#1e3a5f;fontSize=10;fontFamily=Segoe UI;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="530" y="580" width="160" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="s8" value="Mark as &lt;b&gt;Completed&lt;/b&gt;&lt;br&gt;Log to &lt;b&gt;audit_logs&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d1fae5;strokeColor=#10b981;fontColor=#065f46;fontSize=11;fontFamily=Segoe UI;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="230" y="690" width="240" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="se" value="&lt;b&gt;END&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;arcSize=50;fillColor=#1e3a5f;strokeColor=#0f172a;fontColor=#fff;fontSize=12;fontFamily=Segoe UI;fontStyle=1;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="270" y="770" width="160" height="40" as="geometry" />
+        </mxCell>
+        <!-- Edges -->
+        <mxCell id="e1" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#374151;strokeWidth=2;" edge="1" source="s1" target="s2" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e2" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#374151;strokeWidth=2;" edge="1" source="s2" target="s3" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e3" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#374151;strokeWidth=2;" edge="1" source="s3" target="s4" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e4" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#374151;strokeWidth=2;" edge="1" source="s4" target="s5" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e5" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#374151;strokeWidth=2;" edge="1" source="s5" target="s6" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e6" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#374151;strokeWidth=2;" edge="1" source="s6" target="d1" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e7" value="&lt;b&gt;No&lt;/b&gt;" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#f59e0b;strokeWidth=2;fontColor=#f59e0b;labelBackgroundColor=#fff;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" source="d1" target="s7" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e7b" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#f59e0b;strokeWidth=1;dashed=1;exitX=0.5;exitY=0;entryX=1;entryY=0.5;" edge="1" source="s7" target="s3" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="610" y="250" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e8" value="&lt;b&gt;Yes&lt;/b&gt;" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#16a34a;strokeWidth=2;fontColor=#16a34a;labelBackgroundColor=#fff;" edge="1" source="d1" target="s8" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e9" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#374151;strokeWidth=2;" edge="1" source="s8" target="se" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="p11" name="11. Archive Management">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="1100" pageHeight="750" math="0" shadow="1">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="t" value="&lt;b&gt;BPA Level 2 — Archive Management Subsystem&lt;/b&gt;&lt;br&gt;Actor: Legislative Staff / Super Admin" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=14;fontFamily=Segoe UI;fontColor=#1e3a5f;" vertex="1" parent="1">
+          <mxGeometry x="100" y="10" width="550" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="s1" value="&lt;b&gt;START&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;arcSize=50;fillColor=#22c55e;strokeColor=#16a34a;fontColor=#fff;fontSize=12;fontFamily=Segoe UI;fontStyle=1;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="270" y="80" width="160" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="s2" value="Open Archive Module&lt;br&gt;Browse / Search documents" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#3b82f6;fontColor=#1e3a5f;fontSize=11;fontFamily=Segoe UI;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="220" y="150" width="260" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="s3" value="Select document to archive" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#3b82f6;fontColor=#1e3a5f;fontSize=11;fontFamily=Segoe UI;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="230" y="230" width="240" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="d1" value="&lt;b&gt;Meets archival&lt;br&gt;criteria?&lt;/b&gt;&lt;br&gt;&lt;i&gt;(enacted/rejected/&lt;br&gt;superseded)&lt;/i&gt;" style="rhombus;whiteSpace=wrap;html=1;fillColor=#fef3c7;strokeColor=#f59e0b;fontColor=#78350f;fontSize=10;fontFamily=Segoe UI;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="255" y="305" width="190" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="s4" value="Cannot archive:&lt;br&gt;Document still active" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fecaca;strokeColor=#ef4444;fontColor=#991b1b;fontSize=11;fontFamily=Segoe UI;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="530" y="335" width="180" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="s5" value="UPDATE status = &#39;archived&#39;&lt;br&gt;in &lt;b&gt;ordinances/resolutions&lt;/b&gt; table" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d1fae5;strokeColor=#10b981;fontColor=#065f46;fontSize=11;fontFamily=Segoe UI;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="210" y="455" width="280" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="s6" value="Document searchable in Archive&lt;br&gt;&lt;i&gt;(can be retrieved for reference)&lt;/i&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#3b82f6;fontColor=#1e3a5f;fontSize=11;fontFamily=Segoe UI;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="215" y="540" width="270" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="s7" value="Log action to &lt;b&gt;audit_logs&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d1fae5;strokeColor=#10b981;fontColor=#065f46;fontSize=11;fontFamily=Segoe UI;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="230" y="620" width="240" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="se" value="&lt;b&gt;END&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;arcSize=50;fillColor=#1e3a5f;strokeColor=#0f172a;fontColor=#fff;fontSize=12;fontFamily=Segoe UI;fontStyle=1;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="270" y="695" width="160" height="40" as="geometry" />
+        </mxCell>
+        <!-- Edges -->
+        <mxCell id="e1" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#374151;strokeWidth=2;" edge="1" source="s1" target="s2" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e2" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#374151;strokeWidth=2;" edge="1" source="s2" target="s3" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e3" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#374151;strokeWidth=2;" edge="1" source="s3" target="d1" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e4" value="&lt;b&gt;No&lt;/b&gt;" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#ef4444;strokeWidth=2;fontColor=#ef4444;labelBackgroundColor=#fff;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" source="d1" target="s4" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e5" value="&lt;b&gt;Yes&lt;/b&gt;" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#16a34a;strokeWidth=2;fontColor=#16a34a;labelBackgroundColor=#fff;" edge="1" source="d1" target="s5" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e6" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#374151;strokeWidth=2;" edge="1" source="s5" target="s6" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e7" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#374151;strokeWidth=2;" edge="1" source="s6" target="s7" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e8" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#374151;strokeWidth=2;" edge="1" source="s7" target="se" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="p12" name="12. Audit Trail &amp; Logging">
+    <mxGraphModel dx="1414" dy="785" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="1100" pageHeight="750" math="0" shadow="1">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="t" parent="1" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=14;fontFamily=Segoe UI;fontColor=#1e3a5f;" value="&lt;b&gt;BPA Level 2 — Audit Trail &amp;amp; Logging Subsystem&lt;/b&gt;&lt;br&gt;Actor: System (Automatic) | Viewer: Super Admin" vertex="1">
+          <mxGeometry height="50" width="600" x="80" y="10" as="geometry" />
+        </mxCell>
+        <mxCell id="s1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;arcSize=50;fillColor=#22c55e;strokeColor=#16a34a;fontColor=#fff;fontSize=11;fontFamily=Segoe UI;fontStyle=1;shadow=1;" value="&lt;b&gt;START&lt;/b&gt;&lt;br&gt;(Any system action triggered)" vertex="1">
+          <mxGeometry height="45" width="240" x="230" y="80" as="geometry" />
+        </mxCell>
+        <mxCell id="s2" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#3b82f6;fontColor=#1e3a5f;fontSize=10;fontFamily=Segoe UI;shadow=1;" value="System automatically captures:&lt;br&gt;&lt;i&gt;• user_id (who performed action)&lt;br&gt;• action (CREATE / UPDATE / DELETE / LOGIN)&lt;br&gt;• table_name (which table was affected)&lt;br&gt;• record_id (which record)&lt;br&gt;• old_value → new_value (what changed)&lt;br&gt;• ip_address • timestamp&lt;/i&gt;" vertex="1">
+          <mxGeometry height="120" width="320" x="190" y="160" as="geometry" />
+        </mxCell>
+        <mxCell id="s3" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d1fae5;strokeColor=#10b981;fontColor=#065f46;fontSize=11;fontFamily=Segoe UI;shadow=1;" value="INSERT into &lt;b&gt;audit_logs&lt;/b&gt; table&lt;br&gt;&lt;i&gt;(stored as JSON for structured querying)&lt;/i&gt;" vertex="1">
+          <mxGeometry height="50" width="300" x="200" y="315" as="geometry" />
+        </mxCell>
+        <mxCell id="s4" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#3b82f6;fontColor=#1e3a5f;fontSize=11;fontFamily=Segoe UI;shadow=1;" value="Super Admin opens Audit Logs Module" vertex="1">
+          <mxGeometry height="40" width="260" x="220" y="400" as="geometry" />
+        </mxCell>
+        <mxCell id="s5" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f1f5f9;strokeColor=#94a3b8;fontColor=#334155;fontSize=11;fontFamily=Segoe UI;shadow=1;dashed=1;" value="Filter logs by:&lt;br&gt;&lt;i&gt;• User • Action Type • Date Range&lt;br&gt;• Table • Record ID&lt;/i&gt;" vertex="1">
+          <mxGeometry height="65" width="270" x="215" y="475" as="geometry" />
+        </mxCell>
+        <mxCell id="s6" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dbeafe;strokeColor=#3b82f6;fontColor=#1e3a5f;fontSize=11;fontFamily=Segoe UI;shadow=1;" value="View detailed log entries&lt;br&gt;Export audit reports" vertex="1">
+          <mxGeometry height="50" width="250" x="225" y="575" as="geometry" />
+        </mxCell>
+        <mxCell id="se" parent="1" style="rounded=1;whiteSpace=wrap;html=1;arcSize=50;fillColor=#1e3a5f;strokeColor=#0f172a;fontColor=#fff;fontSize=12;fontFamily=Segoe UI;fontStyle=1;shadow=1;" value="&lt;b&gt;END&lt;/b&gt;" vertex="1">
+          <mxGeometry height="40" width="160" x="270" y="660" as="geometry" />
+        </mxCell>
+        <mxCell id="e1" edge="1" parent="1" source="s1" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#374151;strokeWidth=2;" target="s2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e2" edge="1" parent="1" source="s2" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#374151;strokeWidth=2;" target="s3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e3" edge="1" parent="1" source="s3" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#374151;strokeWidth=2;" target="s4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e4" edge="1" parent="1" source="s4" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#374151;strokeWidth=2;" target="s5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e5" edge="1" parent="1" source="s5" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#374151;strokeWidth=2;" target="s6">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e6" edge="1" parent="1" source="s6" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#374151;strokeWidth=2;" target="se">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

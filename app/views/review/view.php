@@ -16,7 +16,7 @@ $userRole = $_SESSION['user_role'] ?? '';
 
 $canAct = in_array($userRole, ['sp_member', 'committee_member', 'super_admin']);
 
-$allowedStatuses = ['pending_review', 'submitted', 'reviewed'];
+$allowedStatuses = [STATUS_PENDING, STATUS_REVIEWED];
 $canReview = $canAct && in_array($document['status'], $allowedStatuses);
 
 // AI report helpers
@@ -89,6 +89,13 @@ $aiStatusColor = match($aiReport['validation_status'] ?? '') {
 
                     <span class="doc-meta-label">Author</span>
                     <span class="doc-meta-value"><?= htmlspecialchars($document['author_name'] ?? 'Unknown') ?></span>
+
+                    <?php if (!empty($document['committee_name'])): ?>
+                    <span class="doc-meta-label">Committee</span>
+                    <span class="doc-meta-value" style="font-weight:600; color:var(--color-primary);">
+                        <?= htmlspecialchars($document['committee_name']) ?>
+                    </span>
+                    <?php endif; ?>
 
                     <span class="doc-meta-label">Date Filed</span>
                     <span class="doc-meta-value">

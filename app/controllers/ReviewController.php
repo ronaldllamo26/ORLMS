@@ -34,9 +34,11 @@ class ReviewController extends Controller
             "SELECT o.id, o.ordinance_no AS doc_no, o.title, o.subject,
                     o.status, o.date_filed, o.created_at,
                     u.name AS author_name,
+                    c.name AS committee_name,
                     'ordinance' AS doc_type
              FROM ordinances o
              LEFT JOIN users u ON o.author_id = u.id
+             LEFT JOIN committees c ON o.committee_id = c.id
              WHERE o.status IN ('submitted','under_review')
              ORDER BY o.created_at ASC"
         );
@@ -48,9 +50,11 @@ class ReviewController extends Controller
             "SELECT r.id, r.resolution_no AS doc_no, r.title, r.subject,
                     r.status, r.date_filed, r.created_at,
                     u.name AS author_name,
+                    c.name AS committee_name,
                     'resolution' AS doc_type
              FROM resolutions r
              LEFT JOIN users u ON r.author_id = u.id
+             LEFT JOIN committees c ON r.committee_id = c.id
              WHERE r.status IN ('submitted','under_review')
              ORDER BY r.created_at ASC"
         );

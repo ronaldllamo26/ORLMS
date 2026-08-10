@@ -70,11 +70,17 @@ class OrdinanceController extends Controller
         $stmt->execute([':id' => (int) $id]);
         $reviewHistory = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
+        // Fetch all active committees for the referral dropdown
+        $stmtComm = $db->prepare("SELECT id, name FROM committees WHERE is_active = TRUE ORDER BY name ASC");
+        $stmtComm->execute();
+        $committees = $stmtComm->fetchAll(PDO::FETCH_ASSOC);
+
         $this->render('ordinances/view', [
             'pageTitle'     => $ordinance['ordinance_no'] ?? 'View Ordinance',
             'ordinance'     => $ordinance,
             'aiReport'      => $aiReport,
             'reviewHistory' => $reviewHistory,
+            'committees'    => $committees, // Pass committees list
         ]);
     }
 
@@ -350,6 +356,78 @@ class OrdinanceController extends Controller
         }
 
         $this->redirect('ordinance');
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // REFER — Refer ordinance to a committee (POST)
+    // ─────────────────────────────────────────────────────────────────────────
+    public function refer(string $id): void
+    {
+        $this->requireRole([ROLE_LEGISLATIVE_STAFF, ROLE_SUPER_ADMIN]);
+
+        if (!$this->isPost()) {
+            $this->redirect('ordinance/view/' . $id);
+        }
+
+        $committeeId = (int) $this->post('committee_id');
+        if (!$committeeId) {
+            $this->flash('error', 'Please select a valid committee.');
+            $this->redirect('ordinance/view/' . $id);
+        }
+
+        $ordinance = $this->ordinanceModel->findById((int) $id);
+        if (!$ordinance) {
+            $this->flash('error', 'Ordinance not found.');
+            $this->redirect('ordinance');
+        }
+
+        // Can only refer if status is 'submitted' (or 'under_review' to change committee)
+        if (!in_array($ordinance['status'], [STATUS_PENDING, STATUS_REVIEWED])) {
+            $this->flash('error', 'Only submitted documents can be referred to a committee.');
+            $this->redirect('ordinance/view/' . $id);
+        }
+
+        // Update committee_id and status to 'under_review' (STATUS_REVIEWED)
+        $updated = $this->ordinanceModel->update((int) $id, [
+            'committee_id' => $committeeId,
+            'status'       => STATUS_REVIEWED
+        ]);
+
+        if ($updated) {
+            $db = \Database::getInstance()->getConnection();
+            $stmt = $db->prepare("SELECT name FROM committees WHERE id = :id");
+            $stmt->execute([':id' => $committeeId]);
+            $comm = $stmt->fetch(PDO::FETCH_ASSOC);
+            $commName = $comm['name'] ?? 'Unknown Committee';
+
+            // Log review action
+            $stmtLog = $db->prepare(
+                "INSERT INTO review_logs (document_type, document_id, action, reason, reviewed_by)
+                 VALUES ('ordinance', :id, 'referred', :reason, :user)"
+            );
+            $stmtLog->execute([
+                ':id'     => (int) $id,
+                ':reason' => 'Referred to ' . $commName,
+                ':user'   => $this->userId(),
+            ]);
+
+            // Audit log
+            $userModel = $this->model('UserModel');
+            $userModel->logAudit(
+                $this->userId(),
+                'REFER_COMMITTEE',
+                'ordinances',
+                (int) $id,
+                ['status' => $ordinance['status'], 'committee_id' => $ordinance['committee_id']],
+                ['status' => STATUS_REVIEWED, 'committee_id' => $committeeId]
+            );
+
+            $this->flash('success', 'Ordinance has been successfully referred to ' . $commName . '.');
+        } else {
+            $this->flash('error', 'Failed to refer ordinance to committee.');
+        }
+
+        $this->redirect('ordinance/view/' . $id);
     }
 
     // ─────────────────────────────────────────────────────────────────────────

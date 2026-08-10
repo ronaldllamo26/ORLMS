@@ -34,11 +34,12 @@ class Database
             PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,   // Throw exceptions on error
             PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,         // Return arrays by default
             PDO::ATTR_EMULATE_PREPARES   => false,                    // Use real prepared statements
-            PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8mb4"       // Enforce UTF-8 encoding
         ];
 
         try {
             $this->connection = new PDO(DB_DSN, DB_USER, DB_PASS, $options);
+            // Set client encoding for PostgreSQL
+            $this->connection->exec("SET client_encoding TO '" . DB_CHARSET . "'");
         } catch (PDOException $e) {
             // Show a clean error — never expose raw PDO errors in production
             die('ORLMS Database Error: Unable to connect to the database. ' . $e->getMessage());

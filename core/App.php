@@ -24,7 +24,7 @@ class App
     // ─────────────────────────────────────────────────────────────────────────
 
     /** Default controller when no URL segment is provided */
-    protected string $defaultController = 'DashboardController';
+    protected string $defaultController = 'HomeController';
 
     /** Default method when no method segment is provided */
     protected string $defaultMethod = 'index';

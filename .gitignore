@@ -40,3 +40,12 @@ desktop.ini
 
 # XAMPP / Apache logs
 *.log
+
+# Configuration files (containing secrets)
+config/config.php
+
+# Exclude Composer vendor directory
+vendor/
+
+# Exclude large ngrok executable
+ngrok.exe

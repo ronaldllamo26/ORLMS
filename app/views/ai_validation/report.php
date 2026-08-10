@@ -2,10 +2,9 @@
 /**
  * ORLMS - AI Validation Report Detail View
  *
- * Variables:
- *   $report              — the validation report record
- *   $completenessDetails — decoded JSON from completeness_details
- *   $similarityDetails   — decoded JSON from similarity_details
+ * @var array $report              The validation report record
+ * @var array $completenessDetails Decoded JSON from completeness_details
+ * @var array $similarityDetails   Decoded JSON from similarity_details
  */
 
 $statusColor = match($report['validation_status']) {

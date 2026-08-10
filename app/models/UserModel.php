@@ -70,7 +70,7 @@ class UserModel extends Model
             'email'      => $email,
             'password'   => password_hash($plainPassword, PASSWORD_BCRYPT),
             'role'       => $role,
-            'is_active'  => 1,
+            'is_active'  => true,
         ]);
     }
 
@@ -118,7 +118,7 @@ class UserModel extends Model
     public function setActiveStatus(int $id, bool $isActive): bool
     {
         return $this->update($id, [
-            'is_active' => $isActive ? 1 : 0,
+            'is_active' => $isActive,
         ]);
     }
 
@@ -133,7 +133,7 @@ class UserModel extends Model
         $rows = $this->query(
             "SELECT role, COUNT(*) as total
              FROM users
-             WHERE is_active = 1
+             WHERE is_active = TRUE
              GROUP BY role"
         );
 

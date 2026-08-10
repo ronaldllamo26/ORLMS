@@ -2,12 +2,18 @@
 /**
  * ORLMS - Archive Detail View (Read-Only)
  *
- * Variables:
+ * Variables injected via extract() from ArchiveController::view():
  *   $document        — the archived document record
  *   $docType         — 'ordinance' or 'resolution'
  *   $workflowHistory — full review log from submission to rejection
  *   $rejectionEntry  — the specific rejection log entry
  *   $aiReport        — AI validation report or false
+ *
+ * @var array       $document
+ * @var string      $docType
+ * @var array       $workflowHistory
+ * @var array|null  $rejectionEntry
+ * @var array|false $aiReport
  */
 
 $noField = $docType === 'ordinance' ? 'ordinance_no' : 'resolution_no';
@@ -242,13 +248,47 @@ $docNo   = $document[$noField] ?? 'N/A';
                     <div style="font-size:18px; font-weight:700; color:#dc3545; margin-bottom:6px;">
                         REJECTED
                     </div>
-                    <div style="font-size:12px; color:var(--color-text-muted); line-height:1.6;">
+                    <div style="font-size:12px; color:var(--color-text-muted); line-height:1.6; margin-bottom:16px;">
                         This document was permanently rejected and
                         moved to the Archive. It cannot be reactivated.
                     </div>
+                    <?php if ($document['status'] === 'rejected' && in_array($_SESSION['user_role'] ?? '', ['legislative_staff', 'super_admin'])): ?>
+                    <button type="button" class="btn btn-sm btn-outline-danger w-100" data-bs-toggle="modal" data-bs-target="#overrideModal">
+                        Override Committee Decision
+                    </button>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>
+
+        <!-- Override Modal -->
+        <?php if ($document['status'] === 'rejected' && in_array($_SESSION['user_role'] ?? '', ['legislative_staff', 'super_admin'])): ?>
+        <div class="modal fade" id="overrideModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form action="<?= APP_ROOT_URL ?>/archive/override/<?= $docType ?>/<?= $document['id'] ?>" method="POST">
+                        <div class="modal-header">
+                            <h5 class="modal-title text-danger">Override Committee Decision</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body text-start">
+                            <div class="alert alert-warning" style="font-size:13px;">
+                                <strong>Warning:</strong> You are overriding a committee rejection. This requires a <strong>2/3 override vote</strong> by the council.
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Reason / Reference (e.g. Minutes of Meeting Date) <span class="form-required">*</span></label>
+                                <textarea name="override_reason" class="form-control" rows="3" required></textarea>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-danger">Confirm Override</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <?php endif; ?>
 
         <!-- AI Validation (if any) -->
         <div class="card">

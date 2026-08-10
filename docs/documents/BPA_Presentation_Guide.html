@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ORLMS - BPA Presentation Guide</title>
+    <!-- Modern Google Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --color-primary: #1e3a8a;
+            --color-primary-light: #eff6ff;
+            --color-secondary: #0f172a;
+            --color-success: #10b981;
+            --color-success-light: #ecfdf5;
+            --color-warning: #f59e0b;
+            --color-warning-light: #fffbeb;
+            --color-danger: #ef4444;
+            --color-danger-light: #fef2f2;
+            --color-text: #334155;
+            --color-text-light: #64748b;
+            --color-border: #e2e8f0;
+            --radius-md: 12px;
+            --radius-sm: 8px;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.05), 0 1px 2px rgba(0,0,0,0.02);
+            --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -1px rgba(0,0,0,0.02);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            color: var(--color-text);
+            background-color: #f8fafc;
+            line-height: 1.6;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: #ffffff;
+            padding: 50px;
+            border-radius: 20px;
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--color-border);
+            position: relative;
+        }
+
+        /* Header Style */
+        .header {
+            text-align: center;
+            margin-bottom: 45px;
+            border-bottom: 2px dashed var(--color-border);
+            padding-bottom: 30px;
+        }
+
+        .system-badge {
+            display: inline-block;
+            background-color: var(--color-primary-light);
+            color: var(--color-primary);
+            padding: 6px 14px;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 15px;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        h1 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 32px;
+            color: var(--color-secondary);
+            font-weight: 800;
+            margin-bottom: 10px;
+            letter-spacing: -0.5px;
+        }
+
+        .subtitle {
+            color: var(--color-text-light);
+            font-size: 16px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Action floating print button */
+        .actions-panel {
+            position: absolute;
+            top: 30px;
+            right: 50px;
+        }
+
+        .btn-print {
+            background-color: var(--color-primary);
+            color: #ffffff;
+            border: none;
+            padding: 10px 20px;
+            font-size: 14px;
+            font-weight: 600;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 12px rgba(30, 58, 138, 0.15);
+        }
+
+        .btn-print:hover {
+            background-color: #172554;
+            transform: translateY(-1px);
+        }
+
+        /* Phase Styling */
+        .phase-section {
+            margin-bottom: 50px;
+        }
+
+        .phase-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 20px;
+            color: var(--color-secondary);
+            border-left: 5px solid var(--color-primary);
+            padding-left: 15px;
+            margin-bottom: 25px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .phase-subtitle {
+            font-size: 14px;
+            color: var(--color-text-light);
+            margin-top: -20px;
+            margin-bottom: 25px;
+            font-style: italic;
+        }
+
+        /* Step Card Styling */
+        .step-card {
+            background: #ffffff;
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-md);
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: var(--shadow-sm);
+            transition: all 0.2s ease;
+        }
+
+        .step-card:hover {
+            box-shadow: var(--shadow-md);
+            border-color: #cbd5e1;
+        }
+
+        .step-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 18px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .step-number-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .step-number {
+            background-color: var(--color-secondary);
+            color: #ffffff;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 14px;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        .step-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--color-secondary);
+        }
+
+        .module-badge {
+            background-color: #f1f5f9;
+            color: #475569;
+            padding: 5px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            border: 1px solid #e2e8f0;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .module-badge strong {
+            color: var(--color-primary);
+        }
+
+        .decision-badge {
+            background-color: var(--color-warning-light);
+            color: var(--color-warning);
+            border-color: #fef3c7;
+        }
+
+        /* Script/Bubble Styling */
+        .script-section {
+            margin-top: 15px;
+        }
+
+        .script-label {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: var(--color-primary);
+            letter-spacing: 1px;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .script-bubble {
+            background-color: #f8fafc;
+            border-left: 4px solid var(--color-primary);
+            padding: 15px;
+            border-radius: 0 var(--radius-sm) var(--radius-sm) var(--radius-sm);
+            font-size: 14px;
+            color: var(--color-secondary);
+        }
+
+        /* Info Alert boxes */
+        .alert-box {
+            margin-top: 15px;
+            padding: 12px 15px;
+            border-radius: var(--radius-sm);
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .alert-info {
+            background-color: var(--color-primary-light);
+            color: #1e40af;
+            border: 1px solid #dbeafe;
+        }
+
+        .alert-warning {
+            background-color: var(--color-warning-light);
+            color: #92400e;
+            border: 1px solid #fef3c7;
+        }
+
+        /* Print media settings */
+        @media print {
+            body {
+                background: none;
+                padding: 0;
+            }
+
+            .container {
+                box-shadow: none;
+                border: none;
+                padding: 0;
+                max-width: 100%;
+            }
+
+            .btn-print {
+                display: none;
+            }
+
+            .step-card {
+                page-break-inside: avoid;
+            }
+
+            .phase-section {
+                page-break-inside: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        
+        <!-- Action floating button -->
+        <div class="actions-panel">
+            <button class="btn-print" onclick="window.print()">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V2h12v7"></path><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+                Print / Save as PDF
+            </button>
+        </div>
+
+        <!-- Header -->
+        <div class="header">
+            <span class="system-badge">ORLMS Presentation Guide</span>
+            <h1>BPA Presentation Guide</h1>
+            <p class="subtitle">Direct at detalyadong gabay sa pagpapaliwanag ng BPA flowchart sa inyong defense.</p>
+        </div>
+
+        <!-- PHASE 1 -->
+        <div class="phase-section">
+            <h2 class="phase-title">Phase 1: Paghahanda at Pagsusuri ng AI (Steps 1 - 2)</h2>
+
+            <!-- Step 1 -->
+            <div class="step-card">
+                <div class="step-header">
+                    <div class="step-number-title">
+                        <span class="step-number">1</span>
+                        <span class="step-title">Document Filing (Drafting)</span>
+                    </div>
+                    <span class="module-badge">Module: <strong>Ordinances / Resolutions</strong></span>
+                </div>
+                <div class="script-section">
+                    <span class="script-label">🗣️ Script:</span>
+                    <div class="script-bubble">
+                        "Dito nag-e-encode ang Legislative Staff ng title, subject, at content ng batas. Pagka-submit, automatic na gagawa ang system ng Tracking Number at ise-save ang draft status sa database."
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 2 -->
+            <div class="step-card">
+                <div class="step-header">
+                    <div class="step-number-title">
+                        <span class="step-number">2</span>
+                        <span class="step-title">AI Validation Engine</span>
+                    </div>
+                    <span class="module-badge">Module: <strong>AI Validation Reports</strong></span>
+                </div>
+                <div class="script-section">
+                    <span class="script-label">🗣️ Script:</span>
+                    <div class="script-bubble">
+                        "Ipapadala ng system ang draft sa Groq API (Llama AI) para sa dalawang bagay: (1) <strong>Completeness Check</strong> para makita kung may kulang na legal parts, at (2) <strong>Similarity Check</strong> para malaman kung may katulad o duplicate na batas sa database natin."
+                    </div>
+                </div>
+            </div>
+
+            <!-- Decision Box -->
+            <div class="step-card" style="border-left: 4px solid var(--color-warning);">
+                <div class="step-header">
+                    <div class="step-number-title">
+                        <span class="step-number" style="background-color:var(--color-warning);">?</span>
+                        <span class="step-title">Decision: AI Validation Passed?</span>
+                    </div>
+                    <span class="module-badge decision-badge">Flow Chart Branch</span>
+                </div>
+                <div class="script-section">
+                    <span class="script-label">🗣️ Script:</span>
+                    <div class="script-bubble">
+                        "Kapag Passed ang AI validation, tuloy sa susunod na hakbang. Kapag Failed o Flagged (may kapareho), ibabalik sa Staff para baguhin o i-revise."
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PHASE 2 -->
+        <div class="phase-section">
+            <h2 class="phase-title">Phase 2: Pagdedebate at Botohan ng Konseho (Steps 3 - 7)</h2>
+
+            <!-- Step 3 -->
+            <div class="step-card">
+                <div class="step-header">
+                    <div class="step-number-title">
+                        <span class="step-number">3</span>
+                        <span class="step-title">First Reading & Committee Referral</span>
+                    </div>
+                    <span class="module-badge">Module: <strong>Ordinances / Resolutions List</strong></span>
+                </div>
+                <div class="script-section">
+                    <span class="script-label">🗣️ Script:</span>
+                    <div class="script-bubble">
+                        "Dito babasahin ang title ng batas sa First Reading. Pagkatapos, i-a-assign ng SP Secretary ang batas sa tamang Committee (halimbawa: Committee on Laws). Ang status nito ay magiging <code>under_review</code>."
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 4 -->
+            <div class="step-card">
+                <div class="step-header">
+                    <div class="step-number-title">
+                        <span class="step-number">4</span>
+                        <span class="step-title">Committee Review & Deliberation</span>
+                    </div>
+                    <span class="module-badge">Module: <strong>Review and Endorsement</strong></span>
+                </div>
+                <div class="script-section">
+                    <span class="script-label">🗣️ Script:</span>
+                    <div class="script-bubble">
+                        "Pag-aaralan ng committee members ang batas kasama ang AI validation report. Magpapasya sila kung ito ay: (1) <strong>Endorsed</strong> para ma-approve, (2) <strong>Returned</strong> para ipa-revise, o (3) <strong>Rejected</strong> para i-archive."
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 5 -->
+            <div class="step-card">
+                <div class="step-header">
+                    <div class="step-number-title">
+                        <span class="step-number">5</span>
+                        <span class="step-title">Second Reading (Debate & Amendments)</span>
+                    </div>
+                    <span class="module-badge">Module: <strong>Amendments and Revisions</strong></span>
+                </div>
+                <div class="script-section">
+                    <span class="script-label">🗣️ Script:</span>
+                    <div class="script-bubble">
+                        "Dito pagdedebatihan ng buong konseho ang batas. Kung may mga pagbabago o amendments, i-e-encode ito ng staff sa system bago ipadala ang batas para sa final voting."
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 6 -->
+            <div class="step-card">
+                <div class="step-header">
+                    <div class="step-number-title">
+                        <span class="step-number">6</span>
+                        <span class="step-title">Third & Final Reading (Voting)</span>
+                    </div>
+                    <span class="module-badge">Module: <strong>Approval and Enactment</strong></span>
+                </div>
+                <div class="script-section">
+                    <span class="script-label">🗣️ Script:</span>
+                    <div class="script-bubble">
+                        "Dito na po ang huling botohan sa Plenary Session. Magpapasok ng boto ang bawat SP Member (Yes, No, Abstain), at ang system na mismo ang magbibilang at magtatala ng voting results."
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 7 -->
+            <div class="step-card">
+                <div class="step-header">
+                    <div class="step-number-title">
+                        <span class="step-number">7</span>
+                        <span class="step-title">Executive Signature / Attestation</span>
+                    </div>
+                    <span class="module-badge">Module: <strong>Approval and Enactment (Enact Screen)</strong></span>
+                </div>
+                <div class="script-section">
+                    <span class="script-label">🗣️ Script:</span>
+                    <div class="script-bubble">
+                        "Ipadadala ang batas sa Mayor (LCE) para pirmahan. Kung <strong>Signed</strong>, magiging active na batas (enacted). Kung <strong>Vetoed</strong> naman (tinanggihan), babalik ang batas sa Step 3 (Committee Referral) gamit ang red dashed line."
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PHASE 3 -->
+        <div class="phase-section">
+            <h2 class="phase-title">Phase 3: Pagpapatupad, Review, at Monitoring (Steps 8 - 11)</h2>
+
+            <!-- Step 8 -->
+            <div class="step-card">
+                <div class="step-header">
+                    <div class="step-number-title">
+                        <span class="step-number">8</span>
+                        <span class="step-title">AI Summary & Portal Publication</span>
+                    </div>
+                    <span class="module-badge">Module: <strong>Publications</strong></span>
+                </div>
+                <div class="script-section">
+                    <span class="script-label">🗣️ Script:</span>
+                    <div class="script-bubble">
+                        "Pagka-enact, i-po-post ng Staff ang batas sa web portal. Gagamit ulit ng Llama AI para mag-generate ng <strong>Plain-Language Summary</strong> (simpleng buod na walang legal jargon) para madaling maintindihan ng mga mamamayan sa ating Public Portal."
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 9 -->
+            <div class="step-card">
+                <div class="step-header">
+                    <div class="step-number-title">
+                        <span class="step-number">9</span>
+                        <span class="step-title">Provincial Review (Sangguniang Panlalawigan)</span>
+                    </div>
+                    <span class="module-badge" style="background-color:#fee2e2; color:#b91c1c; border-color:#fecaca;">External Process</span>
+                </div>
+                <div class="script-section">
+                    <span class="script-label">🗣️ Script:</span>
+                    <div class="script-bubble">
+                        "Manual na re-reviewhin ng Probinsya ng Bulacan ang batas. Kung <strong>Approved</strong>, tuloy sa pag-archive. Kung <strong>Disapproved</strong>, magiging rejected (Step 10). Kung <strong>With Comments</strong> naman, babalik sa Step 5 (Second Reading) gamit ang yellow dashed line para i-amend ng konseho."
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 10 -->
+            <div class="step-card">
+                <div class="step-header">
+                    <div class="step-number-title">
+                        <span class="step-number">10</span>
+                        <span class="step-title">Enactment & Database Archiving</span>
+                    </div>
+                    <span class="module-badge">Module: <strong>Archive / Audit Logs</strong></span>
+                </div>
+                <div class="script-section">
+                    <span class="script-label">🗣️ Script:</span>
+                    <div class="script-bubble">
+                        "Kapag approved na sa lahat ng antas, ang batas ay permanenteng mapupunta sa <strong>Archive</strong> module bilang active law. Kasabay nito, itatala ng system ang lahat ng naging transaction logs sa ating <strong>Audit Logs</strong> module para sa seguridad."
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 11 -->
+            <div class="step-card">
+                <div class="step-header">
+                    <div class="step-number-title">
+                        <span class="step-number">11</span>
+                        <span class="step-title">Implementation Monitoring</span>
+                    </div>
+                    <span class="module-badge">Module: <strong>Implementation Monitoring</strong></span>
+                </div>
+                <div class="script-section">
+                    <span class="script-label">🗣️ Script:</span>
+                    <div class="script-bubble">
+                        "Dito nag-e-encode ang staff ng progress ng batas (Pending, Ongoing, o Completed) habang ito ay ipinapatupad sa buong lungsod para matiyak ang accountability."
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</body>
+</html>

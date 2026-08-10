@@ -174,6 +174,10 @@ class PublicationsController extends Controller
         $errors = [];
         $input  = [];
 
+        // Fetch latest AI validation report to pre-populate plain-language summary
+        $aiModel  = $this->model('AiValidationModel');
+        $aiReport = $aiModel->getLatestForDocument($type, (int) $id);
+
         if ($this->isPost()) {
             $input = [
                 'publication_ref' => trim($this->post('publication_ref', '')),
@@ -229,6 +233,10 @@ class PublicationsController extends Controller
                 $docNo   = $document[$noField] ?? '#' . $id;
                 $this->flash('success', $docNo . ' has been published successfully.');
                 $this->redirect('publications');
+            }
+        } else {
+            if (!empty($aiReport) && !empty($aiReport['ai_summary'])) {
+                $input['plain_summary'] = $aiReport['ai_summary'];
             }
         }
 

@@ -33,9 +33,12 @@ class ApprovalController extends Controller
         $stmtOrd = $db->prepare(
             "SELECT o.id, o.ordinance_no AS doc_no, o.title, o.subject,
                     o.status, o.date_filed, o.created_at,
-                    u.name AS author_name, 'ordinance' AS doc_type
+                    u.name AS author_name,
+                    c.name AS committee_name,
+                    'ordinance' AS doc_type
              FROM ordinances o
              LEFT JOIN users u ON o.author_id = u.id
+             LEFT JOIN committees c ON o.committee_id = c.id
              WHERE o.status IN ('endorsed','approved')
              ORDER BY o.created_at ASC"
         );
@@ -46,9 +49,12 @@ class ApprovalController extends Controller
         $stmtRes = $db->prepare(
             "SELECT r.id, r.resolution_no AS doc_no, r.title, r.subject,
                     r.status, r.date_filed, r.created_at,
-                    u.name AS author_name, 'resolution' AS doc_type
+                    u.name AS author_name,
+                    c.name AS committee_name,
+                    'resolution' AS doc_type
              FROM resolutions r
              LEFT JOIN users u ON r.author_id = u.id
+             LEFT JOIN committees c ON r.committee_id = c.id
              WHERE r.status IN ('endorsed','approved')
              ORDER BY r.created_at ASC"
         );

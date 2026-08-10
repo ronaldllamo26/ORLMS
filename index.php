@@ -32,7 +32,14 @@ error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
 // ─────────────────────────────────────────────────────────────────────────────
-// 4. LOAD CONFIGURATION
+// 4. LOAD COMPOSER AUTOLOADER
+// ─────────────────────────────────────────────────────────────────────────────
+if (file_exists(ROOT . '/vendor/autoload.php')) {
+    require_once ROOT . '/vendor/autoload.php';
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// 5. LOAD CONFIGURATION
 //    Contains DB credentials, app settings, and Groq API key.
 // ─────────────────────────────────────────────────────────────────────────────
 require_once CONFIG_ROOT . '/config.php';

@@ -58,7 +58,7 @@ class CommitteeController extends Controller
         // Fetch all potential chairpersons (Committee members, SP members, Admins)
         $stmtUsers = $db->prepare(
             "SELECT id, name, role FROM users
-             WHERE is_active = 1 AND role IN ('committee_member', 'sp_member', 'super_admin')
+             WHERE is_active = TRUE AND role IN ('committee_member', 'sp_member', 'super_admin')
              ORDER BY name ASC"
         );
         $stmtUsers->execute();
@@ -86,7 +86,7 @@ class CommitteeController extends Controller
 
                 $stmtInsert = $db->prepare(
                     "INSERT INTO committees (name, jurisdiction, chairperson_id, is_active)
-                     VALUES (:name, :jurisdiction, :chairperson_id, 1)"
+                     VALUES (:name, :jurisdiction, :chairperson_id, TRUE)"
                 );
                 $stmtInsert->execute([
                     ':name'           => $input['name'],
@@ -137,7 +137,7 @@ class CommitteeController extends Controller
         // Fetch potential chairpersons
         $stmtUsers = $db->prepare(
             "SELECT id, name, role FROM users
-             WHERE is_active = 1 AND role IN ('committee_member', 'sp_member', 'super_admin')
+             WHERE is_active = TRUE AND role IN ('committee_member', 'sp_member', 'super_admin')
              ORDER BY name ASC"
         );
         $stmtUsers->execute();
@@ -221,7 +221,7 @@ class CommitteeController extends Controller
         $newStatus = !$committee['is_active'];
         $stmtToggle = $db->prepare("UPDATE committees SET is_active = :status WHERE id = :id");
         $stmtToggle->execute([
-            ':status' => $newStatus ? 1 : 0,
+            ':status' => $newStatus ? true : false,
             ':id'     => (int) $id,
         ]);
 

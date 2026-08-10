@@ -7,8 +7,8 @@
  * captured in Controller::view() via output buffering (ob_start/ob_get_clean).
  *
  * Variables available here (set by Controller::view()):
- *   $content     — the rendered view HTML
- *   $pageTitle   — optional page title (defaults to APP_NAME)
+ * @var string $content     — the rendered view HTML
+ * @var string $pageTitle   — optional page title (defaults to APP_NAME)
  */
 
 // Default page title if not set by the controller

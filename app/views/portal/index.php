@@ -185,3 +185,217 @@
     </div>
 
 </div>
+
+<!-- Floating AI Chatbot Widget -->
+<div class="chatbot-wrapper no-print" style="position: fixed; bottom: 30px; right: 30px; z-index: 9999; font-family: 'Inter', sans-serif;">
+    <!-- Chat Toggle Button -->
+    <button id="chatbot-toggle-btn" style="width: 60px; height: 60px; border-radius: 50%; background-color: #0c2340; border: 3px solid #f2a900; color: #f2a900; font-size: 26px; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 10px 25px rgba(12, 35, 64, 0.35); transition: all 0.25s cubic-bezier(0.25, 0.8, 0.25, 1); outline: none;">
+        <i class="bi bi-chat-dots-fill"></i>
+    </button>
+
+    <!-- Chat Box -->
+    <div id="chatbot-box" style="display: none; width: 370px; height: 490px; max-height: 80vh; background: #ffffff; border: 1px solid #dee2e6; border-top: 4px solid #0c2340; border-radius: 12px; box-shadow: 0 15px 35px rgba(0,0,0,0.22); position: absolute; bottom: 80px; right: 0; flex-direction: column; overflow: hidden; animation: slideUp 0.25s ease;">
+        <!-- Header -->
+        <div style="background-color: #0c2340; color: #ffffff; padding: 14px 20px; display: flex; align-items: center; justify-content: space-between; border-bottom: 2px solid #f2a900;">
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <div style="width: 32px; height: 32px; border-radius: 50%; background-color: #f2a900; color: #0c2340; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 800;">
+                    T
+                </div>
+                <div style="text-align: left;">
+                    <div style="font-size: 13.5px; font-weight: 700; line-height: 1;">Tanya SP</div>
+                    <span style="font-size: 10px; color: #f2a900; font-weight: 600;">LGU AI Assistant</span>
+                </div>
+            </div>
+            <button id="chatbot-close-btn" style="background: none; border: none; color: #ffffff; font-size: 20px; cursor: pointer; padding: 0; line-height: 1;">
+                <i class="bi bi-x"></i>
+            </button>
+        </div>
+
+        <!-- Messages Area -->
+        <div id="chatbot-messages" style="flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 12px; background-color: #f8f9fa;">
+            <!-- Welcome Message -->
+            <div style="display: flex; flex-direction: column; align-items: flex-start; max-width: 85%; align-self: flex-start; text-align: left;">
+                <span style="font-size: 9.5px; font-weight: 700; color: #0c2340; margin-bottom: 2px; text-transform: uppercase;">Tanya SP</span>
+                <div style="background-color: #ffffff; border: 1px solid #dee2e6; color: #212529; border-radius: 4px 12px 12px 12px; padding: 10px 14px; font-size: 12.5px; line-height: 1.6; box-shadow: 0 2px 4px rgba(0,0,0,0.02);">
+                    Magandang araw po! Ako si <strong>Tanya SP</strong>, ang AI Legislative Assistant ng San Jose del Monte. Mayroon po ba kayong katanungan tungkol sa mga opisyal na ordinansa o resolusyon natin?
+                </div>
+            </div>
+        </div>
+
+        <!-- Input Form Footer -->
+        <form id="chatbot-form" style="border-top: 1px solid #dee2e6; padding: 12px; display: flex; gap: 8px; background-color: #ffffff; margin: 0;">
+            <input type="text" id="chatbot-input" placeholder="Magtanong po dito..." style="flex: 1; border: 1px solid #ced4da; border-radius: 20px; padding: 8px 16px; font-size: 13px; outline: none; transition: border-color 0.2s;" autocomplete="off" required>
+            <button type="submit" style="width: 36px; height: 36px; border-radius: 50%; background-color: #0c2340; border: none; color: #f2a900; font-size: 16px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: background-color 0.2s;">
+                <i class="bi bi-send-fill"></i>
+            </button>
+        </form>
+    </div>
+</div>
+
+<style>
+    @keyframes slideUp {
+        from { transform: translateY(15px); opacity: 0; }
+        to { transform: translateY(0); opacity: 1; }
+    }
+</style>
+
+<!-- Chatbot Javascript Logic -->
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const toggleBtn = document.getElementById("chatbot-toggle-btn");
+    const closeBtn = document.getElementById("chatbot-close-btn");
+    const chatBox = document.getElementById("chatbot-box");
+    const chatForm = document.getElementById("chatbot-form");
+    const chatInput = document.getElementById("chatbot-input");
+    const messagesContainer = document.getElementById("chatbot-messages");
+
+    // Toggle open/close chat widget
+    toggleBtn.addEventListener("click", function() {
+        if (chatBox.style.display === "none" || chatBox.style.display === "") {
+            chatBox.style.display = "flex";
+            chatInput.focus();
+            toggleBtn.style.transform = "scale(0.9)";
+        } else {
+            chatBox.style.display = "none";
+            toggleBtn.style.transform = "scale(1)";
+        }
+    });
+
+    closeBtn.addEventListener("click", function() {
+        chatBox.style.display = "none";
+        toggleBtn.style.transform = "scale(1)";
+    });
+
+    // Helper to append message bubble to box
+    function appendMessage(sender, text, isAi = false) {
+        const wrapper = document.createElement("div");
+        wrapper.style.display = "flex";
+        wrapper.style.flexDirection = "column";
+        wrapper.style.alignItems = isAi ? "flex-start" : "flex-end";
+        wrapper.style.maxWidth = "85%";
+        if (isAi) {
+            wrapper.style.alignSelf = "flex-start";
+            wrapper.style.textAlign = "left";
+        } else {
+            wrapper.style.alignSelf = "flex-end";
+            wrapper.style.textAlign = "right";
+        }
+
+        const label = document.createElement("span");
+        label.style.fontSize = "9.5px";
+        label.style.fontWeight = "700";
+        label.style.color = isAi ? "#0c2340" : "#6c757d";
+        label.style.marginBottom = "2px";
+        label.style.textTransform = "uppercase";
+        label.textContent = sender;
+
+        const bubble = document.createElement("div");
+        bubble.style.fontSize = "12.5px";
+        bubble.style.lineHeight = "1.6";
+        bubble.style.padding = "10px 14px";
+        bubble.style.boxShadow = "0 2px 4px rgba(0,0,0,0.02)";
+        
+        if (isAi) {
+            bubble.style.backgroundColor = "#ffffff";
+            bubble.style.border = "1px solid #dee2e6";
+            bubble.style.color = "#212529";
+            bubble.style.borderRadius = "4px 12px 12px 12px";
+            bubble.style.whiteSpace = "pre-line"; // Preserves line breaks for cleaner display
+        } else {
+            bubble.style.backgroundColor = "#0c2340";
+            bubble.style.color = "#ffffff";
+            bubble.style.borderRadius = "12px 12px 4px 12px";
+            bubble.style.border = "none";
+        }
+
+        bubble.textContent = text;
+
+        wrapper.appendChild(label);
+        wrapper.appendChild(bubble);
+        messagesContainer.appendChild(wrapper);
+
+        // Auto scroll to bottom
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    }
+
+    // Append a typing loader indicator
+    let typingIndicator = null;
+    function showTypingIndicator() {
+        typingIndicator = document.createElement("div");
+        typingIndicator.style.display = "flex";
+        typingIndicator.style.flexDirection = "column";
+        typingIndicator.style.alignItems = "flex-start";
+        typingIndicator.style.maxWidth = "85%";
+        typingIndicator.style.alignSelf = "flex-start";
+        typingIndicator.style.textAlign = "left";
+
+        const label = document.createElement("span");
+        label.style.fontSize = "9.5px";
+        label.style.fontWeight = "700";
+        label.style.color = "#0c2340";
+        label.style.marginBottom = "2px";
+        label.style.textTransform = "uppercase";
+        label.textContent = "Tanya SP";
+
+        const bubble = document.createElement("div");
+        bubble.style.backgroundColor = "#ffffff";
+        bubble.style.border = "1px solid #dee2e6";
+        bubble.style.color = "#6c757d";
+        bubble.style.borderRadius = "4px 12px 12px 12px";
+        bubble.style.padding = "10px 14px";
+        bubble.style.fontSize = "12.5px";
+        bubble.style.fontStyle = "italic";
+        bubble.textContent = "Sumusulat...";
+
+        typingIndicator.appendChild(label);
+        typingIndicator.appendChild(bubble);
+        messagesContainer.appendChild(typingIndicator);
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    }
+
+    function removeTypingIndicator() {
+        if (typingIndicator) {
+            typingIndicator.remove();
+            typingIndicator = null;
+        }
+    }
+
+    // Handle form submit (Sending message)
+    chatForm.addEventListener("submit", function(e) {
+        e.preventDefault();
+        
+        const messageText = chatInput.value.trim();
+        if (!messageText) return;
+
+        // 1. Add user message bubble
+        appendMessage("Mamamayan", messageText, false);
+        chatInput.value = "";
+
+        // 2. Show typing loading
+        showTypingIndicator();
+
+        // 3. Make AJAX request to /portal/chat
+        const formData = new FormData();
+        formData.append("message", messageText);
+
+        fetch("<?= APP_URL ?>/portal/chat", {
+            method: "POST",
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            removeTypingIndicator();
+            if (data.success) {
+                appendMessage("Tanya SP", data.reply, true);
+            } else {
+                appendMessage("Tanya SP", data.reply || "Paumanhin po, nagkaroon ng error. Subukan muli.", true);
+            }
+        })
+        .catch(err => {
+            removeTypingIndicator();
+            appendMessage("Tanya SP", "Paumanhin po, hindi makakonekta sa server. Pakisiguro na active ang connection.", true);
+            console.error("Chatbot Error: ", err);
+        });
+    });
+});
+</script>

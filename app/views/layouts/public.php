@@ -20,6 +20,9 @@ $pageTitle = $pageTitle ?? APP_SHORT;
     <!-- Bootstrap 5 CSS -->
     <link rel="stylesheet"
           href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+    
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
     <!-- ORLMS Global Stylesheet -->
     <link rel="stylesheet" href="<?= APP_URL ?>/public/css/style.css">
@@ -129,15 +132,20 @@ $pageTitle = $pageTitle ?? APP_SHORT;
 
     <!-- Top Public Navbar -->
     <nav class="public-navbar">
-        <a href="<?= APP_ROOT_URL ?>/portal" class="public-brand">
+        <a href="<?= APP_URL ?>/" class="public-brand">
             <span class="public-brand-short"><?= APP_SHORT ?></span>
             <span class="public-brand-name">
                 Ordinance and Resolution Public Portal
             </span>
         </a>
-        <a href="<?= APP_ROOT_URL ?>/dashboard" class="public-login-btn">
-            Staff Login
-        </a>
+        <div class="d-flex align-items-center gap-3">
+            <a href="<?= APP_URL ?>/" class="text-white text-decoration-none fw-semibold d-flex align-items-center gap-1" style="font-size: 13.5px;">
+                <i class="bi bi-arrow-left-circle-fill"></i> Back to Home
+            </a>
+            <a href="<?= APP_ROOT_URL ?>/dashboard" class="public-login-btn">
+                Staff Login
+            </a>
+        </div>
     </nav>
 
     <!-- Main Container -->
