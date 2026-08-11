@@ -1,12 +1,16 @@
 FROM php:8.2-apache
 
-# Install PostgreSQL dev libraries and PDO extensions
+# Install system dependencies, PostgreSQL dev libraries, and PDO extensions
 RUN apt-get update && apt-get install -y \
     libpq-dev \
+    unzip \
     && docker-php-ext-install pdo pdo_pgsql pgsql
 
 # Enable Apache mod_rewrite
 RUN a2enmod rewrite
+
+# Install Composer
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 # Copy application files to the container
 COPY . /var/www/html/
@@ -16,6 +20,9 @@ RUN cp /var/www/html/config/config.php.example /var/www/html/config/config.php
 
 # Set working directory
 WORKDIR /var/www/html/
+
+# Install composer dependencies
+RUN composer install --no-dev --optimize-autoloader
 
 # Expose standard port
 EXPOSE 80
