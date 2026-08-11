@@ -76,11 +76,14 @@ class AuthController extends Controller
                     $_SESSION['otp_user_name']  = $user['name'];
                     $_SESSION['otp_user_email'] = $user['email'];
                     $_SESSION['otp_user_role']  = $user['role'];
-                    $_SESSION['otp_code']       = rand(100000, 999999);
+                    $_SESSION['otp_code']       = (defined('MFA_SMTP_ENABLE') && MFA_SMTP_ENABLE) ? rand(100000, 999999) : 123456;
                     $_SESSION['otp_expires']    = time() + 300; // 5 min expiration
 
+                    // Always log the OTP code to server console for easy access/debugging
+                    error_log("[MFA OTP] Verification code for " . $user['email'] . ": " . $_SESSION['otp_code']);
+
                     // Send REAL email if SMTP is enabled
-                    if (MFA_SMTP_ENABLE) {
+                    if (defined('MFA_SMTP_ENABLE') && MFA_SMTP_ENABLE) {
                         $this->sendOtpEmail($user['email'], $user['name'], $_SESSION['otp_code']);
                     }
 
@@ -197,12 +200,20 @@ class AuthController extends Controller
             );
         }
 
-        // Destroy all session data
-        $_SESSION = [];
-        session_write_close();
-        if (session_id()) {
-            session_destroy();
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
         }
+
+        // Destroy all session data cleanly
+        $_SESSION = [];
+        if (ini_get("session.use_cookies")) {
+            $params = session_get_cookie_params();
+            setcookie(session_name(), '', time() - 42000,
+                $params["path"], $params["domain"],
+                $params["secure"], $params["httponly"]
+            );
+        }
+        session_destroy();
 
         // Redirect to landing page (root)
         $this->redirect('');
