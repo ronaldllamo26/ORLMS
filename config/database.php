@@ -27,4 +27,12 @@ foreach ($required_db_constants as $constant) {
 // Used by core/Database.php when creating the PDO connection.
 // ─────────────────────────────────────────────────────────────────────────────
 $sslmode = (DB_HOST !== 'localhost' && DB_HOST !== '127.0.0.1') ? ';sslmode=require' : '';
-define('DB_DSN', 'pgsql:host=' . DB_HOST . ';port=' . DB_PORT . ';dbname=' . DB_NAME . $sslmode);
+$endpointOpt = '';
+if (DB_HOST !== 'localhost' && DB_HOST !== '127.0.0.1') {
+    $parts = explode('.', DB_HOST);
+    if (!empty($parts[0])) {
+        $endpointId = str_replace('-pooler', '', $parts[0]);
+        $endpointOpt = ";options='endpoint=" . $endpointId . "'";
+    }
+}
+define('DB_DSN', 'pgsql:host=' . DB_HOST . ';port=' . DB_PORT . ';dbname=' . DB_NAME . $sslmode . $endpointOpt);
