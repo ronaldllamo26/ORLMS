@@ -99,7 +99,7 @@
             background-size: cover;
             background-position: center 30%; /* Shift background down slightly to frame the cityhall well */
             color: #ffffff;
-            padding: 110px 0 130px 0;
+            padding: 160px 0 185px 0;
             position: relative;
             overflow: hidden;
             border-bottom: 5px solid var(--color-lgu-gold);
@@ -132,7 +132,7 @@
             font-size: 42px;
             font-weight: 800;
             line-height: 1.25;
-            margin-bottom: 20px;
+            margin-bottom: 24px;
             letter-spacing: -0.6px;
             text-shadow: 0 2px 5px rgba(0,0,0,0.4);
             max-width: 820px;
@@ -140,7 +140,7 @@
         .hero-subtitle {
             font-size: 17px;
             color: rgba(255, 255, 255, 0.92);
-            margin-bottom: 35px;
+            margin-bottom: 40px;
             line-height: 1.65;
             text-shadow: 0 1px 3px rgba(0,0,0,0.3);
             max-width: 720px;

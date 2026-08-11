@@ -110,4 +110,43 @@ echo "<p>HTTP Code: <strong>$httpCode</strong></p>";
 $detailResult = json_decode($response, true);
 echo "<pre>" . htmlspecialchars(json_encode($detailResult, JSON_PRETTY_PRINT)) . "</pre>";
 
+// ─────────────────────────────────────────────────────────────────────────────
+// TEST 4: POST /api/consultations (Submit Public Consultation Details)
+// ─────────────────────────────────────────────────────────────────────────────
+echo "<h4>[TEST 4] POST /api/consultations - Submitting Public Hearing Data for $docType/$newId...</h4>";
+$consultationUrl = $baseUrl . '/api/consultations';
+$consultationPayload = [
+    'document_id'        => $newId,
+    'document_type'      => $docType,
+    'hearing_date'       => date('Y-m-d', strtotime('+3 days')),
+    'venue'              => 'CSJDM City Hall Multi-Purpose Hall',
+    'total_participants' => 125,
+    'total_opinions'     => 78,
+    'sentiment_summary'  => '85% Positive, 10% Neutral, 5% Negative',
+    'summary_report'     => 'Citizens highly support the traffic management ordinance, pointing out that traffic signs must be properly illuminated at night.',
+    'report_file_url'    => 'http://subsystem6-hearing.com/reports/hearing-report-' . $newId . '.pdf'
+];
+
+$ch = curl_init($consultationUrl);
+curl_setopt_array($ch, [
+    CURLOPT_RETURNTRANSFER => true,
+    CURLOPT_POST           => true,
+    CURLOPT_POSTFIELDS     => json_encode($consultationPayload),
+    CURLOPT_HTTPHEADER     => ['Content-Type: application/json'],
+    CURLOPT_TIMEOUT        => 10
+]);
+
+$response = curl_exec($ch);
+$httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+$curlError = curl_error($ch);
+curl_close($ch);
+
+if ($curlError) {
+    echo "<p style='color:red;'><strong>cURL Error (POST Consultations):</strong> $curlError</p>";
+} else {
+    echo "<p>HTTP Code: <strong>$httpCode</strong></p>";
+    $consultationResult = json_decode($response, true);
+    echo "<pre>" . htmlspecialchars(json_encode($consultationResult, JSON_PRETTY_PRINT)) . "</pre>";
+}
+
 echo "<h3 style='color:green;'>All REST API tests completed successfully!</h3>";

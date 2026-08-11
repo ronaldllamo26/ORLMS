@@ -39,10 +39,20 @@ $verificationUrl = APP_URL . "/portal/verify/{$docType}/{$docId}";
             width: 100% !important;
             margin-bottom: 20px !important;
         }
+        
+        /* Allow the main document content to flow and break naturally across pages */
         .card {
             border: none !important;
             box-shadow: none !important;
             padding: 0 !important;
+            margin-bottom: 20px !important;
+            page-break-inside: auto !important;
+        }
+        .card-header {
+            border-bottom: 1px solid #000000 !important;
+            padding-bottom: 8px !important;
+            margin-bottom: 12px !important;
+            background: none !important;
         }
         .doc-content-body {
             background-color: #ffffff !important;
@@ -50,6 +60,35 @@ $verificationUrl = APP_URL . "/portal/verify/{$docType}/{$docId}";
             padding: 15px !important;
             font-family: 'Courier New', Courier, monospace !important;
             font-size: 13px !important;
+            page-break-inside: auto !important;
+        }
+
+        /* Only prevent splitting on the bottom metadata/verification box */
+        #print-side-by-side {
+            display: grid !important;
+            grid-template-columns: 1fr 280px !important;
+            gap: 20px !important;
+            align-items: start !important;
+            page-break-inside: avoid !important;
+        }
+        #print-side-by-side .card {
+            border: 1px solid #cbd5e1 !important;
+            border-radius: 8px !important;
+            padding: 16px !important;
+            margin-bottom: 0 !important;
+            box-shadow: none !important;
+            background: #ffffff !important;
+            page-break-inside: avoid !important;
+        }
+        #print-side-by-side .card-header {
+            border-bottom: 1px solid #cbd5e1 !important;
+            padding-bottom: 8px !important;
+            margin-bottom: 12px !important;
+            background: none !important;
+        }
+        .print-qr-img {
+            width: 110px !important;
+            height: 110px !important;
         }
     }
 </style>
@@ -131,10 +170,66 @@ $verificationUrl = APP_URL . "/portal/verify/{$docType}/{$docId}";
             </div>
         </div>
 
+        <!-- Public Consultation & Hearings -->
+        <?php if (!empty($consultations)): ?>
+        <div class="card" style="margin-bottom:20px; box-shadow:var(--shadow-sm);">
+            <div class="card-header" style="background:#ffffff; border-bottom:1px solid var(--color-border-light);">
+                <h2 class="card-title" style="font-size:15px; font-weight:700; color:var(--color-primary);">
+                    <i class="bi bi-people-fill me-1" style="color:var(--color-accent);"></i> Public Consultations & Hearings
+                </h2>
+            </div>
+            <div class="card-body" style="padding:24px;">
+                <div style="display:flex; flex-direction:column; gap:16px;">
+                    <?php foreach ($consultations as $consult): ?>
+                        <div style="border: 1px solid var(--color-border-light); border-radius: var(--radius-lg); padding: 16px; background: #fafafa;">
+                            <div style="display:flex; justify-content:space-between; align-items:start; flex-wrap:wrap; gap:8px; border-bottom:1px solid var(--color-border-light); padding-bottom:8px; margin-bottom:12px;">
+                                <div>
+                                    <strong style="color:var(--color-primary); font-size:14px;">Hearing Venue: <?= htmlspecialchars($consult['venue']) ?></strong>
+                                    <div style="font-size:11.5px; color:var(--color-text-muted); margin-top:2px;">
+                                        Held on <?= date('F d, Y', strtotime($consult['hearing_date'])) ?>
+                                    </div>
+                                </div>
+                                <div style="text-align:right;">
+                                    <span class="badge badge-draft" style="font-size:11px; padding:3px 8px; background: rgba(0, 132, 255, 0.1); color: #0084FF; border: 1px solid rgba(0, 132, 255, 0.2);">
+                                        <?= htmlspecialchars($consult['total_participants']) ?> Participants
+                                    </span>
+                                </div>
+                            </div>
+                            <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:12px; font-size:13px; margin-bottom:12px;">
+                                <div>
+                                    <span style="display:block; font-size:11px; text-transform:uppercase; color:#64748b; font-weight:600;">Opinions Gathered</span>
+                                    <strong><?= htmlspecialchars($consult['total_opinions']) ?> comments</strong>
+                                </div>
+                                <div>
+                                    <span style="display:block; font-size:11px; text-transform:uppercase; color:#64748b; font-weight:600;">Sentiment Split</span>
+                                    <strong style="color:#2ec4b6;"><?= htmlspecialchars($consult['sentiment_summary'] ?: 'N/A') ?></strong>
+                                </div>
+                                <?php if (!empty($consult['report_file_url'])): ?>
+                                <div>
+                                    <span style="display:block; font-size:11px; text-transform:uppercase; color:#64748b; font-weight:600;">Official Report</span>
+                                    <a href="<?= htmlspecialchars($consult['report_file_url']) ?>" target="_blank" style="color:var(--color-accent); font-weight:600; text-decoration:none;">
+                                        <i class="bi bi-file-earmark-pdf-fill me-1"></i> View Report &rarr;
+                                    </a>
+                                </div>
+                                <?php endif; ?>
+                            </div>
+                            <?php if (!empty($consult['summary_report'])): ?>
+                                <div style="font-size:12.5px; line-height:1.6; padding:12px; background:#fff; border:1px solid #e2e8f0; border-radius:var(--radius); color:var(--color-text);">
+                                    <strong style="display:block; font-size:11px; text-transform:uppercase; color:#64748b; margin-bottom:4px;">Consultation Summary</strong>
+                                    <?= nl2br(htmlspecialchars($consult['summary_report'])) ?>
+                                </div>
+                            <?php endif; ?>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+            </div>
+        </div>
+        <?php endif; ?>
+
     </div>
 
     <!-- RIGHT: Document Metadata & Security Verification -->
-    <div>
+    <div id="print-side-by-side">
         <!-- 1. Metadata Details Card -->
         <div class="card" style="box-shadow:var(--shadow-sm); margin-bottom: 24px;">
             <div class="card-header" style="background:#ffffff; border-bottom:1px solid var(--color-border-light);">
@@ -185,7 +280,7 @@ $verificationUrl = APP_URL . "/portal/verify/{$docType}/{$docId}";
 
                 <!-- Scan-Ready QR Code from QRServer API -->
                 <img src="https://api.qrserver.com/v1/create-qr-code/?size=140x140&data=<?= urlencode($verificationUrl) ?>" 
-                     alt="Verification QR Code" 
+                     alt="Verification QR Code" class="print-qr-img"
                      style="border: 1px solid #e2e8f0; padding: 6px; border-radius: 6px; display: block; margin: 0 auto 12px auto; width: 140px; height: 140px;">
 
                 <a href="<?= $verificationUrl ?>" target="_blank" style="font-size:12.5px; color:#0084FF; text-decoration:none; font-weight:700; display:inline-block; margin-bottom:15px;" class="no-print">

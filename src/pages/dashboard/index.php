@@ -1,6 +1,6 @@
 <?php
 /**
- * ORLMS - Dashboard View
+ * ORLMS - Dashboard View (Tailwind CSS)
  *
  * @var array $stats
  * @var array $recentOrdinances
@@ -16,168 +16,164 @@ $recentResolutions = $recentResolutions ?? [];
 $chartStatusData = $chartStatusData ?? [];
 $committeeStats = $committeeStats ?? [];
 
-// Helper: returns a CSS badge class based on document status
+// Helper: returns Tailwind CSS badge classes based on document status
 function statusBadge(string $status): string {
     return match($status) {
-        'draft'        => 'badge-draft',
-        'submitted'    => 'badge-submitted',
-        'under_review' => 'badge-under-review',
-        'endorsed'     => 'badge-endorsed',
-        'approved'     => 'badge-approved',
-        'enacted'      => 'badge-enacted',
-        'published'    => 'badge-published',
-        'rejected'     => 'badge-rejected',
-        'archived'     => 'badge-archived',
-        'implemented'  => 'badge-implemented',
-        'amended'      => 'badge-amended',
-        default        => 'badge-draft',
+        'draft'        => 'bg-slate-100 text-slate-700 border-slate-200',
+        'submitted'    => 'bg-blue-50 text-blue-700 border-blue-200',
+        'under_review' => 'bg-indigo-50 text-indigo-700 border-indigo-200',
+        'endorsed'     => 'bg-purple-50 text-purple-700 border-purple-200',
+        'approved'     => 'bg-emerald-50 text-emerald-700 border-emerald-200',
+        'enacted'      => 'bg-teal-50 text-teal-700 border-teal-200',
+        'published'    => 'bg-amber-50 text-amber-700 border-amber-200',
+        'rejected'     => 'bg-rose-50 text-rose-700 border-rose-200',
+        'archived'     => 'bg-gray-150 text-gray-700 border-gray-200',
+        'implemented'  => 'bg-green-50 text-green-700 border-green-200',
+        'amended'      => 'bg-orange-50 text-orange-700 border-orange-200',
+        default        => 'bg-slate-100 text-slate-700 border-slate-200',
     };
 }
 ?>
 
 <!-- Page Header -->
-<div class="page-header">
-    <div class="d-flex align-center justify-between">
-        <div>
-            <h1 class="page-title">Dashboard</h1>
-            <p class="page-subtitle">
-                System overview as of <?= date('F d, Y') ?>
-            </p>
-        </div>
-        <?php if (in_array($_SESSION['user_role'], ['legislative_staff', 'super_admin'])): ?>
-        <div class="d-flex gap-8">
-            <a href="<?= APP_ROOT_URL ?>/ordinance/create" class="btn btn-primary btn-sm">
-                New Ordinance
-            </a>
-            <a href="<?= APP_ROOT_URL ?>/resolution/create" class="btn btn-outline btn-sm">
-                New Resolution
-            </a>
-        </div>
-        <?php endif; ?>
+<div class="mb-6 pb-4 border-b border-gray-250 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+    <div>
+        <h1 class="text-2xl font-bold text-slate-800">Dashboard</h1>
+        <p class="text-sm text-slate-500 mt-1">
+            System overview as of <?= date('F d, Y') ?>
+        </p>
     </div>
+    <?php if (in_array($_SESSION['user_role'], ['legislative_staff', 'super_admin'])): ?>
+    <div class="flex gap-3">
+        <a href="<?= APP_ROOT_URL ?>/ordinance/create" class="inline-flex items-center px-4 py-2 bg-primary hover:bg-primary/90 text-white text-sm font-medium rounded-md shadow-sm transition duration-150">
+            New Ordinance
+        </a>
+        <a href="<?= APP_ROOT_URL ?>/resolution/create" class="inline-flex items-center px-4 py-2 bg-white hover:bg-slate-50 border border-slate-350 text-slate-700 text-sm font-medium rounded-md shadow-sm transition duration-150">
+            New Resolution
+        </a>
+    </div>
+    <?php endif; ?>
 </div>
 
 <!-- ── Statistics Row ─────────────────────────────────────── -->
-<div class="row row-4" style="margin-bottom: 24px;">
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
 
-    <div class="stat-card">
-        <div class="stat-label">Total Ordinances</div>
-        <div class="stat-value"><?= number_format($stats['total_ordinances']) ?></div>
-        <div class="stat-meta">All ordinances on record</div>
+    <div class="bg-white border border-slate-200 rounded-lg p-5 shadow-sm hover:shadow-md transition duration-200">
+        <div class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Total Ordinances</div>
+        <div class="text-3xl font-extrabold text-slate-800 mt-2"><?= number_format($stats['total_ordinances']) ?></div>
+        <div class="text-xs text-slate-400 mt-1.5">All ordinances on record</div>
     </div>
 
-    <div class="stat-card accent">
-        <div class="stat-label">Total Resolutions</div>
-        <div class="stat-value"><?= number_format($stats['total_resolutions']) ?></div>
-        <div class="stat-meta">All resolutions on record</div>
+    <div class="bg-white border border-slate-200 border-t-4 border-t-accent rounded-lg p-5 shadow-sm hover:shadow-md transition duration-200">
+        <div class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Total Resolutions</div>
+        <div class="text-3xl font-extrabold text-primary mt-2"><?= number_format($stats['total_resolutions']) ?></div>
+        <div class="text-xs text-slate-400 mt-1.5">All resolutions on record</div>
     </div>
 
-    <div class="stat-card success">
-        <div class="stat-label">Enacted</div>
-        <div class="stat-value"><?= number_format($stats['enacted']) ?></div>
-        <div class="stat-meta">Enacted documents</div>
+    <div class="bg-white border border-slate-200 border-t-4 border-t-emerald-500 rounded-lg p-5 shadow-sm hover:shadow-md transition duration-200">
+        <div class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Enacted</div>
+        <div class="text-3xl font-extrabold text-emerald-600 mt-2"><?= number_format($stats['enacted']) ?></div>
+        <div class="text-xs text-slate-400 mt-1.5">Enacted documents</div>
     </div>
 
-    <div class="stat-card">
-        <div class="stat-label">For Review</div>
-        <div class="stat-value"><?= number_format($stats['pending_review']) ?></div>
-        <div class="stat-meta">Awaiting review</div>
+    <div class="bg-white border border-slate-200 border-t-4 border-t-rose-500 rounded-lg p-5 shadow-sm hover:shadow-md transition duration-200">
+        <div class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">For Review</div>
+        <div class="text-3xl font-extrabold text-rose-600 mt-2"><?= number_format($stats['pending_review']) ?></div>
+        <div class="text-xs text-slate-400 mt-1.5">Awaiting review</div>
     </div>
 
 </div>
 
 <!-- ── Second Stats Row ───────────────────────────────────── -->
-<div class="row row-4" style="margin-bottom: 28px;">
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
 
-    <div class="stat-card">
-        <div class="stat-label">Drafts</div>
-        <div class="stat-value"><?= number_format($stats['draft']) ?></div>
-        <div class="stat-meta">Work in progress</div>
+    <div class="bg-white border border-slate-200 rounded-lg p-5 shadow-sm hover:shadow-md transition duration-200">
+        <div class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Drafts</div>
+        <div class="text-3xl font-extrabold text-slate-800 mt-2"><?= number_format($stats['draft']) ?></div>
+        <div class="text-xs text-slate-400 mt-1.5">Work in progress</div>
     </div>
 
-    <div class="stat-card danger">
-        <div class="stat-label">Rejected</div>
-        <div class="stat-value"><?= number_format($stats['rejected']) ?></div>
-        <div class="stat-meta">Archived rejections</div>
+    <div class="bg-white border border-slate-200 border-t-4 border-t-red-500 rounded-lg p-5 shadow-sm hover:shadow-md transition duration-200">
+        <div class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Rejected</div>
+        <div class="text-3xl font-extrabold text-red-600 mt-2"><?= number_format($stats['rejected']) ?></div>
+        <div class="text-xs text-slate-400 mt-1.5">Archived rejections</div>
     </div>
 
-    <div class="stat-card accent">
-        <div class="stat-label">Total Documents</div>
-        <div class="stat-value">
+    <div class="bg-white border border-slate-200 border-t-4 border-t-accent rounded-lg p-5 shadow-sm hover:shadow-md transition duration-200">
+        <div class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Total Documents</div>
+        <div class="text-3xl font-extrabold text-primary mt-2">
             <?= number_format($stats['total_ordinances'] + $stats['total_resolutions']) ?>
         </div>
-        <div class="stat-meta">Ordinances and resolutions combined</div>
+        <div class="text-xs text-slate-400 mt-1.5">Ordinances and resolutions combined</div>
     </div>
 
-    <div class="stat-card">
-        <div class="stat-label">Current Year</div>
-        <div class="stat-value"><?= date('Y') ?></div>
-        <div class="stat-meta">Legislative session</div>
+    <div class="bg-white border border-slate-200 rounded-lg p-5 shadow-sm hover:shadow-md transition duration-200">
+        <div class="text-[11px] font-bold text-slate-400 tracking-wider uppercase">Current Year</div>
+        <div class="text-3xl font-extrabold text-slate-800 mt-2"><?= date('Y') ?></div>
+        <div class="text-xs text-slate-400 mt-1.5">Legislative session</div>
     </div>
 
 </div>
 
 <!-- ── Analytics Charts Row ───────────────────────────────── -->
-<div class="row row-2" style="margin-bottom: 28px; gap: 20px; display: flex !important; flex-wrap: wrap !important;">
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
     <!-- Status Distribution Doughnut Chart -->
-    <div class="card" style="flex: 1; min-width: 300px; padding: 20px;">
-        <div class="card-header" style="border-bottom: 1px solid #e2e8f0; padding-bottom: 12px; margin-bottom: 20px; display: flex; align-items: center; justify-content: space-between;">
-            <h2 class="card-title" style="font-size: 15px; font-weight: 700; color: #0C2340; margin: 0;">
-                <i class="bi bi-pie-chart-fill me-2" style="color: #0084FF;"></i> Status Distribution
+    <div class="bg-white border border-slate-200 rounded-lg p-5 shadow-sm">
+        <div class="border-b border-slate-200 pb-3 mb-5 flex items-center justify-between">
+            <h2 class="text-base font-bold text-slate-800 flex items-center">
+                <i class="bi bi-pie-chart-fill mr-2 text-sky-500"></i> Status Distribution
             </h2>
         </div>
-        <div style="height: 280px; position: relative; display: flex; justify-content: center; align-items: center;">
+        <div class="h-[280px] relative flex justify-center items-center">
             <canvas id="statusChart"></canvas>
         </div>
     </div>
 
     <!-- Committee Distribution Bar Chart -->
-    <div class="card" style="flex: 1; min-width: 300px; padding: 20px;">
-        <div class="card-header" style="border-bottom: 1px solid #e2e8f0; padding-bottom: 12px; margin-bottom: 20px; display: flex; align-items: center; justify-content: space-between;">
-            <h2 class="card-title" style="font-size: 15px; font-weight: 700; color: #0C2340; margin: 0;">
-                <i class="bi bi-bar-chart-fill me-2" style="color: #F2A900;"></i> Committee Distribution
+    <div class="bg-white border border-slate-200 rounded-lg p-5 shadow-sm">
+        <div class="border-b border-slate-200 pb-3 mb-5 flex items-center justify-between">
+            <h2 class="text-base font-bold text-slate-800 flex items-center">
+                <i class="bi bi-bar-chart-fill mr-2 text-amber-500"></i> Committee Distribution
             </h2>
         </div>
-        <div style="height: 280px; position: relative;">
+        <div class="h-[280px] relative">
             <canvas id="committeeChart"></canvas>
         </div>
     </div>
 </div>
 
 <!-- ── Recent Documents ───────────────────────────────────── -->
-<div class="row row-2">
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
 
     <!-- Recent Ordinances -->
-    <div class="card">
-        <div class="card-header">
-            <h2 class="card-title">Recent Ordinances</h2>
-            <a href="<?= APP_ROOT_URL ?>/ordinance"
-               class="btn btn-outline btn-sm">
+    <div class="bg-white border border-slate-200 rounded-lg shadow-sm overflow-hidden">
+        <div class="flex items-center justify-between p-5 border-b border-slate-200 bg-slate-50/50">
+            <h2 class="text-base font-bold text-slate-800">Recent Ordinances</h2>
+            <a href="<?= APP_ROOT_URL ?>/ordinance" class="inline-flex items-center px-3 py-1 bg-white hover:bg-slate-50 border border-slate-250 text-slate-700 text-xs font-semibold rounded shadow-sm transition">
                 View All
             </a>
         </div>
-        <div class="table-wrapper">
-            <table class="data-table">
-                <thead>
+        <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-slate-200 text-left text-xs sm:text-sm">
+                <thead class="bg-slate-50 text-slate-650 font-bold text-[11px] uppercase tracking-wider">
                     <tr>
-                        <th>No.</th>
-                        <th>Title</th>
-                        <th>Status</th>
-                        <th>Date Filed</th>
+                        <th class="px-5 py-3.5">No.</th>
+                        <th class="px-5 py-3.5">Title</th>
+                        <th class="px-5 py-3.5">Status</th>
+                        <th class="px-5 py-3.5">Date Filed</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody class="divide-y divide-slate-100 text-slate-700">
                     <?php if (!empty($recentOrdinances)): ?>
                         <?php foreach ($recentOrdinances as $ord): ?>
-                        <tr>
-                            <td>
-                                <a href="<?= APP_ROOT_URL ?>/ordinance/view/<?= $ord['id'] ?>"
-                                   style="font-weight:500; color:var(--color-primary);">
+                        <tr class="hover:bg-slate-50/40 transition">
+                            <td class="px-5 py-3.5 align-middle">
+                                <a href="<?= APP_ROOT_URL ?>/ordinance/view/<?= $ord['id'] ?>" class="font-semibold text-primary hover:text-accent transition">
                                     <?= htmlspecialchars($ord['ordinance_no'] ?? 'N/A') ?>
                                 </a>
                             </td>
-                            <td>
-                                <span title="<?= htmlspecialchars($ord['title']) ?>">
+                            <td class="px-5 py-3.5 align-middle">
+                                <span class="truncate block max-w-[220px] sm:max-w-[280px]" title="<?= htmlspecialchars($ord['title']) ?>">
                                     <?= htmlspecialchars(
                                         strlen($ord['title']) > 45
                                         ? substr($ord['title'], 0, 45) . '...'
@@ -185,12 +181,12 @@ function statusBadge(string $status): string {
                                     ) ?>
                                 </span>
                             </td>
-                            <td>
-                                <span class="badge <?= statusBadge($ord['status']) ?>">
+                            <td class="px-5 py-3.5 align-middle">
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold border <?= statusBadge($ord['status']) ?>">
                                     <?= ucfirst(str_replace('_', ' ', $ord['status'])) ?>
                                 </span>
                             </td>
-                            <td class="text-muted">
+                            <td class="px-5 py-3.5 align-middle text-slate-500">
                                 <?= $ord['date_filed']
                                     ? date('M d, Y', strtotime($ord['date_filed']))
                                     : '—' ?>
@@ -199,7 +195,7 @@ function statusBadge(string $status): string {
                         <?php endforeach; ?>
                     <?php else: ?>
                         <tr>
-                            <td colspan="4" class="table-empty">
+                            <td colspan="4" class="px-5 py-8 text-center text-slate-450 bg-slate-50/20">
                                 No ordinances on record.
                             </td>
                         </tr>
@@ -210,36 +206,34 @@ function statusBadge(string $status): string {
     </div>
 
     <!-- Recent Resolutions -->
-    <div class="card">
-        <div class="card-header">
-            <h2 class="card-title">Recent Resolutions</h2>
-            <a href="<?= APP_ROOT_URL ?>/resolution"
-               class="btn btn-outline btn-sm">
+    <div class="bg-white border border-slate-200 rounded-lg shadow-sm overflow-hidden">
+        <div class="flex items-center justify-between p-5 border-b border-slate-200 bg-slate-50/50">
+            <h2 class="text-base font-bold text-slate-800">Recent Resolutions</h2>
+            <a href="<?= APP_ROOT_URL ?>/resolution" class="inline-flex items-center px-3 py-1 bg-white hover:bg-slate-50 border border-slate-250 text-slate-700 text-xs font-semibold rounded shadow-sm transition">
                 View All
             </a>
         </div>
-        <div class="table-wrapper">
-            <table class="data-table">
-                <thead>
+        <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-slate-200 text-left text-xs sm:text-sm">
+                <thead class="bg-slate-50 text-slate-650 font-bold text-[11px] uppercase tracking-wider">
                     <tr>
-                        <th>No.</th>
-                        <th>Title</th>
-                        <th>Status</th>
-                        <th>Date Filed</th>
+                        <th class="px-5 py-3.5">No.</th>
+                        <th class="px-5 py-3.5">Title</th>
+                        <th class="px-5 py-3.5">Status</th>
+                        <th class="px-5 py-3.5">Date Filed</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody class="divide-y divide-slate-100 text-slate-700">
                     <?php if (!empty($recentResolutions)): ?>
                         <?php foreach ($recentResolutions as $res): ?>
-                        <tr>
-                            <td>
-                                <a href="<?= APP_ROOT_URL ?>/resolution/view/<?= $res['id'] ?>"
-                                   style="font-weight:500; color:var(--color-primary);">
+                        <tr class="hover:bg-slate-50/40 transition">
+                            <td class="px-5 py-3.5 align-middle">
+                                <a href="<?= APP_ROOT_URL ?>/resolution/view/<?= $res['id'] ?>" class="font-semibold text-primary hover:text-accent transition">
                                     <?= htmlspecialchars($res['resolution_no'] ?? 'N/A') ?>
                                 </a>
                             </td>
-                            <td>
-                                <span title="<?= htmlspecialchars($res['title']) ?>">
+                            <td class="px-5 py-3.5 align-middle">
+                                <span class="truncate block max-w-[220px] sm:max-w-[280px]" title="<?= htmlspecialchars($res['title']) ?>">
                                     <?= htmlspecialchars(
                                         strlen($res['title']) > 45
                                         ? substr($res['title'], 0, 45) . '...'
@@ -247,12 +241,12 @@ function statusBadge(string $status): string {
                                     ) ?>
                                 </span>
                             </td>
-                            <td>
-                                <span class="badge <?= statusBadge($res['status']) ?>">
+                            <td class="px-5 py-3.5 align-middle">
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold border <?= statusBadge($res['status']) ?>">
                                     <?= ucfirst(str_replace('_', ' ', $res['status'])) ?>
                                 </span>
                             </td>
-                            <td class="text-muted">
+                            <td class="px-5 py-3.5 align-middle text-slate-500">
                                 <?= $res['date_filed']
                                     ? date('M d, Y', strtotime($res['date_filed']))
                                     : '—' ?>
@@ -261,7 +255,7 @@ function statusBadge(string $status): string {
                         <?php endforeach; ?>
                     <?php else: ?>
                         <tr>
-                            <td colspan="4" class="table-empty">
+                            <td colspan="4" class="px-5 py-8 text-center text-slate-450 bg-slate-50/20">
                                 No resolutions on record.
                             </td>
                         </tr>

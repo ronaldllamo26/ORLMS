@@ -8,6 +8,11 @@
  *   $publication — joined publication record
  */
 
+// Initialize variables to prevent undefined variable warnings
+if (empty($publication) || !is_array($publication)) {
+    $publication = [];
+}
+
 $docNo = $publication['doc_no'] ?? 'N/A';
 $docType = $publication['document_type'] ?? 'ordinance';
 $docTitle = $publication['doc_title'] ?? 'N/A';

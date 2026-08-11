@@ -158,9 +158,14 @@ class PortalController extends Controller
             $this->redirect('portal');
         }
 
+        // Fetch public consultations history
+        $consultationModel = $this->model('ConsultationModel');
+        $consultations     = $consultationModel->getForDocument($type, (int)$id);
+
         $this->renderPublic('portal/view', [
-            'pageTitle'   => $publication['doc_no'] ?? 'Document Registry',
-            'publication' => $publication,
+            'pageTitle'     => $publication['doc_no'] ?? 'Document Registry',
+            'publication'   => $publication,
+            'consultations' => $consultations,
         ]);
     }
 

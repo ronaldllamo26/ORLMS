@@ -1,0 +1,8 @@
+.git
+.venv
+.vscode
+.antigravityignore
+requirements.txt
+scratch_migration.php
+*.log
+*.docx

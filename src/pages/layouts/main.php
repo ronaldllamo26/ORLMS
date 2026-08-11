@@ -24,14 +24,41 @@ $pageTitle = $pageTitle ?? APP_SHORT;
 
     <title><?= htmlspecialchars($pageTitle) ?> | <?= APP_SHORT ?></title>
 
-    <!-- Bootstrap 5 CSS -->
-    <link rel="stylesheet"
-          href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+    <!-- Tailwind CSS Play CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <!-- Tailwind Config -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            DEFAULT: '#1a3a5c',
+                            dark: '#122840',
+                            light: '#2c4a6e',
+                        },
+                        accent: {
+                            DEFAULT: '#c9a84c',
+                            dark: '#a8873a',
+                            light: '#d4b96a',
+                        },
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
 
     <!-- ORLMS Global Stylesheet -->
     <link rel="stylesheet" href="<?= APP_URL ?>/public/css/style.css">
 </head>
-<body class="">
+<body class="bg-gray-50 text-gray-900 font-sans">
 
     <!-- Prevent UI flickering by applying saved sidebar state immediately -->
     <script>
@@ -68,20 +95,20 @@ $pageTitle = $pageTitle ?? APP_SHORT;
                 $flashType = htmlspecialchars($flash['type'] ?? 'info');
                 $flashMsg  = htmlspecialchars($flash['message'] ?? '');
 
-                // Map type to CSS class
-                $alertClass = match($flashType) {
-                    'success' => 'alert-success',
-                    'error'   => 'alert-danger',
-                    'warning' => 'alert-warning',
-                    default   => 'alert-info',
+                // Map type to Tailwind alert classes
+                $alertBg = match($flashType) {
+                    'success' => 'bg-emerald-50 text-emerald-800 border-emerald-200',
+                    'error'   => 'bg-rose-50 text-rose-800 border-rose-200',
+                    'warning' => 'bg-amber-50 text-amber-800 border-amber-200',
+                    default   => 'bg-sky-50 text-sky-800 border-sky-200',
                 };
 
                 // Clear the flash message after displaying
                 unset($_SESSION['flash']);
             ?>
-            <div class="alert <?= $alertClass ?> alert-dismissible" id="flash-message" role="alert">
-                <?= $flashMsg ?>
-                <button type="button" class="alert-close" onclick="this.parentElement.remove()"
+            <div class="flex items-center justify-between p-4 mb-6 border rounded-lg <?= $alertBg ?>" id="flash-message" role="alert">
+                <span class="text-sm font-medium"><?= $flashMsg ?></span>
+                <button type="button" class="text-xl font-bold leading-none hover:opacity-75 focus:outline-none" onclick="this.parentElement.remove()"
                         aria-label="Close">&times;</button>
             </div>
         <?php endif; ?>
@@ -95,8 +122,7 @@ $pageTitle = $pageTitle ?? APP_SHORT;
          SCRIPTS
          ═══════════════════════════════════════════════════════ -->
 
-    <!-- Bootstrap 5 JS Bundle (includes Popper) -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Bootstrap JS Bundle omitted (Tailwind Migration) -->
 
     <!-- ORLMS Global JavaScript -->
     <script src="<?= APP_URL ?>/public/js/main.js"></script>

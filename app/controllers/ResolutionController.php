@@ -73,12 +73,17 @@ class ResolutionController extends Controller
         $stmtComm->execute();
         $committees = $stmtComm->fetchAll(PDO::FETCH_ASSOC);
 
+        // Fetch public consultations history
+        $consultationModel = $this->model('ConsultationModel');
+        $consultations     = $consultationModel->getForDocument('resolution', (int) $id);
+
         $this->render('resolutions/view', [
             'pageTitle'     => $resolution['resolution_no'] ?? 'View Resolution',
             'resolution'    => $resolution,
             'aiReport'      => $aiReport,
             'reviewHistory' => $reviewHistory,
             'committees'    => $committees, // Pass committees list
+            'consultations' => $consultations, // Pass consultations list
         ]);
     }
 

@@ -188,6 +188,69 @@ function viewOrdBadge(string $status): string {
             </div>
         </div>
 
+        <!-- Public Consultation & Hearings History -->
+        <div class="card" style="margin-top:20px; margin-bottom:20px;">
+            <div class="card-header">
+                <h2 class="card-title">
+                    <i class="bi bi-people-fill me-1" style="color:var(--color-accent);"></i> Public Consultation & Hearings
+                </h2>
+                <span style="font-size:11px; color:var(--color-text-muted);">
+                    Feedback from the Public Hearing Subsystem
+                </span>
+            </div>
+            <div class="card-body" style="padding: 20px;">
+                <?php if (empty($consultations)): ?>
+                    <div style="text-align:center; padding:15px; color:var(--color-text-muted); font-size:13.5px; background:var(--color-bg); border:1px solid var(--color-border-light); border-radius:var(--radius);">
+                        No public hearings or consultation records have been submitted for this document yet.
+                    </div>
+                <?php else: ?>
+                    <div style="display:flex; flex-direction:column; gap:16px;">
+                        <?php foreach ($consultations as $consult): ?>
+                            <div style="border: 1px solid var(--color-border-light); border-radius: var(--radius-lg); padding: 16px; background: #fafafa;">
+                                <div style="display:flex; justify-content:space-between; align-items:start; flex-wrap:wrap; gap:8px; border-bottom:1px solid var(--color-border-light); padding-bottom:8px; margin-bottom:12px;">
+                                    <div>
+                                        <strong style="color:var(--color-primary); font-size:14px;">Hearing Venue: <?= htmlspecialchars($consult['venue']) ?></strong>
+                                        <div style="font-size:11.5px; color:var(--color-text-muted); margin-top:2px;">
+                                            Held on <?= date('F d, Y', strtotime($consult['hearing_date'])) ?>
+                                        </div>
+                                    </div>
+                                    <div style="text-align:right;">
+                                        <span class="badge badge-draft" style="font-size:11px; padding:3px 8px; background: rgba(0, 132, 255, 0.1); color: #0084FF; border: 1px solid rgba(0, 132, 255, 0.2);">
+                                            <?= htmlspecialchars($consult['total_participants']) ?> Participants
+                                        </span>
+                                    </div>
+                                </div>
+                                <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:12px; font-size:13px; margin-bottom:12px;">
+                                    <div>
+                                        <span style="display:block; font-size:11px; text-transform:uppercase; color:#64748b; font-weight:600;">Opinions Gathered</span>
+                                        <strong><?= htmlspecialchars($consult['total_opinions']) ?> comments</strong>
+                                    </div>
+                                    <div>
+                                        <span style="display:block; font-size:11px; text-transform:uppercase; color:#64748b; font-weight:600;">Sentiment Split</span>
+                                        <strong style="color:#2ec4b6;"><?= htmlspecialchars($consult['sentiment_summary'] ?: 'N/A') ?></strong>
+                                    </div>
+                                    <?php if (!empty($consult['report_file_url'])): ?>
+                                    <div>
+                                        <span style="display:block; font-size:11px; text-transform:uppercase; color:#64748b; font-weight:600;">Official Report</span>
+                                        <a href="<?= htmlspecialchars($consult['report_file_url']) ?>" target="_blank" style="color:var(--color-accent); font-weight:600; text-decoration:none;">
+                                            <i class="bi bi-file-earmark-pdf-fill me-1"></i> View Report &rarr;
+                                        </a>
+                                    </div>
+                                    <?php endif; ?>
+                                </div>
+                                <?php if (!empty($consult['summary_report'])): ?>
+                                    <div style="font-size:12.5px; line-height:1.6; padding:12px; background:#fff; border:1px solid #e2e8f0; border-radius:var(--radius); color:var(--color-text);">
+                                        <strong style="display:block; font-size:11px; text-transform:uppercase; color:#64748b; margin-bottom:4px;">Consultation Summary</strong>
+                                        <?= nl2br(htmlspecialchars($consult['summary_report'])) ?>
+                                    </div>
+                                <?php endif; ?>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
+                <?php endif; ?>
+            </div>
+        </div>
+
     </div>
 
     <!-- RIGHT: Status Panel + AI Validation -->
@@ -252,11 +315,12 @@ function viewOrdBadge(string $status): string {
                         $isDone   = $idx < $currentIdx;
                         $isCurrent= $key === $ordinance['status']
                                     || false; // status matches exactly now
+                        $divStyle = "display:flex; align-items:center; gap:12px; padding:8px 0; border-bottom: 1px solid var(--color-border-light);";
+                        if (!$isDone && !$isCurrent) {
+                            $divStyle .= " opacity:0.4;";
+                        }
                         ?>
-                        <div style="display:flex; align-items:center; gap:12px;
-                                    padding:8px 0;
-                                    <?= !$isDone && !$isCurrent ? 'opacity:0.4;' : '' ?>
-                                    border-bottom: 1px solid var(--color-border-light);">
+                        <div style="<?= $divStyle ?>">
                             <div style="width:10px; height:10px; border-radius:50%; flex-shrink:0;
                                         background-color: <?= $isCurrent ? 'var(--color-accent)' : ($isDone ? 'var(--color-success)' : 'var(--color-border)') ?>;">
                             </div>

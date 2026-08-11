@@ -1,6 +1,6 @@
 <?php
 /**
- * ORLMS - Public Layout
+ * ORLMS - Public Layout (Tailwind CSS)
  *
  * Used for public portal pages. Does not render the left navigation sidebar.
  * Displays a clean government branding header with a portal login shortcut.
@@ -20,154 +20,71 @@ $pageTitle = $pageTitle ?? APP_SHORT;
     
     <title><?= htmlspecialchars($pageTitle) ?> | Public Registry</title>
 
-    <!-- Bootstrap 5 CSS -->
-    <link rel="stylesheet"
-          href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+    <!-- Tailwind CSS Play CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
     
     <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
-    <!-- ORLMS Global Stylesheet -->
-    <link rel="stylesheet" href="<?= APP_URL ?>/public/css/style.css">
-    
-    <style>
-        /* Custom overrides for public layout */
-        body {
-            background-color: #f8f9fa;
-        }
-        
-        .public-navbar {
-            background-color: var(--color-primary);
-            height: var(--navbar-height);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 32px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.15);
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 1000;
-        }
-        
-        .public-brand {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            color: #ffffff;
-            font-weight: 700;
-            font-size: var(--font-size-lg);
-            text-decoration: none;
-        }
-        
-        .public-brand:hover {
-            color: #ffffff;
-            opacity: 0.9;
-        }
-        
-        .public-brand-short {
-            background-color: var(--color-accent);
-            color: var(--color-primary);
-            font-weight: 800;
-            font-size: 13px;
-            padding: 3px 8px;
-            border-radius: var(--radius-sm);
-            letter-spacing: 0.5px;
-        }
-
-        .public-brand-name {
-            font-size: 13px;
-            font-weight: 500;
-            color: rgba(255, 255, 255, 0.85);
-        }
-
-        .public-login-btn {
-            color: #ffffff;
-            font-size: var(--font-size-sm);
-            padding: 5px 14px;
-            border: 1px solid rgba(255, 255, 255, 0.4);
-            border-radius: var(--radius);
-            text-decoration: none;
-            transition: all 0.2s ease;
-            font-weight: 500;
-        }
-        
-        .public-login-btn:hover {
-            background-color: rgba(255, 255, 255, 0.1);
-            color: #ffffff;
-            border-color: #ffffff;
-        }
-
-        .public-container {
-            margin-top: calc(var(--navbar-height) + 24px);
-            padding: var(--content-padding);
-            max-width: 1200px;
-            margin-left: auto;
-            margin-right: auto;
-            min-height: calc(100vh - var(--navbar-height) - 100px);
-        }
-        
-        .public-footer {
-            background-color: #ffffff;
-            border-top: 1px solid var(--color-border);
-            padding: 24px;
-            text-align: center;
-            font-size: 12px;
-            color: var(--color-text-muted);
-            margin-top: 48px;
-        }
-
-        @media (max-width: 768px) {
-            .public-brand-name {
-                display: none;
-            }
-            .public-navbar {
-                padding: 0 16px;
-            }
-            .public-container {
-                padding: 16px;
+    <!-- Tailwind Config -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            DEFAULT: '#1a3a5c',
+                            dark: '#122840',
+                            light: '#2c4a6e',
+                        },
+                        accent: {
+                            DEFAULT: '#c9a84c',
+                            dark: '#a8873a',
+                            light: '#d4b96a',
+                        },
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
             }
         }
-    </style>
+    </script>
 </head>
-<body>
+<body class="bg-slate-50 text-slate-800 font-sans antialiased">
 
     <!-- Top Public Navbar -->
-    <nav class="public-navbar">
-        <a href="<?= APP_URL ?>/" class="public-brand">
-            <span class="public-brand-short"><?= APP_SHORT ?></span>
-            <span class="public-brand-name">
+    <nav class="public-navbar no-print print:hidden fixed top-0 left-0 right-0 h-[56px] bg-primary flex items-center justify-between px-8 shadow-[0_2px_4px_rgba(0,0,0,0.15)] z-[1000]">
+        <a href="<?= APP_URL ?>/" class="flex items-center gap-3 no-underline text-white font-bold text-lg">
+            <span class="bg-accent text-primary font-extrabold text-[13px] px-2 py-0.5 rounded tracking-wider"><?= APP_SHORT ?></span>
+            <span class="hidden sm:inline text-[13px] font-medium text-white/85">
                 Ordinance and Resolution Public Portal
             </span>
         </a>
-        <div class="d-flex align-items-center gap-3">
-            <a href="<?= APP_URL ?>/" class="text-white text-decoration-none fw-semibold d-flex align-items-center gap-1" style="font-size: 13.5px;">
+        <div class="flex items-center gap-4">
+            <a href="<?= APP_URL ?>/" class="text-white text-xs font-semibold hover:text-white/85 transition no-underline flex items-center gap-1">
                 <i class="bi bi-arrow-left-circle-fill"></i> Back to Home
             </a>
-            <a href="<?= APP_ROOT_URL ?>/dashboard" class="public-login-btn">
+            <a href="<?= APP_ROOT_URL ?>/dashboard" class="text-white text-xs font-semibold hover:bg-white/10 border border-white/40 hover:border-white px-3 py-1.5 rounded transition no-underline">
                 Staff Login
             </a>
         </div>
     </nav>
 
     <!-- Main Container -->
-    <main class="public-container">
+    <main class="mt-[80px] p-6 max-w-[1200px] mx-auto min-h-[calc(100vh-180px)]">
         <?= $content ?>
     </main>
 
     <!-- Footer -->
-    <footer class="public-footer">
+    <footer class="public-footer no-print print:hidden bg-white border-t border-slate-200 py-6 text-center text-xs text-slate-500 mt-12">
         <div>
             © 2026 Ordinance and Resolution Lifecycle Management System (ORLMS). All rights reserved.
         </div>
-        <div style="font-size:11px; margin-top:4px;">
+        <div class="text-[11px] text-slate-400 mt-1">
             Municipality Legislative Record and AI Gatekeeper Portal.
         </div>
     </footer>
-
-    <!-- Bootstrap 5 JS Bundle -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>
 </html>

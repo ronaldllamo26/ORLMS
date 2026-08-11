@@ -1,6 +1,6 @@
 <?php
 /**
- * ORLMS - Login Page
+ * ORLMS - Login Page (Tailwind CSS)
  *
  * Standalone page — rendered without the main layout.
  * Called via AuthController::login() with useLayout = false.
@@ -20,182 +20,59 @@
 
     <title>Login | <?= APP_SHORT ?></title>
 
-    <!-- Bootstrap 5 CSS -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
-    
+    <!-- Tailwind CSS Play CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
     <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
-    <!-- ORLMS Global Stylesheet -->
-    <link rel="stylesheet" href="<?= APP_URL ?>/public/css/style.css">
+    <!-- Tailwind Config -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            DEFAULT: '#0C2340', // CSJDM Deep Blue
+                            dark: '#08182c',
+                            light: '#1e3a5f',
+                        },
+                        accent: {
+                            DEFAULT: '#F2A900', // CSJDM Gold
+                            dark: '#cc8f00',
+                            light: '#ffd266',
+                        },
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
 
     <style>
-        :root {
-            --color-lgu-blue: #0C2340;
-            --color-lgu-gold: #F2A900;
-            --color-lgu-sky: #0084FF;
-        }
-
         body {
             background: linear-gradient(135deg, rgba(12, 35, 64, 0.45) 0%, rgba(8, 24, 44, 0.7) 100%), 
                         url('<?= APP_URL ?>/public/img/csjdm_cityhall.webp') no-repeat center center fixed;
             background-size: cover;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-            margin: 0;
-            padding: 16px;
-            font-family: 'Inter', sans-serif;
-        }
-
-        .login-box {
-            background: rgba(12, 35, 64, 0.15) !important; /* Premium Transparent LGU Blue */
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.2) !important;
-            border-radius: 12px !important;
-            box-shadow: 0 20px 45px rgba(0, 0, 0, 0.35) !important;
-            width: 100%;
-            max-width: 440px;
-            color: #ffffff;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .login-header {
-            background-color: transparent !important;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 35px 30px 25px 30px;
-            text-align: center;
-        }
-
-        .login-header img {
-            object-fit: contain;
-            margin-bottom: 10px;
-        }
-
-        .login-header h1 {
-            color: #ffffff !important;
-            font-size: 15px !important;
-            font-weight: 700;
-            margin-top: 12px;
-            line-height: 1.4;
-            letter-spacing: -0.3px;
-        }
-
-        .login-header p {
-            color: var(--color-lgu-gold) !important;
-            font-size: 11px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin: 6px 0 0 0;
-        }
-
-        .login-body {
-            padding: 30px;
-        }
-
-        .form-control-login {
-            background-color: rgba(255, 255, 255, 0.95);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 4px;
-            padding: 11px 14px;
-            font-size: 13.5px;
-            width: 100%;
-            color: #1e293b;
-            transition: border-color 0.15s ease, box-shadow 0.15s ease;
-        }
-
-        .form-control-login:focus {
-            outline: none;
-            border-color: var(--color-lgu-gold);
-            box-shadow: 0 0 0 3px rgba(242, 169, 0, 0.3);
-            background-color: #ffffff;
-        }
-
-        .btn-login {
-            width: 100%;
-            padding: 11px;
-            background-color: var(--color-lgu-gold);
-            color: var(--color-lgu-blue);
-            border: 1px solid var(--color-lgu-gold);
-            border-radius: 4px;
-            font-size: 14px;
-            font-weight: 700;
-            cursor: pointer;
-            letter-spacing: 0.3px;
-            transition: all 0.2s ease;
-            box-shadow: 0 4px 8px rgba(242, 169, 0, 0.15);
-        }
-
-        .btn-login:hover {
-            background-color: #cc8f00;
-            border-color: #cc8f00;
-            color: #ffffff;
-            transform: translateY(-1px);
-            box-shadow: 0 6px 12px rgba(242, 169, 0, 0.25);
-        }
-
-        .btn-login:disabled {
-            background-color: rgba(242, 169, 0, 0.5);
-            border-color: rgba(242, 169, 0, 0.5);
-            color: rgba(12, 35, 64, 0.6);
-            cursor: not-allowed;
-            transform: none;
-            box-shadow: none;
-        }
-
-        .login-error {
-            background-color: rgba(239, 68, 68, 0.15);
-            border: 1px solid rgba(239, 68, 68, 0.3);
-            color: #f87171;
-            padding: 10px 14px;
-            border-radius: 4px;
-            font-size: 13px;
-            margin-bottom: 16px;
-        }
-
-        .back-link {
-            text-decoration: none;
-            font-size: 13px;
-            font-weight: 600;
-            color: #ffffff;
-            opacity: 0.85;
-            transition: opacity 0.2s, color 0.2s;
-        }
-        .back-link:hover {
-            opacity: 1;
-            color: var(--color-lgu-gold);
-        }
-
-        .login-footer {
-            background-color: rgba(0, 0, 0, 0.15) !important;
-            border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
-            color: rgba(255, 255, 255, 0.6) !important;
-            font-size: 10.5px;
-            padding: 14px 30px;
-            text-align: center;
-            border-radius: 0 0 12px 12px;
         }
     </style>
 </head>
-<body>
+<body class="flex items-center justify-center min-h-screen p-4 font-sans antialiased">
 
-<div class="login-box">
+<div class="w-full max-w-[440px] bg-primary/20 backdrop-blur-md border border-white/20 rounded-xl shadow-[0_20px_45px_rgba(0,0,0,0.35)] text-white overflow-hidden flex flex-col">
 
     <!-- ── Header ──────────────────────────────────── -->
-    <div class="login-header">
+    <div class="border-b border-white/10 p-[35px_30px_25px_30px] text-center">
         <!-- Official Seal Image of CSJDM LGU -->
-        <img src="<?= APP_URL ?>/public/img/csjdm_logo.webp" alt="CSJDM Logo" width="60" height="60">
-        <h1>Ordinance and Resolution<br>Lifecycle Management System</h1>
-        <p>Authorized Personnel Only</p>
+        <img class="mx-auto object-contain mb-3" src="<?= APP_URL ?>/public/img/csjdm_logo.webp" alt="CSJDM Logo" width="60" height="60">
+        <h1 class="text-white text-base font-bold mt-3 leading-relaxed tracking-tight">Ordinance and Resolution<br>Lifecycle Management System</h1>
+        <p class="text-accent text-[11px] font-bold uppercase tracking-wider mt-1.5">Authorized Personnel Only</p>
     </div>
 
     <!-- ── Body: Login Form ────────────────────────── -->
-    <div class="login-body">
+    <div class="p-[30px]">
 
         <!-- Session Flash Message -->
         <?php if (isset($_SESSION['flash'])): ?>
@@ -204,19 +81,21 @@
                 $flashType = htmlspecialchars($flash['type'] ?? 'info');
                 $flashMsg  = htmlspecialchars($flash['message'] ?? '');
                 
-                $flashClass = $flashType === 'error' ? 'login-error' : 'alert alert-info py-2';
+                $flashClass = $flashType === 'error' 
+                    ? 'bg-rose-500/10 border border-rose-500/30 text-rose-300' 
+                    : 'bg-sky-500/10 border border-sky-500/30 text-sky-300';
                 unset($_SESSION['flash']);
             ?>
-            <div class="<?= $flashClass ?>" role="alert" style="font-size: 13px; margin-bottom: 16px;">
+            <div class="p-3 rounded text-sm mb-4 <?= $flashClass ?>" role="alert">
                 <?= $flashMsg ?>
             </div>
         <?php endif; ?>
 
         <!-- Error message (if login failed) -->
         <?php if (!empty($error)): ?>
-            <div class="login-error" role="alert">
-                <i class="bi bi-exclamation-triangle-fill me-1"></i>
-                <?= htmlspecialchars($error) ?>
+            <div class="bg-rose-500/10 border border-rose-500/30 text-rose-300 p-3 rounded text-sm mb-4 flex items-center gap-2" role="alert">
+                <i class="bi bi-exclamation-triangle-fill shrink-0"></i>
+                <span><?= htmlspecialchars($error) ?></span>
             </div>
         <?php endif; ?>
 
@@ -226,14 +105,14 @@
               novalidate>
 
             <!-- Email -->
-            <div class="form-group mb-3">
-                <label for="email" class="form-label text-white-50 fw-semibold" style="font-size:12.5px; margin-bottom:6px; display:block;">
+            <div class="mb-4">
+                <label for="email" class="block text-white/60 font-semibold text-xs mb-1.5">
                     Email Address
                 </label>
                 <input type="email"
                        id="email"
                        name="email"
-                       class="form-control-login"
+                       class="w-full bg-white/95 border border-white/20 rounded px-3.5 py-2.5 text-[13.5px] text-slate-800 transition duration-150 focus:outline-none focus:border-accent focus:ring-3 focus:ring-accent/30 placeholder-slate-400"
                        placeholder="user@csjdm.gov.ph"
                        value="<?= htmlspecialchars($_POST['email'] ?? '') ?>"
                        required
@@ -242,14 +121,14 @@
             </div>
 
             <!-- Password -->
-            <div class="form-group mb-4">
-                <label for="password" class="form-label text-white-50 fw-semibold" style="font-size:12.5px; margin-bottom:6px; display:block;">
+            <div class="mb-5">
+                <label for="password" class="block text-white/60 font-semibold text-xs mb-1.5">
                     Password
                 </label>
                 <input type="password"
                        id="password"
                        name="password"
-                       class="form-control-login"
+                       class="w-full bg-white/95 border border-white/20 rounded px-3.5 py-2.5 text-[13.5px] text-slate-800 transition duration-150 focus:outline-none focus:border-accent focus:ring-3 focus:ring-accent/30 placeholder-slate-400"
                        placeholder="Enter your password"
                        required
                        autocomplete="current-password">
@@ -257,14 +136,14 @@
 
             <!-- Submit -->
             <button type="submit"
-                    class="btn-login"
+                    class="w-full py-2.5 bg-accent hover:bg-accent-dark text-primary font-bold text-sm border border-accent rounded shadow-md hover:shadow-lg transition duration-200"
                     id="btn-login-submit">
                 Log In
             </button>
 
             <!-- Back Link -->
-            <div class="text-center mt-3">
-                <a href="<?= APP_URL ?>/" class="back-link d-inline-flex align-items-center gap-1">
+            <div class="text-center mt-4">
+                <a href="<?= APP_URL ?>/" class="inline-flex items-center gap-1.5 text-white/80 hover:text-accent font-semibold text-xs transition duration-150">
                     <i class="bi bi-arrow-left-circle-fill"></i> Back to Landing Page
                 </a>
             </div>
@@ -274,14 +153,11 @@
     </div>
 
     <!-- ── Footer ──────────────────────────────────── -->
-    <div class="login-footer">
+    <div class="bg-black/15 border-t border-white/10 text-white/50 text-[10.5px] p-[14px_30px] text-center">
         © 2026 CSJDM Legislative Dept. All rights reserved.
     </div>
 
 </div>
-
-<!-- Bootstrap 5 JS -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
 <script>
     // Disable login button on submit to prevent double-click
@@ -289,6 +165,7 @@
         var btn = document.getElementById('btn-login-submit');
         btn.disabled = true;
         btn.textContent = 'Logging in...';
+        btn.classList.add('opacity-70', 'cursor-not-allowed');
     });
 </script>
 

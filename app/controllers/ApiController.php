@@ -21,12 +21,16 @@ class ApiController extends Controller
     /** @var UserModel */
     private UserModel $userModel;
 
+    /** @var ConsultationModel */
+    private ConsultationModel $consultationModel;
+
     public function __construct()
     {
         // No session check ($this->requireLogin()) so external subsystems can connect.
         $this->ordinanceModel = $this->model('OrdinanceModel');
         $this->resolutionModel = $this->model('ResolutionModel');
         $this->userModel = $this->model('UserModel');
+        $this->consultationModel = $this->model('ConsultationModel');
     }
 
     // ─────────────────────────────────────────────────────────────────────────
@@ -222,5 +226,82 @@ class ApiController extends Controller
                 'ai_report' => $aiReport ?: null
             ]
         ]);
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // 4. POST /api/consultations — Receive public hearing consultation data
+    // ─────────────────────────────────────────────────────────────────────────
+    public function consultations(): void
+    {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            $this->json(['success' => false, 'message' => 'Only POST requests are allowed.'], 405);
+        }
+
+        $json = file_get_contents('php://input');
+        $data = json_decode($json, true);
+
+        if (empty($data)) {
+            $data = $_POST;
+        }
+
+        // Validate required fields
+        $requiredFields = ['document_id', 'document_type', 'hearing_date', 'venue'];
+        foreach ($requiredFields as $field) {
+            if (empty($data[$field])) {
+                $this->json(['success' => false, 'message' => "Field '{$field}' is required."], 400);
+            }
+        }
+
+        $docType = strtolower(trim($data['document_type']));
+        if ($docType !== 'ordinance' && $docType !== 'resolution') {
+            $this->json(['success' => false, 'message' => "Field 'document_type' must be 'ordinance' or 'resolution'."], 400);
+        }
+
+        $docId = (int)$data['document_id'];
+        if ($docId <= 0) {
+            $this->json(['success' => false, 'message' => 'Invalid document ID.'], 400);
+        }
+
+        // Verify the document exists in our database
+        $document = ($docType === 'ordinance') 
+            ? $this->ordinanceModel->findById($docId) 
+            : $this->resolutionModel->findById($docId);
+
+        if (!$document) {
+            $this->json(['success' => false, 'message' => "Document not found in ORLMS database."], 404);
+        }
+
+        // Save consultation
+        $newId = $this->consultationModel->insert([
+            'document_id'        => $docId,
+            'document_type'      => $docType,
+            'hearing_date'       => trim($data['hearing_date']),
+            'venue'              => trim($data['venue']),
+            'total_participants' => isset($data['total_participants']) ? (int)$data['total_participants'] : 0,
+            'total_opinions'     => isset($data['total_opinions']) ? (int)$data['total_opinions'] : 0,
+            'sentiment_summary'  => isset($data['sentiment_summary']) ? trim($data['sentiment_summary']) : null,
+            'summary_report'     => isset($data['summary_report']) ? trim($data['summary_report']) : null,
+            'report_file_url'    => isset($data['report_file_url']) ? trim($data['report_file_url']) : null,
+        ]);
+
+        if ($newId) {
+            // Log audit using system default user
+            $this->userModel->logAudit(
+                1,
+                'API_RECEIVE_CONSULTATION',
+                $docType === 'ordinance' ? 'ordinances' : 'resolutions',
+                $docId,
+                null,
+                ['consultation_id' => (int)$newId, 'source' => 'external_api']
+            );
+
+            $this->json([
+                'success' => true,
+                'message' => 'Public consultation data received and linked successfully.',
+                'id'      => (int)$newId
+            ], 201);
+        } else {
+            $this->json(['success' => false, 'message' => 'Failed to save consultation data.'], 500);
+        }
     }
 }
