@@ -11,6 +11,9 @@ RUN a2enmod rewrite
 # Copy application files to the container
 COPY . /var/www/html/
 
+# Copy config.php.example to config.php (since config.php is gitignored)
+RUN cp /var/www/html/config/config.php.example /var/www/html/config/config.php
+
 # Set working directory
 WORKDIR /var/www/html/
 
