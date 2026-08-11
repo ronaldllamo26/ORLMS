@@ -26,4 +26,5 @@ foreach ($required_db_constants as $constant) {
 // DSN (Data Source Name)
 // Used by core/Database.php when creating the PDO connection.
 // ─────────────────────────────────────────────────────────────────────────────
-define('DB_DSN', 'pgsql:host=' . DB_HOST . ';port=' . DB_PORT . ';dbname=' . DB_NAME);
+$sslmode = (DB_HOST !== 'localhost' && DB_HOST !== '127.0.0.1') ? ';sslmode=require' : '';
+define('DB_DSN', 'pgsql:host=' . DB_HOST . ';port=' . DB_PORT . ';dbname=' . DB_NAME . $sslmode);
