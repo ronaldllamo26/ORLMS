@@ -251,6 +251,46 @@ class PublicationsController extends Controller
         ]);
     }
 
+    /**
+     * AJAX endpoint to generate or fetch AI summary on-demand for any document
+     */
+    public function generate_summary(string $type, string $id): void
+    {
+        $this->requireLogin();
+        header('Content-Type: application/json');
+
+        if (!in_array($type, ['ordinance', 'resolution'])) {
+            echo json_encode(['success' => false, 'message' => 'Invalid document type.']);
+            exit;
+        }
+
+        $model    = $this->model($type === 'ordinance' ? 'OrdinanceModel' : 'ResolutionModel');
+        $document = $model->getById((int) $id);
+
+        if (!$document) {
+            echo json_encode(['success' => false, 'message' => 'Document not found.']);
+            exit;
+        }
+
+        // Try existing summary
+        if (!empty($document['ai_summary'])) {
+            echo json_encode(['success' => true, 'summary' => $document['ai_summary']]);
+            exit;
+        }
+
+        // Run AI Engine to generate summary on-demand
+        $aiModel = $this->model('AiValidationModel');
+        $report  = $aiModel->validateDocument($type, $document);
+
+        $summary = $report['ai_summary'] ?? 'Resolusyon ng Sangguniang Panlungsod ng CSJDM para sa opisyal na pagkilala at gawad parangal.';
+
+        // Cache summary back to document
+        $model->update((int) $id, ['ai_summary' => $summary]);
+
+        echo json_encode(['success' => true, 'summary' => $summary]);
+        exit;
+    }
+
     // ─────────────────────────────────────────────────────────────────────────
     // PRIVATE: FILE UPLOAD HANDLER
     // ─────────────────────────────────────────────────────────────────────────

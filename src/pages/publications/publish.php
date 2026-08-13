@@ -74,23 +74,20 @@ $docNo   = $document[$noField] ?? 'N/A';
                         $hasAiSummary = !empty($document['ai_summary']);
                     ?>
                     <div class="form-group">
-                        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:4px;">
+                        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:6px;">
                             <label for="plain_summary" class="form-label" style="margin:0;">
                                 Plain-Language Summary <span class="form-required">*</span>
                             </label>
-                            <?php if ($hasAiSummary): ?>
-                                <span class="badge badge-info" style="font-size:10px; padding:3px 8px; background:#e0f2fe; color:#0369a1; border-radius:12px; font-weight:600;">
-                                    ✨ AI Summary Suggested
-                                </span>
-                            <?php endif; ?>
+                            <button type="button" id="btn-generate-ai-summary" class="btn btn-xs" style="background:#fef3c7; color:#92400e; border:1px solid #fde68a; font-weight:600; font-size:11px; padding:3px 10px; border-radius:6px; cursor:pointer;">
+                                ✨ Auto-Generate AI Summary
+                            </button>
                         </div>
                         <textarea id="plain_summary" name="plain_summary"
                                   class="form-control" rows="5"
                                   placeholder="Write a simple, easy-to-understand summary of what this <?= $docType ?> does and who it affects..."
                                   required><?= htmlspecialchars($summaryValue) ?></textarea>
-                        <span class="form-hint">
-                            This summary will be visible to the general public on the Public Portal.
-                            <?= $hasAiSummary ? 'Pre-filled by AI Validation Engine — you can edit or customize it.' : 'Use simple language — avoid legal jargon.' ?>
+                        <span class="form-hint" id="summary-hint">
+                            This summary will be visible to the general public on the Public Portal. Click the button above to auto-generate using AI.
                         </span>
                         <?php if (!empty($errors['plain_summary'])): ?>
                         <span class="form-error">
@@ -186,3 +183,39 @@ $docNo   = $document[$noField] ?? 'N/A';
     </div>
 
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    var btn = document.getElementById('btn-generate-ai-summary');
+    var txt = document.getElementById('plain_summary');
+    var hint = document.getElementById('summary-hint');
+
+    if (btn && txt) {
+        btn.addEventListener('click', function () {
+            btn.disabled = true;
+            btn.textContent = '⏳ Generating AI Summary...';
+
+            fetch('<?= APP_ROOT_URL ?>/publications/generate_summary/<?= $docType ?>/<?= $document['id'] ?>')
+                .then(function (res) { return res.json(); })
+                .then(function (data) {
+                    btn.disabled = false;
+                    btn.textContent = '✨ Auto-Generate AI Summary';
+                    if (data.success && data.summary) {
+                        txt.value = data.summary;
+                        if (hint) {
+                            hint.textContent = '✨ AI Summary generated successfully! You can edit or customize it before publishing.';
+                            hint.style.color = '#0369a1';
+                        }
+                    } else {
+                        alert(data.message || 'Failed to generate AI summary.');
+                    }
+                })
+                .catch(function (err) {
+                    btn.disabled = false;
+                    btn.textContent = '✨ Auto-Generate AI Summary';
+                    alert('Error connecting to AI service.');
+                });
+        });
+    }
+});
+</script>
