@@ -69,17 +69,28 @@ $docNo   = $document[$noField] ?? 'N/A';
                     </div>
 
                     <!-- Plain-Language Summary -->
+                    <?php 
+                        $summaryValue = $input['plain_summary'] ?? $document['ai_summary'] ?? '';
+                        $hasAiSummary = !empty($document['ai_summary']);
+                    ?>
                     <div class="form-group">
-                        <label for="plain_summary" class="form-label">
-                            Plain-Language Summary <span class="form-required">*</span>
-                        </label>
+                        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:4px;">
+                            <label for="plain_summary" class="form-label" style="margin:0;">
+                                Plain-Language Summary <span class="form-required">*</span>
+                            </label>
+                            <?php if ($hasAiSummary): ?>
+                                <span class="badge badge-info" style="font-size:10px; padding:3px 8px; background:#e0f2fe; color:#0369a1; border-radius:12px; font-weight:600;">
+                                    ✨ AI Summary Suggested
+                                </span>
+                            <?php endif; ?>
+                        </div>
                         <textarea id="plain_summary" name="plain_summary"
                                   class="form-control" rows="5"
                                   placeholder="Write a simple, easy-to-understand summary of what this <?= $docType ?> does and who it affects..."
-                                  required><?= htmlspecialchars($input['plain_summary'] ?? '') ?></textarea>
+                                  required><?= htmlspecialchars($summaryValue) ?></textarea>
                         <span class="form-hint">
-                            This summary will be visible to the general public.
-                            Use simple language — avoid legal jargon.
+                            This summary will be visible to the general public on the Public Portal.
+                            <?= $hasAiSummary ? 'Pre-filled by AI Validation Engine — you can edit or customize it.' : 'Use simple language — avoid legal jargon.' ?>
                         </span>
                         <?php if (!empty($errors['plain_summary'])): ?>
                         <span class="form-error">
