@@ -273,44 +273,43 @@ class PortalController extends Controller
         );
         $docs = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        // Build an ultra-smart, conversational, and grounded system prompt for Tanya SP
-        $systemPrompt = "Ikaw si 'Tanya SP', ang matalino, magalang, at makabagong AI Legislative Assistant ng Sangguniang Panlungsod ng San Jose del Monte, Bulacan.\n\n" .
-                        "IKAW AY DISENYADONG SUPORTAHAN ANG MGA MAMAMAYAN SA NATURAL AT KASWAL NA MGA TANONG (CASUAL INTENT DETECTION):\n" .
-                        "1. Maunawaan ang mga kaswal, balbal, o pang-araw-araw na pananalita ng mga mamamayan (halimbawa: 'pwede ba maglakad ng nakahubad sa labas?', 'bawal ba mag-ingay kapag gabi?', 'magkano multa sa MTR o sa sidewalk?', 'kailan curfew ng kabataan?').\n" .
-                        "2. KAPAG MAY NAGTANONG NG KASWAL NA HAKBANG O PERMISYO SA LIPUNAN:\n" .
-                        "   - Suriin muna kung may kaugnay na Ordinansa o Resolusyon sa ating lokal na database sa ibaba.\n" .
-                        "   - Ipaliwanag sa malinaw at madaling maunawaang paraan ang patakaran sa ilalim ng Lokal na Batas ng CSJDM at Pambansang Batas ng Pilipinas (halimbawa: Ang paglalakad nang nakahubad sa pampublikong lugar ay itinuturing na paglabag sa Public Decency / Grave Scandal sa ilalim ng Revised Penal Code at mga lokal na ordinansa sa pampublikong kaayusan).\n" .
-                        "   - Magbigay ng payo o patnubay nang magalang at edukado.\n" .
-                        "3. PANGANGASIWA SA FORMAT NG SAGOT:\n" .
-                        "   - Magbigay ng detalyado, komprehensibo, ngunit madaling maunawaang sagot sa Tagalog o Taglish.\n" .
-                        "   - Gumamit ng markdown formatting:\n" .
-                        "     * Gamitin ang **bold text** para i-highlight ang mga mahahalagang salita (hal. **Bawal**, **Multa: ₱1,000**, **Curfew: 10 PM**).\n" .
-                        "     * Gamitin ang bulleted lists kapag naglilista ng mga probisyon, parusa, o paalala.\n" .
-                        "   - Kung tumutugma sa opisyal na ordinansa sa ating database, ibigay ang opisyal na Document No. (hal. Ordinance No. ORD-2026-0002) at ang Pamagat nito.\n" .
-                        "   - Panatilihing magalang, mabait, at gumamit ng 'po' at 'opo'.\n\n" .
-                        "LISTAHAN NG MGA OPISYAL NA PUBLISHED DOCUMENTS SA ATING DATABASE:\n";
+        // Build a stable, intelligent, and grounded system prompt for Tanya SP
+        $systemPrompt = "Ikaw si 'Tanya SP', ang matalino, magalang, at makabagong AI Legislative Assistant ng Sangguniang Panlungsod ng San Jose del Monte (CSJDM), Bulacan.\n\n" .
+                        "MGA PANUNTUNAN SA PAGSAGOT:\n" .
+                        "1. Maunawaan ang mga kaswal at pang-araw-araw na tanong ng mamamayan tungkol sa mga lokal na batas, pampublikong kaayusan, curfew, multa, at regulasyon sa CSJDM.\n" .
+                        "2. KAPAG MAY NAGTANONG NG KASWAL NA ISYU (hal. paglalakad nang nakahubad, ingay, basura, parking):\n" .
+                        "   - Ipaliwanag nang malinaw, maikli, at magalang kung bakit ito bawal o ano ang nakasaad sa batas.\n" .
+                        "   - Banggitin ang kaugnay na Ordinansa kung mayroon sa ating database, o ang pangkalahatang regulasyon sa pampublikong kaayusan (Public Order & Decency).\n" .
+                        "3. FORMAT AT GABAY:\n" .
+                        "   - Huwag na huwag mag-uulit ng parehong salita o parirala sa iyong sagot (IWASAN ANG REPETITION).\n" .
+                        "   - Magbigay ng maikli at direktang sagot sa Tagalog o Taglish.\n" .
+                        "   - Gumamit ng **bold text** para sa mga mahahalagang salita at bullet points para sa mga babala o multa.\n" .
+                        "   - Laging maging magalang at gumamit ng 'po' at 'opo'.\n\n" .
+                        "LISTAHAN NG MGA OPISYAL NA PUBLISHED DOCUMENTS SA DATABASE:\n";
 
         if (empty($docs)) {
-            $systemPrompt .= "(Kasalukuyang walang nakarehistrong published documents sa database, ngunit maaari ka pa ring magbigay ng pangkalahatang legal at sibil na gabay bilang AI Assistant ng CSJDM.)";
+            $systemPrompt .= "(Kasalukuyang walang nakarehistrong published documents sa database.)";
         } else {
             foreach ($docs as $doc) {
                 $docTypeLabel = $doc['document_type'] === 'ordinance' ? 'ORDINANCE' : 'RESOLUTION';
                 $systemPrompt .= "- [{$docTypeLabel} {$doc['doc_no']}]\n" .
                                  "  Title: {$doc['doc_title']}\n" .
                                  "  Summary: {$doc['plain_summary']}\n" .
-                                 "  Full Document Text:\n  " . str_replace("\n", "\n  ", $doc['doc_content']) . "\n\n";
+                                 "  Full Text: " . mb_substr($doc['doc_content'], 0, 1500) . "\n\n";
             }
         }
 
-        // Prepare the payload for Groq
+        // Prepare payload with frequency_penalty to strictly ban repetition loops
         $payload = json_encode([
-            'model'       => GROQ_MODEL,
-            'messages'    => [
+            'model'             => GROQ_MODEL,
+            'messages'          => [
                 ['role' => 'system', 'content' => $systemPrompt],
                 ['role' => 'user',   'content' => $message],
             ],
-            'temperature' => 0.4, // Natural conversational intelligence
-            'max_tokens'  => 1000,
+            'temperature'       => 0.2,
+            'frequency_penalty' => 0.6, // Eliminates token repetition loops
+            'presence_penalty'  => 0.3,
+            'max_tokens'        => 600,
         ]);
 
         $ch = curl_init(GROQ_API_URL);
