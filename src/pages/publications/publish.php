@@ -203,7 +203,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     if (data.success && data.summary) {
                         txt.value = data.summary;
                         if (hint) {
-                            hint.textContent = '✨ AI Summary generated successfully! You can edit or customize it before publishing.';
+                            hint.textContent = '✨ AI Summary generated automatically! You can edit or customize it before publishing.';
                             hint.style.color = '#0369a1';
                         }
                     } else {
@@ -216,6 +216,11 @@ document.addEventListener('DOMContentLoaded', function () {
                     alert('Error connecting to AI service.');
                 });
         });
+
+        // Automatically trigger AI summary generation on page load if empty
+        if (!txt.value.trim()) {
+            btn.click();
+        }
     }
 });
 </script>
