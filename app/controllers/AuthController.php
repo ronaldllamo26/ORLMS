@@ -178,6 +178,117 @@ class AuthController extends Controller
     }
 
     // ─────────────────────────────────────────────────────────────────────────
+    // FORGOT PASSWORD — GET: show form | POST: send OTP email
+    // ─────────────────────────────────────────────────────────────────────────
+    public function forgot_password(): void
+    {
+        if ($this->isLoggedIn()) {
+            $this->redirect('dashboard');
+        }
+
+        $error = null;
+
+        if ($this->isPost()) {
+            $email = trim($this->post('email', ''));
+
+            if (empty($email) || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                $error = 'Mangyaring maglagay ng tamang email address.';
+            } else {
+                $user = $this->userModel->findByEmail($email);
+
+                if (!$user) {
+                    // For security, show friendly message even if email not found
+                    $this->flash('info', 'Kung rehistrado ang email, naipadala na ang Reset Code.');
+                    $this->redirect('auth/reset_password');
+                } elseif (!(bool) $user['is_active']) {
+                    $error = 'Ang account na ito ay deactivated. Makipag-ugnayan sa Administrator.';
+                } else {
+                    $_SESSION['reset_pending']    = true;
+                    $_SESSION['reset_user_id']    = (int) $user['id'];
+                    $_SESSION['reset_user_email'] = $user['email'];
+                    $_SESSION['reset_user_name']  = $user['name'];
+                    $_SESSION['reset_code']       = (defined('MFA_SMTP_ENABLE') && MFA_SMTP_ENABLE) ? rand(100000, 999999) : 123456;
+                    $_SESSION['reset_expires']    = time() + 600; // 10 minutes
+
+                    error_log("[Password Reset] Code for " . $user['email'] . ": " . $_SESSION['reset_code']);
+
+                    if (defined('MFA_SMTP_ENABLE') && MFA_SMTP_ENABLE) {
+                        $this->sendOtpEmail($user['email'], $user['name'], $_SESSION['reset_code']);
+                    }
+
+                    $this->flash('success', 'Ang 6-digit Reset Code ay naipadala sa iyong email.');
+                    $this->redirect('auth/reset_password');
+                }
+            }
+        }
+
+        $this->render('auth/forgot_password', ['error' => $error], false);
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // RESET PASSWORD — GET: show form | POST: update password
+    // ─────────────────────────────────────────────────────────────────────────
+    public function reset_password(): void
+    {
+        if ($this->isLoggedIn()) {
+            $this->redirect('dashboard');
+        }
+
+        if (!isset($_SESSION['reset_pending']) || !isset($_SESSION['reset_user_id'])) {
+            $this->redirect('auth/forgot_password');
+        }
+
+        $error = null;
+
+        if ($this->isPost()) {
+            $enteredCode     = trim($this->post('reset_code', ''));
+            $newPassword     = $this->post('new_password', '');
+            $confirmPassword = $this->post('confirm_password', '');
+
+            if (empty($enteredCode) || empty($newPassword)) {
+                $error = 'Mangyaring punan ang lahat ng kinakailangang field.';
+            } elseif (time() > $_SESSION['reset_expires']) {
+                $error = 'Expired na ang Reset Code. Mag-request ng bagong code.';
+            } elseif ($enteredCode !== (string)$_SESSION['reset_code']) {
+                $error = 'Maling Reset Code. Pakisuri muli sa iyong email.';
+            } elseif (strlen($newPassword) < 6) {
+                $error = 'Ang bagong password ay dapat may hindi bababa sa 6 na karakter.';
+            } elseif ($newPassword !== $confirmPassword) {
+                $error = 'Hindi magkatugma ang kumpirmasyon ng password.';
+            } else {
+                // Update password in database
+                $userId = (int) $_SESSION['reset_user_id'];
+                $updated = $this->userModel->updatePassword($userId, $newPassword);
+
+                if ($updated) {
+                    $this->userModel->logAudit(
+                        $userId,
+                        'PASSWORD_RESET',
+                        'users',
+                        $userId,
+                        null,
+                        ['reset_via' => 'self_service_email_otp']
+                    );
+
+                    unset($_SESSION['reset_pending']);
+                    unset($_SESSION['reset_user_id']);
+                    unset($_SESSION['reset_user_email']);
+                    unset($_SESSION['reset_user_name']);
+                    unset($_SESSION['reset_code']);
+                    unset($_SESSION['reset_expires']);
+
+                    $this->flash('success', 'Matagumpay na na-reset ang iyong password. Maaari ka nang mag-login.');
+                    $this->redirect('auth/login');
+                } else {
+                    $error = 'Nagkaroon ng problema sa pag-update ng password. Subukang muli.';
+                }
+            }
+        }
+
+        $this->render('auth/reset_password', ['error' => $error], false);
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────
     // LOGOUT
     // ─────────────────────────────────────────────────────────────────────────
 

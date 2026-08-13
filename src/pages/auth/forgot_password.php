@@ -1,0 +1,111 @@
+<?php
+/**
+ * ORLMS - Forgot Password Page
+ */
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Forgot Password — Ordinance and Resolution Lifecycle Management System">
+    <meta name="robots" content="noindex, nofollow">
+
+    <title>Forgot Password | <?= APP_SHORT ?></title>
+
+    <!-- Tailwind CSS Play CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: { DEFAULT: '#0C2340', dark: '#08182c', light: '#1e3a5f' },
+                        accent: { DEFAULT: '#F2A900', dark: '#cc8f00', light: '#ffd266' },
+                    },
+                    fontFamily: { sans: ['Inter', 'sans-serif'] }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background: linear-gradient(135deg, rgba(12, 35, 64, 0.45) 0%, rgba(8, 24, 44, 0.7) 100%), 
+                        url('<?= APP_URL ?>/public/img/csjdm_cityhall.webp') no-repeat center center fixed;
+            background-size: cover;
+        }
+    </style>
+</head>
+<body class="flex items-center justify-center min-h-screen p-4 font-sans antialiased">
+
+<div class="w-full max-w-[440px] bg-primary/20 backdrop-blur-md border border-white/20 rounded-xl shadow-[0_20px_45px_rgba(0,0,0,0.35)] text-white overflow-hidden flex flex-col">
+
+    <!-- Header -->
+    <div class="border-b border-white/10 p-[30px_30px_20px_30px] text-center">
+        <img class="mx-auto object-contain mb-3" src="<?= APP_URL ?>/public/img/csjdm_logo.webp" alt="CSJDM Logo" width="55" height="55">
+        <h1 class="text-white text-base font-bold tracking-tight">Account Recovery</h1>
+        <p class="text-white/60 text-xs mt-1">Nakalimutan ang Password? Mag-request ng OTP.</p>
+    </div>
+
+    <!-- Body -->
+    <div class="p-[30px]">
+
+        <?php if (!empty($error)): ?>
+            <div class="bg-rose-500/10 border border-rose-500/30 text-rose-300 p-3 rounded text-xs mb-4 flex items-center gap-2" role="alert">
+                <i class="bi bi-exclamation-triangle-fill shrink-0"></i>
+                <span><?= htmlspecialchars($error) ?></span>
+            </div>
+        <?php endif; ?>
+
+        <form action="<?= APP_ROOT_URL ?>/auth/forgot_password" method="POST" id="forgot-form">
+            <div class="mb-5">
+                <label for="email" class="block text-white/70 font-semibold text-xs mb-1.5">
+                    Rehistradong Email Address
+                </label>
+                <input type="email"
+                       id="email"
+                       name="email"
+                       class="w-full bg-white/95 border border-white/20 rounded px-3.5 py-2.5 text-[13.5px] text-slate-800 focus:outline-none focus:border-accent focus:ring-3 focus:ring-accent/30 placeholder-slate-400"
+                       placeholder="halimbawa: admin@csjdm.gov.ph"
+                       value="<?= htmlspecialchars($_POST['email'] ?? '') ?>"
+                       required
+                       autofocus>
+                <p class="text-white/50 text-[11px] mt-1.5">
+                    Magpapadala kami ng 6-digit verification code sa iyong email.
+                </p>
+            </div>
+
+            <button type="submit"
+                    class="w-full py-2.5 bg-accent hover:bg-accent-dark text-primary font-bold text-sm border border-accent rounded shadow-md transition duration-200"
+                    id="btn-forgot-submit">
+                I-send ang Reset Code
+            </button>
+
+            <div class="text-center mt-4">
+                <a href="<?= APP_ROOT_URL ?>/auth/login" class="inline-flex items-center gap-1.5 text-white/80 hover:text-accent font-semibold text-xs transition duration-150">
+                    <i class="bi bi-arrow-left-circle-fill"></i> Bumalik sa Login
+                </a>
+            </div>
+        </form>
+    </div>
+
+    <!-- Footer -->
+    <div class="bg-black/15 border-t border-white/10 text-white/50 text-[10.5px] p-[14px_30px] text-center">
+        © 2026 CSJDM Legislative Dept. All rights reserved.
+    </div>
+
+</div>
+
+<script>
+    document.getElementById('forgot-form').addEventListener('submit', function () {
+        var btn = document.getElementById('btn-forgot-submit');
+        btn.disabled = true;
+        btn.textContent = 'Ipinapadala ang Code...';
+        btn.classList.add('opacity-70', 'cursor-not-allowed');
+    });
+</script>
+
+</body>
+</html>

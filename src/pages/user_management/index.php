@@ -7,7 +7,7 @@
  */
 
 $roleLabels = [
-    'super_admin'       => 'System Administrator',
+    'super_admin'       => 'Administrator',
     'legislative_staff' => 'Legislative Staff',
     'committee_member'  => 'Committee Member',
     'sp_member'         => 'SP Member',

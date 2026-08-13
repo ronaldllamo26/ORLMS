@@ -12,7 +12,7 @@
 
 // Format role for display
 $roleLabels = [
-    'super_admin'        => 'System Administrator',
+    'super_admin'        => 'Administrator',
     'legislative_staff'  => 'Legislative Staff',
     'committee_member'   => 'Committee Member',
     'sp_member'          => 'SP Member',
@@ -20,6 +20,9 @@ $roleLabels = [
 
 $currentRole  = $_SESSION['user_role'] ?? '';
 $currentName  = $_SESSION['user_name'] ?? 'User';
+if ($currentName === 'System Administrator') {
+    $currentName = 'Administrator';
+}
 $roleLabel    = $roleLabels[$currentRole] ?? ucfirst(str_replace('_', ' ', $currentRole));
 ?>
 

@@ -388,7 +388,7 @@ $aiStatusColor = match ($aiReport['validation_status'] ?? '') {
                 <div class="card-body" style="text-align:center; padding:24px;">
                     <div style="font-size:13px; color:var(--color-text-muted);">
                         Approval and enactment actions are restricted to the
-                        System Administrator (approving authority).
+                        Administrator (approving authority).
                     </div>
                 </div>
             </div>

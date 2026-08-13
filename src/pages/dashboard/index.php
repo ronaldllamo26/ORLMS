@@ -36,81 +36,113 @@ function statusBadge(string $status): string {
 ?>
 
 <!-- Page Header -->
-<div class="mb-6 pb-4 border-b border-gray-250 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+<div class="mb-8 pb-4 border-b border-slate-200 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
     <div>
-        <h1 class="text-2xl font-bold text-slate-800">Dashboard</h1>
-        <p class="text-sm text-slate-500 mt-1">
-            System overview as of <?= date('F d, Y') ?>
+        <h1 class="text-xl font-bold text-slate-800 tracking-tight">Dashboard Overview</h1>
+        <p class="text-xs text-slate-500 mt-1">
+            Official legislative statistics and analytics as of <?= date('F d, Y') ?>
         </p>
     </div>
     <?php if (in_array($_SESSION['user_role'], ['legislative_staff', 'super_admin'])): ?>
     <div class="flex gap-3">
-        <a href="<?= APP_ROOT_URL ?>/ordinance/create" class="inline-flex items-center px-4 py-2 bg-primary hover:bg-primary/90 text-white text-sm font-medium rounded-md shadow-sm transition duration-150">
+        <a href="<?= APP_ROOT_URL ?>/ordinance/create" class="inline-flex items-center px-4 py-2 bg-primary hover:bg-primary-dark text-white text-xs font-semibold uppercase tracking-wider rounded shadow-sm transition">
             New Ordinance
         </a>
-        <a href="<?= APP_ROOT_URL ?>/resolution/create" class="inline-flex items-center px-4 py-2 bg-white hover:bg-slate-50 border border-slate-350 text-slate-700 text-sm font-medium rounded-md shadow-sm transition duration-150">
+        <a href="<?= APP_ROOT_URL ?>/resolution/create" class="inline-flex items-center px-4 py-2 bg-white hover:bg-slate-50 border border-slate-300 text-slate-700 text-xs font-semibold uppercase tracking-wider rounded shadow-sm transition">
             New Resolution
         </a>
     </div>
     <?php endif; ?>
 </div>
 
-<!-- ── Statistics Row ─────────────────────────────────────── -->
+<!-- ── Statistics Grid ────────────────────────────────────── -->
 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
 
-    <div class="bg-white border border-slate-200 rounded-lg p-5 shadow-sm hover:shadow-md transition duration-200">
-        <div class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Total Ordinances</div>
-        <div class="text-3xl font-extrabold text-slate-800 mt-2"><?= number_format($stats['total_ordinances']) ?></div>
-        <div class="text-xs text-slate-400 mt-1.5">All ordinances on record</div>
+    <!-- Total Ordinances Card -->
+    <div class="bg-white border border-slate-200 border-t-2 border-t-primary rounded p-5 shadow-sm hover:shadow transition flex items-center justify-between">
+        <div>
+            <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Total Ordinances</div>
+            <div class="text-2xl font-bold text-slate-800 mt-1"><?= number_format($stats['total_ordinances']) ?></div>
+            <div class="text-[11px] text-slate-400 mt-1.5">All ordinances on record</div>
+        </div>
+        <i class="bi bi-file-earmark-text text-slate-350 text-xl shrink-0"></i>
     </div>
 
-    <div class="bg-white border border-slate-200 border-t-4 border-t-accent rounded-lg p-5 shadow-sm hover:shadow-md transition duration-200">
-        <div class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Total Resolutions</div>
-        <div class="text-3xl font-extrabold text-primary mt-2"><?= number_format($stats['total_resolutions']) ?></div>
-        <div class="text-xs text-slate-400 mt-1.5">All resolutions on record</div>
+    <!-- Total Resolutions Card -->
+    <div class="bg-white border border-slate-200 border-t-2 border-t-accent rounded p-5 shadow-sm hover:shadow transition flex items-center justify-between">
+        <div>
+            <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Total Resolutions</div>
+            <div class="text-2xl font-bold text-slate-800 mt-1"><?= number_format($stats['total_resolutions']) ?></div>
+            <div class="text-[11px] text-slate-400 mt-1.5">All resolutions on record</div>
+        </div>
+        <i class="bi bi-file-earmark-check text-slate-350 text-xl shrink-0"></i>
     </div>
 
-    <div class="bg-white border border-slate-200 border-t-4 border-t-emerald-500 rounded-lg p-5 shadow-sm hover:shadow-md transition duration-200">
-        <div class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Enacted</div>
-        <div class="text-3xl font-extrabold text-emerald-600 mt-2"><?= number_format($stats['enacted']) ?></div>
-        <div class="text-xs text-slate-400 mt-1.5">Enacted documents</div>
+    <!-- Enacted Card -->
+    <div class="bg-white border border-slate-200 border-t-2 border-t-emerald-600 rounded p-5 shadow-sm hover:shadow transition flex items-center justify-between">
+        <div>
+            <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Enacted</div>
+            <div class="text-2xl font-bold text-emerald-700 mt-1"><?= number_format($stats['enacted']) ?></div>
+            <div class="text-[11px] text-slate-400 mt-1.5">Officially enacted laws</div>
+        </div>
+        <i class="bi bi-check-circle text-slate-350 text-xl shrink-0"></i>
     </div>
 
-    <div class="bg-white border border-slate-200 border-t-4 border-t-rose-500 rounded-lg p-5 shadow-sm hover:shadow-md transition duration-200">
-        <div class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">For Review</div>
-        <div class="text-3xl font-extrabold text-rose-600 mt-2"><?= number_format($stats['pending_review']) ?></div>
-        <div class="text-xs text-slate-400 mt-1.5">Awaiting review</div>
+    <!-- For Review Card -->
+    <div class="bg-white border border-slate-200 border-t-2 border-t-rose-500 rounded p-5 shadow-sm hover:shadow transition flex items-center justify-between">
+        <div>
+            <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">For Review</div>
+            <div class="text-2xl font-bold text-rose-700 mt-1"><?= number_format($stats['pending_review']) ?></div>
+            <div class="text-[11px] text-slate-400 mt-1.5">Awaiting council review</div>
+        </div>
+        <i class="bi bi-clock-history text-slate-350 text-xl shrink-0"></i>
     </div>
 
 </div>
 
-<!-- ── Second Stats Row ───────────────────────────────────── -->
+<!-- ── Second Statistics Grid ─────────────────────────────── -->
 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
 
-    <div class="bg-white border border-slate-200 rounded-lg p-5 shadow-sm hover:shadow-md transition duration-200">
-        <div class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Drafts</div>
-        <div class="text-3xl font-extrabold text-slate-800 mt-2"><?= number_format($stats['draft']) ?></div>
-        <div class="text-xs text-slate-400 mt-1.5">Work in progress</div>
-    </div>
-
-    <div class="bg-white border border-slate-200 border-t-4 border-t-red-500 rounded-lg p-5 shadow-sm hover:shadow-md transition duration-200">
-        <div class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Rejected</div>
-        <div class="text-3xl font-extrabold text-red-600 mt-2"><?= number_format($stats['rejected']) ?></div>
-        <div class="text-xs text-slate-400 mt-1.5">Archived rejections</div>
-    </div>
-
-    <div class="bg-white border border-slate-200 border-t-4 border-t-accent rounded-lg p-5 shadow-sm hover:shadow-md transition duration-200">
-        <div class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Total Documents</div>
-        <div class="text-3xl font-extrabold text-primary mt-2">
-            <?= number_format($stats['total_ordinances'] + $stats['total_resolutions']) ?>
+    <!-- Drafts Card -->
+    <div class="bg-white border border-slate-200 border-t-2 border-t-slate-400 rounded p-5 shadow-sm hover:shadow transition flex items-center justify-between">
+        <div>
+            <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Drafts</div>
+            <div class="text-2xl font-bold text-slate-800 mt-1"><?= number_format($stats['draft']) ?></div>
+            <div class="text-[11px] text-slate-400 mt-1.5">Work in progress files</div>
         </div>
-        <div class="text-xs text-slate-400 mt-1.5">Ordinances and resolutions combined</div>
+        <i class="bi bi-pencil-square text-slate-350 text-xl shrink-0"></i>
     </div>
 
-    <div class="bg-white border border-slate-200 rounded-lg p-5 shadow-sm hover:shadow-md transition duration-200">
-        <div class="text-[11px] font-bold text-slate-400 tracking-wider uppercase">Current Year</div>
-        <div class="text-3xl font-extrabold text-slate-800 mt-2"><?= date('Y') ?></div>
-        <div class="text-xs text-slate-400 mt-1.5">Legislative session</div>
+    <!-- Rejected Card -->
+    <div class="bg-white border border-slate-200 border-t-2 border-t-red-650 rounded p-5 shadow-sm hover:shadow transition flex items-center justify-between">
+        <div>
+            <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Rejected</div>
+            <div class="text-2xl font-bold text-red-700 mt-1"><?= number_format($stats['rejected']) ?></div>
+            <div class="text-[11px] text-slate-400 mt-1.5">Archived rejections</div>
+        </div>
+        <i class="bi bi-x-circle text-slate-350 text-xl shrink-0"></i>
+    </div>
+
+    <!-- Total Documents Card -->
+    <div class="bg-white border border-slate-200 border-t-2 border-t-primary rounded p-5 shadow-sm hover:shadow transition flex items-center justify-between">
+        <div>
+            <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Total Documents</div>
+            <div class="text-2xl font-bold text-slate-800 mt-1">
+                <?= number_format($stats['total_ordinances'] + $stats['total_resolutions']) ?>
+            </div>
+            <div class="text-[11px] text-slate-400 mt-1.5">Combined registries</div>
+        </div>
+        <i class="bi bi-files text-slate-350 text-xl shrink-0"></i>
+    </div>
+
+    <!-- Current Session Card -->
+    <div class="bg-white border border-slate-200 border-t-2 border-t-slate-400 rounded p-5 shadow-sm hover:shadow transition flex items-center justify-between">
+        <div>
+            <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Current Year</div>
+            <div class="text-2xl font-bold text-slate-800 mt-1"><?= date('Y') ?></div>
+            <div class="text-[11px] text-slate-400 mt-1.5">Legislative session</div>
+        </div>
+        <i class="bi bi-calendar3 text-slate-350 text-xl shrink-0"></i>
     </div>
 
 </div>
@@ -118,10 +150,10 @@ function statusBadge(string $status): string {
 <!-- ── Analytics Charts Row ───────────────────────────────── -->
 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
     <!-- Status Distribution Doughnut Chart -->
-    <div class="bg-white border border-slate-200 rounded-lg p-5 shadow-sm">
-        <div class="border-b border-slate-200 pb-3 mb-5 flex items-center justify-between">
-            <h2 class="text-base font-bold text-slate-800 flex items-center">
-                <i class="bi bi-pie-chart-fill mr-2 text-sky-500"></i> Status Distribution
+    <div class="bg-white border border-slate-200 rounded p-5 shadow-sm">
+        <div class="border-b border-slate-200 pb-3 mb-5">
+            <h2 class="text-sm font-bold text-slate-800 flex items-center uppercase tracking-wider">
+                <i class="bi bi-pie-chart mr-2 text-primary"></i> Status Distribution
             </h2>
         </div>
         <div class="h-[280px] relative flex justify-center items-center">
@@ -130,10 +162,10 @@ function statusBadge(string $status): string {
     </div>
 
     <!-- Committee Distribution Bar Chart -->
-    <div class="bg-white border border-slate-200 rounded-lg p-5 shadow-sm">
-        <div class="border-b border-slate-200 pb-3 mb-5 flex items-center justify-between">
-            <h2 class="text-base font-bold text-slate-800 flex items-center">
-                <i class="bi bi-bar-chart-fill mr-2 text-amber-500"></i> Committee Distribution
+    <div class="bg-white border border-slate-200 rounded p-5 shadow-sm">
+        <div class="border-b border-slate-200 pb-3 mb-5">
+            <h2 class="text-sm font-bold text-slate-800 flex items-center uppercase tracking-wider">
+                <i class="bi bi-bar-chart mr-2 text-accent"></i> Committee Distribution
             </h2>
         </div>
         <div class="h-[280px] relative">
@@ -284,11 +316,11 @@ document.addEventListener("DOMContentLoaded", function() {
             datasets: [{
                 data: statusData,
                 backgroundColor: [
-                    '#64748b', // Slate for Drafts
-                    '#0084FF', // Sky Blue for In Review
-                    '#10b981', // Emerald/Green for Enacted
-                    '#F2A900', // Gold for Published
-                    '#ef4444'  // Red for Rejected
+                    '#6c757d', // Slate for Drafts
+                    '#1a3a5c', // Primary Navy for In Review
+                    '#198754', // Success Green for Enacted
+                    '#c9a84c', // Accent Gold for Published
+                    '#842029'  // Danger Red for Rejected
                 ],
                 borderWidth: 2,
                 borderColor: '#ffffff'
@@ -301,7 +333,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 legend: {
                     position: 'bottom',
                     labels: {
-                        boxWidth: 10,
+                        boxWidth: 12,
                         padding: 10,
                         font: { size: 11, family: "'Inter', sans-serif" }
                     }
@@ -341,14 +373,14 @@ document.addEventListener("DOMContentLoaded", function() {
                 {
                     label: 'Ordinances',
                     data: ordinanceCounts,
-                    backgroundColor: '#0C2340', // CSJDM Deep Blue
-                    borderRadius: 4
+                    backgroundColor: '#1a3a5c', // Primary Navy
+                    borderRadius: 0
                 },
                 {
                     label: 'Resolutions',
                     data: resolutionCounts,
-                    backgroundColor: '#F2A900', // CSJDM Gold
-                    borderRadius: 4
+                    backgroundColor: '#c9a84c', // Accent Gold
+                    borderRadius: 0
                 }
             ]
         },
@@ -359,7 +391,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 legend: {
                     position: 'bottom',
                     labels: {
-                        boxWidth: 10,
+                        boxWidth: 12,
                         padding: 10,
                         font: { size: 11, family: "'Inter', sans-serif" }
                     }

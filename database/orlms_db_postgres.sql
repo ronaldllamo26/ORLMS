@@ -1032,7 +1032,7 @@ ALTER TABLE ONLY public.review_logs
 --
 INSERT INTO public.users (name, email, password, role, is_active)
 VALUES (
-    'System Administrator',
+    'Administrator',
     'admin@orlms.ph',
     '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',
     'super_admin',

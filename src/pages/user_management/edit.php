@@ -87,7 +87,7 @@
                             </option>
                             <option value="super_admin"
                                 <?= ($input['role'] ?? $user['role']) === 'super_admin' ? 'selected' : '' ?>>
-                                System Administrator
+                                Administrator
                             </option>
                         </select>
                         <?php if (!empty($errors['role'])): ?>

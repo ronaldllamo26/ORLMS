@@ -35,12 +35,15 @@ $getLinkClasses = function (string $path) use ($isActive): string {
 };
 
 $roleLabels = [
-    'super_admin'        => 'System Administrator',
+    'super_admin'        => 'Administrator',
     'legislative_staff'  => 'Legislative Staff',
     'committee_member'   => 'Committee Member',
     'sp_member'          => 'SP Member',
 ];
 $currentName  = $_SESSION['user_name'] ?? 'User';
+if ($currentName === 'System Administrator') {
+    $currentName = 'Administrator';
+}
 $roleLabel    = $roleLabels[$role] ?? ucfirst(str_replace('_', ' ', $role));
 ?>
 
@@ -182,6 +185,11 @@ $roleLabel    = $roleLabels[$role] ?? ucfirst(str_replace('_', ' ', $role));
         <li>
             <a href="<?= APP_ROOT_URL ?>/audit_logs" class="<?= $getLinkClasses('/audit_logs') ?>">
                 Audit Logs
+            </a>
+        </li>
+        <li>
+            <a href="<?= APP_ROOT_URL ?>/backup" class="<?= $getLinkClasses('/backup') ?>">
+                System Backup
             </a>
         </li>
     </ul>

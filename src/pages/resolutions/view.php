@@ -237,49 +237,79 @@ function viewResBadge(string $status): string {
         </div>
         <?php endif; ?>
 
-        <!-- Status Timeline -->
+        <!-- Current Status & Visual Legislation Trail Card -->
         <div class="card" style="margin-bottom:20px;">
-            <div class="card-header"><h2 class="card-title">Document Status</h2></div>
-            <div class="card-body">
+            <div class="card-header" style="display:flex; justify-content:space-between; align-items:center;">
+                <h2 class="card-title" style="font-size:14px; font-weight:700;">
+                    <i class="bi bi-diagram-3-fill me-1" style="color:var(--color-primary);"></i> Legislation Trail
+                </h2>
+                <span style="font-size:10px; font-weight:700; text-transform:uppercase; color:var(--color-text-muted); background:var(--color-bg); padding:2px 8px; border-radius:10px; border:1px solid var(--color-border-light);">
+                    Lifecycle History
+                </span>
+            </div>
+            <div class="card-body" style="padding:16px;">
                 <?php
-                $stages    = ['draft' => 'Draft', 'submitted' => 'Submitted for Review',
-                              'under_review' => 'Under Review', 'endorsed' => 'Endorsed',
-                              'approved' => 'Approved', 'enacted' => 'Enacted', 'published' => 'Published'];
+                $stages = [
+                    'draft'        => ['label' => '1. Filing & Encoding', 'icon' => 'bi-pencil-square', 'desc' => 'Resolution drafted by author'],
+                    'submitted'    => ['label' => '2. AI & First Reading', 'icon' => 'bi-robot', 'desc' => 'Read in plenary & AI checked'],
+                    'under_review' => ['label' => '3. Committee Review', 'icon' => 'bi-people', 'desc' => 'Assigned to committee'],
+                    'endorsed'     => ['label' => '4. Committee Endorsed', 'icon' => 'bi-file-earmark-check', 'desc' => 'Recom. approved for 2nd Reading'],
+                    'approved'     => ['label' => '5. Plenary Approved', 'icon' => 'bi-check2-square', 'desc' => 'Plenary voting passed'],
+                    'enacted'      => ['label' => '6. Mayor Signature', 'icon' => 'bi-pen', 'desc' => 'Signed & approved by LCE'],
+                    'published'    => ['label' => '7. Published to Registry', 'icon' => 'bi-globe', 'desc' => 'Active & searchable in portal'],
+                ];
                 $stageKeys = array_keys($stages);
                 $currentIdx = array_search($resolution['status'], $stageKeys);
                 if ($currentIdx === false) $currentIdx = -1;
                 ?>
-                <?php foreach ($stages as $key => $label): ?>
-                    <?php
-                    $idx       = array_search($key, $stageKeys);
-                    $isDone    = $idx < $currentIdx;
-                    $isCurrent = $key === $resolution['status'];
-                    $divStyle  = "display:flex; align-items:center; gap:12px; padding:8px 0; border-bottom:1px solid var(--color-border-light);";
-                    if (!$isDone && !$isCurrent) {
-                        $divStyle .= " opacity:0.4;";
-                    }
-                    ?>
-                    <div style="<?= $divStyle ?>">
-                        <div style="width:10px; height:10px; border-radius:50%; flex-shrink:0;
-                                    background-color:<?= $isCurrent ? 'var(--color-accent)' : ($isDone ? 'var(--color-success)' : 'var(--color-border)') ?>;"></div>
-                        <span style="font-size:13px; font-weight:<?= $isCurrent ? '600' : '400' ?>;
-                                     color:<?= $isCurrent ? 'var(--color-primary)' : 'var(--color-text-muted)' ?>;">
-                            <?= $label ?>
-                            <?php if ($isCurrent): ?>
-                                <span style="font-size:10px; color:var(--color-accent); margin-left:6px;
-                                             text-transform:uppercase; letter-spacing:0.5px;">&larr; Current</span>
-                            <?php elseif ($isDone): ?>
-                                <span style="font-size:10px; color:var(--color-success); margin-left:6px;">&check;</span>
+                <div style="display:flex; flex-direction:column; gap:0;">
+                    <?php foreach ($stages as $key => $info): ?>
+                        <?php
+                        $idx       = array_search($key, $stageKeys);
+                        $isDone    = $idx < $currentIdx;
+                        $isCurrent = $key === $resolution['status'];
+                        $nodeBg    = $isCurrent ? 'var(--color-accent)' : ($isDone ? 'var(--color-success)' : '#e2e8f0');
+                        $nodeColor = ($isCurrent || $isDone) ? '#ffffff' : '#64748b';
+                        $borderLeft = ($idx < count($stages) - 1) ? "border-left: 2px dashed " . ($isDone ? "var(--color-success)" : "#cbd5e1") . ";" : "";
+                        ?>
+                        <div style="display:flex; gap:12px; position:relative; padding-bottom:16px;">
+                            <?php if ($idx < count($stages) - 1): ?>
+                            <div style="position:absolute; left:13px; top:28px; bottom:0; width:2px; <?= $borderLeft ?>"></div>
                             <?php endif; ?>
-                        </span>
+                            
+                            <div style="width:28px; height:28px; border-radius:50%; background:<?= $nodeBg ?>; color:<?= $nodeColor ?>; display:flex; align-items:center; justify-content:center; font-size:13px; flex-shrink:0; z-index:1;">
+                                <i class="bi <?= $info['icon'] ?>"></i>
+                            </div>
+                            
+                            <div style="flex-grow:1; <?= (!$isDone && !$isCurrent) ? 'opacity:0.5;' : '' ?>">
+                                <div style="display:flex; justify-content:space-between; align-items:center;">
+                                    <span style="font-size:12.5px; font-weight:<?= $isCurrent ? '700' : '600' ?>; color:<?= $isCurrent ? 'var(--color-primary)' : 'var(--color-text)' ?>;">
+                                        <?= $info['label'] ?>
+                                    </span>
+                                    <?php if ($isCurrent): ?>
+                                        <span class="badge" style="font-size:9.5px; background:var(--color-accent); color:#fff; padding:2px 6px;">CURRENT</span>
+                                    <?php elseif ($isDone): ?>
+                                        <i class="bi bi-check-circle-fill text-success" style="font-size:12px;"></i>
+                                    <?php endif; ?>
+                                </div>
+                                <div style="font-size:11px; color:var(--color-text-muted); margin-top:2px;">
+                                    <?= $info['desc'] ?>
+                                </div>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                    <?php if ($resolution['status'] === 'rejected'): ?>
+                    <div style="display:flex; gap:12px; padding-top:4px;">
+                        <div style="width:28px; height:28px; border-radius:50%; background:#dc3545; color:#fff; display:flex; align-items:center; justify-content:center; font-size:13px; flex-shrink:0;">
+                            <i class="bi bi-x-circle-fill"></i>
+                        </div>
+                        <div>
+                            <span style="font-size:12.5px; font-weight:700; color:#dc3545;">Document Rejected</span>
+                            <div style="font-size:11px; color:var(--color-text-muted);">Returned or disapproved during review</div>
+                        </div>
                     </div>
-                <?php endforeach; ?>
-                <?php if ($resolution['status'] === 'rejected'): ?>
-                <div style="display:flex; align-items:center; gap:12px; padding:8px 0;">
-                    <div style="width:10px; height:10px; border-radius:50%; background-color:#dc3545; flex-shrink:0;"></div>
-                    <span style="font-size:13px; font-weight:600; color:#dc3545;">Rejected &larr; Current</span>
+                    <?php endif; ?>
                 </div>
-                <?php endif; ?>
             </div>
         </div>
 

@@ -17,7 +17,16 @@
  *      Or run: `php test_api.php` in your terminal
  */
 
-$baseUrl = 'http://localhost:8000';
+// Dynamically detect base URL (handles CLI, localhost:8000, XAMPP under /Capstone, etc.)
+if (php_sapi_name() === 'cli') {
+    $baseUrl = 'http://localhost:8000';
+} else {
+    $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? "https" : "http";
+    $host = $_SERVER['HTTP_HOST'] ?? 'localhost:8000';
+    $scriptDir = str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'] ?? ''));
+    $basePath = ($scriptDir === '/' || $scriptDir === '\\' || $scriptDir === '.') ? '' : $scriptDir;
+    $baseUrl = rtrim($protocol . '://' . $host . $basePath, '/');
+}
 
 echo "<h2>ORLMS - REST API Integration Test Suite</h2>";
 echo "<p>Running tests against <strong>$baseUrl</strong>...</p>";

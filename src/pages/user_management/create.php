@@ -88,7 +88,7 @@
                             </option>
                             <option value="super_admin"
                                 <?= ($input['role'] ?? '') === 'super_admin' ? 'selected' : '' ?>>
-                                System Administrator — Full access
+                                Administrator — Full access
                             </option>
                         </select>
                         <?php if (!empty($errors['role'])): ?>
@@ -167,7 +167,7 @@
 
                     <div style="margin-bottom:0;">
                         <div style="font-weight:700; color:var(--color-primary); margin-bottom:4px;">
-                            System Administrator
+                            Administrator
                         </div>
                         <ul style="margin:0; padding-left:16px; color:var(--color-text-muted);">
                             <li>Full system access</li>

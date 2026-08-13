@@ -122,9 +122,14 @@
 
             <!-- Password -->
             <div class="mb-5">
-                <label for="password" class="block text-white/60 font-semibold text-xs mb-1.5">
-                    Password
-                </label>
+                <div class="flex items-center justify-between mb-1.5">
+                    <label for="password" class="block text-white/60 font-semibold text-xs">
+                        Password
+                    </label>
+                    <a href="<?= APP_ROOT_URL ?>/auth/forgot_password" class="text-accent hover:underline text-[11px] font-semibold">
+                        Forgot Password?
+                    </a>
+                </div>
                 <input type="password"
                        id="password"
                        name="password"
