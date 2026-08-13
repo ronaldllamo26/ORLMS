@@ -79,7 +79,7 @@ $docNo   = $document[$noField] ?? 'N/A';
                                 Plain-Language Summary <span class="form-required">*</span>
                             </label>
                             <button type="button" id="btn-generate-ai-summary" class="btn btn-xs" style="background:#fef3c7; color:#92400e; border:1px solid #fde68a; font-weight:600; font-size:11px; padding:3px 10px; border-radius:6px; cursor:pointer;">
-                                ✨ Auto-Generate AI Summary
+                                Auto-Generate AI Summary
                             </button>
                         </div>
                         <textarea id="plain_summary" name="plain_summary"
@@ -193,17 +193,17 @@ document.addEventListener('DOMContentLoaded', function () {
     if (btn && txt) {
         btn.addEventListener('click', function () {
             btn.disabled = true;
-            btn.textContent = '⏳ Generating AI Summary...';
+            btn.textContent = 'Generating AI Summary...';
 
             fetch('<?= APP_ROOT_URL ?>/publications/generate_summary/<?= $docType ?>/<?= $document['id'] ?>')
                 .then(function (res) { return res.json(); })
                 .then(function (data) {
                     btn.disabled = false;
-                    btn.textContent = '✨ Auto-Generate AI Summary';
+                    btn.textContent = 'Auto-Generate AI Summary';
                     if (data.success && data.summary) {
                         txt.value = data.summary;
                         if (hint) {
-                            hint.textContent = '✨ AI Summary generated automatically! You can edit or customize it before publishing.';
+                            hint.textContent = 'AI Summary generated automatically! You can edit or customize it before publishing.';
                             hint.style.color = '#0369a1';
                         }
                     } else {
@@ -212,7 +212,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 })
                 .catch(function (err) {
                     btn.disabled = false;
-                    btn.textContent = '✨ Auto-Generate AI Summary';
+                    btn.textContent = 'Auto-Generate AI Summary';
                     alert('Error connecting to AI service.');
                 });
         });
