@@ -387,6 +387,85 @@
             color: #6c757d;
             letter-spacing: 0.3px;
         }
+
+        /* Mobile Responsiveness Enhancements */
+        @media (max-width: 768px) {
+            .main-header {
+                padding: 8px 12px;
+            }
+            .hero-section {
+                padding: 45px 0 55px 0;
+            }
+            .hero-title {
+                font-size: 23px;
+                line-height: 1.3;
+                margin-bottom: 14px;
+            }
+            .hero-subtitle {
+                font-size: 13px;
+                line-height: 1.5;
+                margin-bottom: 20px;
+            }
+            .hero-tag {
+                font-size: 10px;
+                padding: 4px 10px;
+                margin-bottom: 12px;
+            }
+            .btn-custom-gold, .btn-custom-outline {
+                width: 100%;
+                text-align: center;
+                padding: 10px 14px;
+                font-size: 13px;
+            }
+            .chatbot-wrapper {
+                bottom: 16px !important;
+                right: 16px !important;
+            }
+            #chatbot-toggle-btn {
+                width: 48px !important;
+                height: 48px !important;
+                font-size: 20px !important;
+            }
+            #chatbot-box {
+                width: calc(100vw - 32px) !important;
+                right: 0 !important;
+                bottom: 65px !important;
+                height: 430px !important;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .brand-section {
+                gap: 8px;
+            }
+            .brand-section img {
+                width: 36px;
+                height: 36px;
+            }
+            .brand-text h1 {
+                font-size: 13.5px;
+            }
+            .brand-text p {
+                font-size: 8px;
+                letter-spacing: 0.1px;
+            }
+            .main-header .btn {
+                padding: 5px 8px !important;
+                font-size: 11px !important;
+            }
+            .header-btn-text-full {
+                display: none;
+            }
+            .header-btn-text-short {
+                display: inline;
+            }
+        }
+
+        @media (min-width: 481px) {
+            .header-btn-text-short {
+                display: none;
+            }
+        }
     </style>
 </head>
 <body>
@@ -403,12 +482,12 @@
                 </div>
             </a>
             
-            <div class="d-flex gap-3 align-items-center">
-                <a href="<?= APP_URL ?>/portal" class="btn btn-sm btn-outline-dark px-3 py-2 fw-semibold" style="font-size: 13px; border-radius: 4px; border-color: #dee2e6;">
-                    <i class="bi bi-search me-1"></i> Public Search
+            <div class="d-flex gap-2 align-items-center">
+                <a href="<?= APP_URL ?>/portal" class="btn btn-sm btn-outline-dark px-2 px-sm-3 py-1.5 fw-semibold" style="font-size: 12px; border-radius: 4px; border-color: #dee2e6;">
+                    <i class="bi bi-search me-1"></i> <span class="header-btn-text-full">Public Search</span><span class="header-btn-text-short">Search</span>
                 </a>
-                <a href="<?= APP_URL ?>/auth/login" class="btn btn-sm btn-primary px-3 py-2 fw-semibold" style="font-size: 13px; border-radius: 4px; background-color: var(--color-lgu-blue); border-color: var(--color-lgu-blue);">
-                    <i class="bi bi-box-arrow-in-right me-1"></i> Staff Login
+                <a href="<?= APP_URL ?>/auth/login" class="btn btn-sm btn-primary px-2 px-sm-3 py-1.5 fw-semibold" style="font-size: 12px; border-radius: 4px; background-color: var(--color-lgu-blue); border-color: var(--color-lgu-blue);">
+                    <i class="bi bi-box-arrow-in-right me-1"></i> <span class="header-btn-text-full">Staff Login</span><span class="header-btn-text-short">Login</span>
                 </a>
             </div>
         </div>
