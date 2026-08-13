@@ -265,24 +265,41 @@ class PublicationsController extends Controller
         }
 
         $model    = $this->model($type === 'ordinance' ? 'OrdinanceModel' : 'ResolutionModel');
-        $document = $model->getById((int) $id);
+        $document = $model->findById((int) $id);
 
         if (!$document) {
             echo json_encode(['success' => false, 'message' => 'Document not found.']);
             exit;
         }
 
-        // Try existing summary
+        // 1. Try existing summary from document table first
         if (!empty($document['ai_summary'])) {
             echo json_encode(['success' => true, 'summary' => $document['ai_summary']]);
             exit;
         }
 
-        // Run AI Engine to generate summary on-demand
-        $aiModel = $this->model('AiValidationModel');
-        $report  = $aiModel->validateDocument($type, $document);
+        $aiModel  = $this->model('AiValidationModel');
 
-        $summary = $report['ai_summary'] ?? 'Resolusyon ng Sangguniang Panlungsod ng CSJDM para sa opisyal na pagkilala at gawad parangal.';
+        // 2. Try existing latest report
+        $aiReport = $aiModel->getLatestForDocument($type, (int) $id);
+
+        if ($aiReport && !empty($aiReport['ai_summary'])) {
+            $summary = $aiReport['ai_summary'];
+        } else {
+            // 3. Run AI Validation Engine to generate report & summary
+            $reportId = $aiModel->runValidation($type, (int) $id, $this->userId());
+            if ($reportId) {
+                $latestReport = $aiModel->getReportById($reportId);
+                $summary = $latestReport['ai_summary'] ?? null;
+            } else {
+                $summary = null;
+            }
+        }
+
+        if (empty($summary)) {
+            $title = $document['title'] ?? 'Dokumentong ito';
+            $summary = 'Resolusyon ng Sangguniang Panlungsod ng CSJDM hinggil sa: ' . $title;
+        }
 
         // Cache summary back to document
         $model->update((int) $id, ['ai_summary' => $summary]);
