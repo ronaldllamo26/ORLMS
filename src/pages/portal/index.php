@@ -244,6 +244,24 @@ document.addEventListener("DOMContentLoaded", function() {
         toggleBtn.style.transform = "scale(1)";
     });
 
+    // Markdown parser for AI responses
+    function parseMarkdown(str) {
+        if (!str) return "";
+        let safe = str
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;");
+
+        // Bold **text**
+        safe = safe.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+        // Bullets * text
+        safe = safe.replace(/^\*\s+(.*)$/gim, '<div style="margin-left:8px; margin-bottom:2px;">• $1</div>');
+        // Newlines
+        safe = safe.replace(/\n/g, '<br>');
+
+        return safe;
+    }
+
     // Helper to append message bubble to box
     function appendMessage(sender, text, isAi = false) {
         const wrapper = document.createElement("div");
@@ -278,15 +296,14 @@ document.addEventListener("DOMContentLoaded", function() {
             bubble.style.border = "1px solid #dee2e6";
             bubble.style.color = "#212529";
             bubble.style.borderRadius = "4px 12px 12px 12px";
-            bubble.style.whiteSpace = "pre-line"; // Preserves line breaks for cleaner display
+            bubble.innerHTML = parseMarkdown(text);
         } else {
             bubble.style.backgroundColor = "#0c2340";
             bubble.style.color = "#ffffff";
             bubble.style.borderRadius = "12px 12px 4px 12px";
             bubble.style.border = "none";
+            bubble.textContent = text;
         }
-
-        bubble.textContent = text;
 
         wrapper.appendChild(label);
         wrapper.appendChild(bubble);

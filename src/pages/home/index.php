@@ -748,53 +748,70 @@
             toggleBtn.style.transform = "scale(1)";
         });
 
-        // Helper to append message bubble to box
-        function appendMessage(sender, text, isAi = false) {
-            const wrapper = document.createElement("div");
-            wrapper.style.display = "flex";
-            wrapper.style.flexDirection = "column";
-            wrapper.style.alignItems = isAi ? "flex-start" : "flex-end";
-            wrapper.style.maxWidth = "85%";
-            if (isAi) {
-                wrapper.style.alignSelf = "flex-start";
-                wrapper.style.textAlign = "left";
-            } else {
-                wrapper.style.alignSelf = "flex-end";
-                wrapper.style.textAlign = "right";
-            }
+    // Markdown parser for AI responses
+    function parseMarkdown(str) {
+        if (!str) return "";
+        let safe = str
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;");
 
-            const label = document.createElement("span");
-            label.style.fontSize = "9.5px";
-            label.style.fontWeight = "700";
-            label.style.color = isAi ? "#0c2340" : "#6c757d";
-            label.style.marginBottom = "2px";
-            label.style.textTransform = "uppercase";
-            label.textContent = sender;
+        // Bold **text**
+        safe = safe.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+        // Bullets * text
+        safe = safe.replace(/^\*\s+(.*)$/gim, '<div style="margin-left:8px; margin-bottom:2px;">• $1</div>');
+        // Newlines
+        safe = safe.replace(/\n/g, '<br>');
 
-            const bubble = document.createElement("div");
-            bubble.style.fontSize = "12.5px";
-            bubble.style.lineHeight = "1.6";
-            bubble.style.padding = "10px 14px";
-            bubble.style.boxShadow = "0 2px 4px rgba(0,0,0,0.02)";
-            
-            if (isAi) {
-                bubble.style.backgroundColor = "#ffffff";
-                bubble.style.border = "1px solid #dee2e6";
-                bubble.style.color = "#212529";
-                bubble.style.borderRadius = "4px 12px 12px 12px";
-                bubble.style.whiteSpace = "pre-line"; // Preserves line breaks for cleaner display
-            } else {
-                bubble.style.backgroundColor = "#0c2340";
-                bubble.style.color = "#ffffff";
-                bubble.style.borderRadius = "12px 12px 4px 12px";
-                bubble.style.border = "none";
-            }
+        return safe;
+    }
 
+    // Helper to append message bubble to box
+    function appendMessage(sender, text, isAi = false) {
+        const wrapper = document.createElement("div");
+        wrapper.style.display = "flex";
+        wrapper.style.flexDirection = "column";
+        wrapper.style.alignItems = isAi ? "flex-start" : "flex-end";
+        wrapper.style.maxWidth = "85%";
+        if (isAi) {
+            wrapper.style.alignSelf = "flex-start";
+            wrapper.style.textAlign = "left";
+        } else {
+            wrapper.style.alignSelf = "flex-end";
+            wrapper.style.textAlign = "right";
+        }
+
+        const label = document.createElement("span");
+        label.style.fontSize = "9.5px";
+        label.style.fontWeight = "700";
+        label.style.color = isAi ? "#0c2340" : "#6c757d";
+        label.style.marginBottom = "2px";
+        label.style.textTransform = "uppercase";
+        label.textContent = sender;
+
+        const bubble = document.createElement("div");
+        bubble.style.fontSize = "12.5px";
+        bubble.style.lineHeight = "1.6";
+        bubble.style.padding = "10px 14px";
+        bubble.style.boxShadow = "0 2px 4px rgba(0,0,0,0.02)";
+        
+        if (isAi) {
+            bubble.style.backgroundColor = "#ffffff";
+            bubble.style.border = "1px solid #dee2e6";
+            bubble.style.color = "#212529";
+            bubble.style.borderRadius = "4px 12px 12px 12px";
+            bubble.innerHTML = parseMarkdown(text);
+        } else {
+            bubble.style.backgroundColor = "#0c2340";
+            bubble.style.color = "#ffffff";
+            bubble.style.borderRadius = "12px 12px 4px 12px";
+            bubble.style.border = "none";
             bubble.textContent = text;
+        }
 
-            wrapper.appendChild(label);
-            wrapper.appendChild(bubble);
-            messagesContainer.appendChild(wrapper);
+        wrapper.appendChild(label);
+        wrapper.appendChild(bubble);
+        messagesContainer.appendChild(wrapper);
 
             // Auto scroll to bottom
             messagesContainer.scrollTop = messagesContainer.scrollHeight;
