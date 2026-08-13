@@ -237,6 +237,8 @@ class PublicationsController extends Controller
         } else {
             if (!empty($aiReport) && !empty($aiReport['ai_summary'])) {
                 $input['plain_summary'] = $aiReport['ai_summary'];
+            } elseif (!empty($document['ai_summary'])) {
+                $input['plain_summary'] = $document['ai_summary'];
             }
         }
 
