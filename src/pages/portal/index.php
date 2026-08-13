@@ -177,11 +177,11 @@ $availableYears = $availableYears ?? [];
         <div style="background-color: #0c2340; color: #ffffff; padding: 14px 20px; display: flex; align-items: center; justify-content: space-between; border-bottom: 2px solid #f2a900;">
             <div style="display: flex; align-items: center; gap: 10px;">
                 <div style="width: 32px; height: 32px; border-radius: 50%; background-color: #f2a900; color: #0c2340; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 800;">
-                    T
+                    O
                 </div>
                 <div style="text-align: left;">
-                    <div style="font-size: 13.5px; font-weight: 700; line-height: 1;">Tanya SP</div>
-                    <span style="font-size: 10px; color: #f2a900; font-weight: 600;">LGU AI Assistant</span>
+                    <div style="font-size: 13.5px; font-weight: 700; line-height: 1;">ORLMS AI</div>
+                    <span style="font-size: 10px; color: #f2a900; font-weight: 600;">CSJDM Legislative AI Assistant</span>
                 </div>
             </div>
             <button id="chatbot-close-btn" style="background: none; border: none; color: #ffffff; font-size: 20px; cursor: pointer; padding: 0; line-height: 1;">
@@ -193,9 +193,9 @@ $availableYears = $availableYears ?? [];
         <div id="chatbot-messages" style="flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 12px; background-color: #f8f9fa;">
             <!-- Welcome Message -->
             <div style="display: flex; flex-direction: column; align-items: flex-start; max-width: 85%; align-self: flex-start; text-align: left;">
-                <span style="font-size: 9.5px; font-weight: 700; color: #0c2340; margin-bottom: 2px; text-transform: uppercase;">Tanya SP</span>
+                <span style="font-size: 9.5px; font-weight: 700; color: #0c2340; margin-bottom: 2px; text-transform: uppercase;">ORLMS AI</span>
                 <div style="background-color: #ffffff; border: 1px solid #dee2e6; color: #212529; border-radius: 4px 12px 12px 12px; padding: 10px 14px; font-size: 12.5px; line-height: 1.6; box-shadow: 0 2px 4px rgba(0,0,0,0.02);">
-                    Magandang araw po! Ako si <strong>Tanya SP</strong>, ang AI Legislative Assistant ng San Jose del Monte. Mayroon po ba kayong katanungan tungkol sa mga opisyal na ordinansa o resolusyon natin?
+                    Magandang araw po! Ako si <strong>ORLMS AI</strong>, ang opisyal na Legislative AI Assistant ng San Jose del Monte. Mayroon po ba kayong katanungan tungkol sa ating mga ordinansa, resolusyon, o lokal na regulasyon?
                 </div>
             </div>
         </div>
@@ -330,7 +330,7 @@ document.addEventListener("DOMContentLoaded", function() {
         label.style.color = "#0c2340";
         label.style.marginBottom = "2px";
         label.style.textTransform = "uppercase";
-        label.textContent = "Tanya SP";
+        label.textContent = "ORLMS AI";
 
         const bubble = document.createElement("div");
         bubble.style.backgroundColor = "#ffffff";
@@ -381,14 +381,14 @@ document.addEventListener("DOMContentLoaded", function() {
         .then(data => {
             removeTypingIndicator();
             if (data.success) {
-                appendMessage("Tanya SP", data.reply, true);
+                appendMessage("ORLMS AI", data.reply, true);
             } else {
-                appendMessage("Tanya SP", data.reply || "Paumanhin po, nagkaroon ng error. Subukan muli.", true);
+                appendMessage("ORLMS AI", data.reply || "Paumanhin po, nagkaroon ng error. Subukan muli.", true);
             }
         })
         .catch(err => {
             removeTypingIndicator();
-            appendMessage("Tanya SP", "Paumanhin po, hindi makakonekta sa server. Pakisiguro na active ang connection.", true);
+            appendMessage("ORLMS AI", "Paumanhin po, hindi makakonekta sa server. Pakisiguro na active ang connection.", true);
             console.error("Chatbot Error: ", err);
         });
     });
