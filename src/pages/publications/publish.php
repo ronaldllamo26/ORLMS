@@ -9,8 +9,14 @@
  *   $input    — re-filled form values on error
  */
 
+$document = $document ?? [];
+$docType  = $docType ?? 'ordinance';
+$errors   = $errors ?? [];
+$input    = $input ?? [];
+
 $noField = $docType === 'ordinance' ? 'ordinance_no' : 'resolution_no';
 $docNo   = $document[$noField] ?? 'N/A';
+$docId   = $document['id'] ?? 0;
 ?>
 
 <!-- Page Header -->
@@ -27,7 +33,7 @@ $docNo   = $document[$noField] ?? 'N/A';
                 <li class="breadcrumb-item active">Publish <?= htmlspecialchars($docNo) ?></li>
             </ul>
             <h1 class="page-title">Publish Document</h1>
-            <p class="page-subtitle"><?= htmlspecialchars($document['title']) ?></p>
+            <p class="page-subtitle"><?= htmlspecialchars($document['title'] ?? '') ?></p>
         </div>
     </div>
 </div>
@@ -43,7 +49,7 @@ $docNo   = $document[$noField] ?? 'N/A';
             <div class="card-body">
 
                 <form method="POST"
-                      action="<?= APP_ROOT_URL ?>/publications/publish/<?= $docType ?>/<?= $document['id'] ?>"
+                      action="<?= APP_ROOT_URL ?>/publications/publish/<?= $docType ?>/<?= $docId ?>"
                       enctype="multipart/form-data"
                       id="publish-form">
 
@@ -151,12 +157,12 @@ $docNo   = $document[$noField] ?? 'N/A';
 
                     <span class="doc-meta-label">Title</span>
                     <span class="doc-meta-value">
-                        <?= htmlspecialchars($document['title']) ?>
+                        <?= htmlspecialchars($document['title'] ?? '') ?>
                     </span>
 
                     <span class="doc-meta-label">Subject</span>
                     <span class="doc-meta-value">
-                        <?= htmlspecialchars($document['subject']) ?>
+                        <?= htmlspecialchars($document['subject'] ?? '') ?>
                     </span>
 
                     <span class="doc-meta-label">Author</span>
@@ -166,7 +172,7 @@ $docNo   = $document[$noField] ?? 'N/A';
 
                     <span class="doc-meta-label">Date Filed</span>
                     <span class="doc-meta-value text-muted">
-                        <?= $document['date_filed'] ? date('F d, Y', strtotime($document['date_filed'])) : '—' ?>
+                        <?= !empty($document['date_filed']) ? date('F d, Y', strtotime($document['date_filed'])) : '—' ?>
                     </span>
                 </div>
 
@@ -195,7 +201,7 @@ document.addEventListener('DOMContentLoaded', function () {
             btn.disabled = true;
             btn.textContent = 'Generating AI Summary...';
 
-            fetch('<?= APP_ROOT_URL ?>/publications/generate_summary/<?= $docType ?>/<?= $document['id'] ?>')
+            fetch('<?= APP_ROOT_URL ?>/publications/generate_summary/<?= $docType ?>/<?= $docId ?>')
                 .then(function (res) { return res.json(); })
                 .then(function (data) {
                     btn.disabled = false;

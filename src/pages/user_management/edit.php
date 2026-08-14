@@ -7,6 +7,10 @@
  *   $errors — validation errors
  *   $input  — posted form values (for re-filling after error)
  */
+
+$user   = $user ?? ['id' => 0, 'name' => 'Unknown User', 'email' => '', 'role' => '', 'is_active' => 1, 'created_at' => date('Y-m-d H:i:s')];
+$errors = $errors ?? [];
+$input  = $input ?? [];
 ?>
 
 <!-- Page Header -->
@@ -23,7 +27,7 @@
                 <li class="breadcrumb-item active">Edit User</li>
             </ul>
             <h1 class="page-title">Edit User</h1>
-            <p class="page-subtitle"><?= htmlspecialchars($user['name']) ?></p>
+            <p class="page-subtitle"><?= htmlspecialchars($user['name'] ?? '') ?></p>
         </div>
     </div>
 </div>

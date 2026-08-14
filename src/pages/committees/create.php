@@ -7,6 +7,10 @@
  *   $errors — validation errors
  *   $input  — re-filled form input
  */
+
+$users  = $users ?? [];
+$errors = $errors ?? [];
+$input  = $input ?? [];
 ?>
 
 <!-- Page Header -->

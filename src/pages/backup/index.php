@@ -4,6 +4,8 @@
  *
  * @var array $tableCounts
  */
+
+$tableCounts = $tableCounts ?? [];
 ?>
 
 <!-- Page Header -->

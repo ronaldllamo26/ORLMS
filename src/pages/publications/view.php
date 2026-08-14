@@ -5,6 +5,8 @@
  * Variables:
  *   $publication — full publication record with joined document data
  */
+
+$publication = $publication ?? [];
 ?>
 
 <!-- Page Header -->

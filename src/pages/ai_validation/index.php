@@ -7,6 +7,9 @@
  *   $counts  — ['passed' => n, 'flagged' => n, 'failed' => n]
  */
 
+$reports = $reports ?? [];
+$counts  = $counts ?? [];
+
 $userRole  = $_SESSION['user_role'] ?? '';
 $canRun    = in_array($userRole, ['super_admin', 'legislative_staff']);
 ?>

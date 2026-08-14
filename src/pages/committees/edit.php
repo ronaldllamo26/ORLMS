@@ -8,6 +8,11 @@
  *   $errors    — validation errors
  *   $input     — re-filled form input
  */
+
+$committee = $committee ?? [];
+$users     = $users ?? [];
+$errors    = $errors ?? [];
+$input     = $input ?? $committee;
 ?>
 
 <!-- Page Header -->
@@ -24,7 +29,7 @@
                 <li class="breadcrumb-item active">Edit Committee</li>
             </ul>
             <h1 class="page-title">Edit Committee</h1>
-            <p class="page-subtitle"><?= htmlspecialchars($committee['name']) ?></p>
+            <p class="page-subtitle"><?= htmlspecialchars($committee['name'] ?? 'Committee') ?></p>
         </div>
     </div>
 </div>

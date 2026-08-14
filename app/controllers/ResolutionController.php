@@ -181,12 +181,12 @@ class ResolutionController extends Controller
         $input  = $resolution;
 
         if ($this->isPost()) {
-            $input = [
+            $input = array_merge($resolution, [
                 'title'      => $this->post('title', ''),
                 'subject'    => $this->post('subject', ''),
                 'content'    => $this->post('content', ''),
-                'date_filed' => $this->post('date_filed', $resolution['date_filed']),
-            ];
+                'date_filed' => $this->post('date_filed', $resolution['date_filed'] ?? date('Y-m-d')),
+            ]);
 
             if (empty($input['title']))   { $errors['title']   = 'Title is required.'; }
             if (empty($input['subject'])) { $errors['subject'] = 'Subject is required.'; }

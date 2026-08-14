@@ -126,11 +126,11 @@ class UserManagementController extends Controller
         $input  = $user;
 
         if ($this->isPost()) {
-            $input = [
+            $input = array_merge($user, [
                 'name'  => trim($this->post('name', '')),
                 'email' => trim($this->post('email', '')),
                 'role'  => trim($this->post('role', '')),
-            ];
+            ]);
 
             $newPassword = $this->post('new_password', '');
             $confirmPwd  = $this->post('new_password_confirm', '');

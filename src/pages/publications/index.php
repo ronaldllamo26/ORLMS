@@ -7,6 +7,9 @@
  *   $pendingPublication — enacted documents not yet published
  */
 
+$published          = $published ?? [];
+$pendingPublication = $pendingPublication ?? [];
+
 $userRole = $_SESSION['user_role'] ?? '';
 $canPublish = $userRole === 'super_admin';
 ?>

@@ -7,6 +7,10 @@
  *   $oldValue — decoded old_value (array or string)
  *   $newValue — decoded new_value (array or string)
  */
+
+$log      = $log ?? [];
+$oldValue = $oldValue ?? null;
+$newValue = $newValue ?? null;
 ?>
 
 <!-- Page Header -->
@@ -206,6 +210,10 @@
                     <span class="doc-meta-label">IP Address</span>
                     <span class="doc-meta-value" style="font-family:monospace; font-size:12px;">
                         <?= htmlspecialchars($log['ip_address']) ?>
+                    </span>
+                    <span class="doc-meta-label">Location</span>
+                    <span class="doc-meta-value">
+                        📍 <?= htmlspecialchars($log['location'] ?? (class_exists('GeoIPHelper') ? GeoIPHelper::getLocation($log['ip_address']) : 'Local Network')) ?>
                     </span>
                     <?php endif; ?>
 

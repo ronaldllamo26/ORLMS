@@ -147,11 +147,11 @@ class CommitteeController extends Controller
         $input  = $committee;
 
         if ($this->isPost()) {
-            $input = [
+            $input = array_merge($committee, [
                 'name'           => trim($this->post('name', '')),
                 'jurisdiction'   => trim($this->post('jurisdiction', '')),
                 'chairperson_id' => $this->post('chairperson_id', ''),
-            ];
+            ]);
 
             if (empty($input['name'])) {
                 $errors['name'] = 'Committee name is required.';

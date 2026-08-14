@@ -9,17 +9,22 @@
  * @var array       $reviewHistory Array of review/endorsement log entries
  */
 
+$document      = $document ?? [];
+$docType       = $docType ?? 'ordinance';
+$aiReport      = $aiReport ?? false;
+$reviewHistory = $reviewHistory ?? [];
+
 $noField  = $docType === 'ordinance' ? 'ordinance_no' : 'resolution_no';
 $docNo    = $document[$noField] ?? 'N/A';
-$docUrl   = APP_ROOT_URL . '/' . $docType . '/view/' . $document['id'];
+$docUrl   = APP_ROOT_URL . '/' . $docType . '/view/' . ($document['id'] ?? 0);
 $userRole = $_SESSION['user_role'] ?? '';
 $canAct   = in_array($userRole, ['super_admin']);
 
-$isEndorsed = $document['status'] === 'endorsed';
-$isApproved = $document['status'] === 'approved';
+$isEndorsed = ($document['status'] ?? '') === 'endorsed';
+$isApproved = ($document['status'] ?? '') === 'approved';
 $canApprove = $canAct && $isEndorsed;
 $canEnact   = $canAct && $isApproved;
-$canReject  = $canAct && in_array($document['status'], ['endorsed', 'approved']);
+$canReject  = $canAct && in_array($document['status'] ?? '', ['endorsed', 'approved']);
 
 $aiStatusColor = match ($aiReport['validation_status'] ?? '') {
     'passed'  => 'var(--color-success)',

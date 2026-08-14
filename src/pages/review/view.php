@@ -8,15 +8,20 @@
  * @var array $reviewHistory
  */
 
+$document      = $document ?? [];
+$docType       = $docType ?? 'ordinance';
+$aiReport      = $aiReport ?? false;
+$reviewHistory = $reviewHistory ?? [];
+
 $noField  = $docType === 'ordinance' ? 'ordinance_no' : 'resolution_no';
 $docNo    = $document[$noField] ?? 'N/A';
-$docUrl   = APP_ROOT_URL . '/' . $docType . '/view/' . $document['id'];
+$docUrl   = APP_ROOT_URL . '/' . $docType . '/view/' . ($document['id'] ?? 0);
 $userRole = $_SESSION['user_role'] ?? '';
 
 $canAct = in_array($userRole, ['sp_member', 'committee_member', 'super_admin']);
 
 $allowedStatuses = [STATUS_PENDING, STATUS_REVIEWED];
-$canReview = $canAct && in_array($document['status'], $allowedStatuses);
+$canReview = $canAct && in_array($document['status'] ?? '', $allowedStatuses);
 
 // AI report helpers
 $aiPassed  = !empty($aiReport) && $aiReport['validation_status'] === 'passed';

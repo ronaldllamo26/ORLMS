@@ -9,6 +9,14 @@
  *   $filterAction, $filterTable, $filterUser, $filterDate — active filters
  */
 
+$logs         = $logs ?? [];
+$allActions   = $allActions ?? [];
+$allTables    = $allTables ?? [];
+$filterAction = $filterAction ?? '';
+$filterTable  = $filterTable ?? '';
+$filterUser   = $filterUser ?? '';
+$filterDate   = $filterDate ?? '';
+
 function auditActionBadge(string $action): string {
     return match(true) {
         str_contains($action, 'CREATE') => 'badge-endorsed',
@@ -151,8 +159,9 @@ function auditActionBadge(string $action): string {
                     <th style="width:110px;">Module</th>
                     <th style="width:70px;">Record</th>
                     <th>Changes</th>
-                    <th style="width:160px;">User</th>
-                    <th style="width:150px;">Timestamp</th>
+                    <th style="width:150px;">User</th>
+                    <th style="width:140px;">IP & Location</th>
+                    <th style="width:140px;">Timestamp</th>
                     <th style="width:60px;" class="col-actions">Detail</th>
                 </tr>
             </thead>
@@ -256,6 +265,15 @@ function auditActionBadge(string $action): string {
                         </div>
                         <div style="font-size:11px; color:var(--color-text-muted);">
                             <?= htmlspecialchars(str_replace('_', ' ', ucfirst($log['user_role'] ?? ''))) ?>
+                        </div>
+                    </td>
+
+                    <td>
+                        <div style="font-size:11px; font-weight:500; font-family:monospace; color:var(--color-text);">
+                            <?= htmlspecialchars($log['ip_address'] ?? '127.0.0.1') ?>
+                        </div>
+                        <div style="font-size:10px; color:var(--color-text-muted); margin-top:2px;">
+                            📍 <?= htmlspecialchars($log['location'] ?? (class_exists('GeoIPHelper') ? GeoIPHelper::getLocation($log['ip_address'] ?? null) : 'Local Network')) ?>
                         </div>
                     </td>
 

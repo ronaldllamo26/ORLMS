@@ -5,6 +5,8 @@
  * Variables:
  *   $committees — array of committee records
  */
+
+$committees = $committees ?? [];
 ?>
 
 <!-- Page Header -->
@@ -150,12 +152,11 @@
                             <a href="<?= APP_ROOT_URL ?>/committee/edit/<?= $c['id'] ?>"
                                class="btn btn-outline btn-sm">Edit</a>
 
+                            <?php $confirmMsg = ($c['is_active'] ? 'Suspend ' : 'Activate ') . $c['name'] . '?'; ?>
                             <form method="POST"
                                   action="<?= APP_ROOT_URL ?>/committee/toggle/<?= $c['id'] ?>"
                                   style="display:inline;"
-                                  onsubmit="return confirm('<?= $c['is_active']
-                                      ? 'Suspend ' . htmlspecialchars($c['name']) . '?'
-                                      : 'Activate ' . htmlspecialchars($c['name']) . '?' ?>')">
+                                  onsubmit="return confirm(<?= htmlspecialchars(json_encode($confirmMsg), ENT_QUOTES) ?>)">
                                 <button type="submit"
                                         class="btn <?= $c['is_active'] ? 'btn-outline-secondary' : 'btn-outline' ?> btn-sm"
                                         style="font-size:11px;">

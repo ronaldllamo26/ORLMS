@@ -5,6 +5,8 @@
  * @var array $endorsed
  */
 
+$endorsed = $endorsed ?? [];
+
 function approvalStatusBadge(string $status): string {
     return match($status) {
         'endorsed' => 'badge-endorsed',

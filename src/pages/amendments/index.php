@@ -8,6 +8,10 @@
  *   $enactedDocs — array of enacted/published documents for quick creation
  */
 
+$amendments  = $amendments ?? [];
+$summary     = $summary ?? [];
+$enactedDocs = $enactedDocs ?? [];
+
 $userRole = $_SESSION['user_role'] ?? '';
 $canCreate = in_array($userRole, ['super_admin', 'legislative_staff']);
 ?>

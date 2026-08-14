@@ -123,6 +123,7 @@ CREATE TABLE IF NOT EXISTS `audit_logs` (
     `old_value`   TEXT          DEFAULT NULL,
     `new_value`   TEXT          DEFAULT NULL,
     `ip_address`  VARCHAR(45)   DEFAULT NULL,
+    `location`    VARCHAR(150)  DEFAULT NULL,
     `created_at`  DATETIME      NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (`id`),
     KEY `fk_audit_user` (`user_id`),

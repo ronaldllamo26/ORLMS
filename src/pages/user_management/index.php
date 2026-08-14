@@ -6,6 +6,8 @@
  *   $users — all users from the DB
  */
 
+$users = $users ?? [];
+
 $roleLabels = [
     'super_admin'       => 'Administrator',
     'legislative_staff' => 'Legislative Staff',
@@ -143,12 +145,13 @@ $roleColors = [
                                class="btn btn-outline btn-sm">Edit</a>
 
                             <?php if ($user['id'] !== (int)($_SESSION['user_id'] ?? 0)): ?>
+                            <?php $userConfirmMsg = $user['is_active']
+                                ? 'Deactivate ' . $user['name'] . '? They will no longer be able to log in.'
+                                : 'Activate ' . $user['name'] . '?'; ?>
                             <form method="POST"
                                   action="<?= APP_ROOT_URL ?>/user_management/toggle/<?= $user['id'] ?>"
                                   style="display:inline;"
-                                  onsubmit="return confirm('<?= $user['is_active']
-                                      ? 'Deactivate ' . htmlspecialchars($user['name']) . '? They will no longer be able to log in.'
-                                      : 'Activate ' . htmlspecialchars($user['name']) . '?' ?>')">
+                                  onsubmit="return confirm(<?= htmlspecialchars(json_encode($userConfirmMsg), ENT_QUOTES) ?>)">
                                 <button type="submit"
                                         class="btn <?= $user['is_active'] ? 'btn-outline-secondary' : 'btn-outline' ?> btn-sm"
                                         style="font-size:11px;">

@@ -6,6 +6,9 @@
  *   $errors — validation errors
  *   $input  — posted form values (for re-filling after error)
  */
+
+$errors = $errors ?? [];
+$input  = $input ?? [];
 ?>
 
 <!-- Page Header -->

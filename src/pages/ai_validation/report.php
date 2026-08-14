@@ -7,14 +7,20 @@
  * @var array $similarityDetails   Decoded JSON from similarity_details
  */
 
-$statusColor = match($report['validation_status']) {
+$report              = $report ?? [];
+$completenessDetails = $completenessDetails ?? [];
+$similarityDetails   = $similarityDetails ?? [];
+
+$valStatus = $report['validation_status'] ?? 'pending';
+
+$statusColor = match($valStatus) {
     'passed'  => 'var(--color-success)',
     'flagged' => '#fd7e14',
     'failed'  => '#dc3545',
     default   => 'var(--color-text-muted)',
 };
 
-$statusBadge = match($report['validation_status']) {
+$statusBadge = match($valStatus) {
     'passed'  => 'badge-ai-passed',
     'flagged' => 'badge-ai-flagged',
     'failed'  => 'badge-ai-failed',

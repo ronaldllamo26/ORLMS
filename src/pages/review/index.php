@@ -6,6 +6,8 @@
  *   $pending — merged array of ordinances + resolutions awaiting review
  */
 
+$pending = $pending ?? [];
+
 function reviewStatusBadge(string $status): string {
     return match($status) {
         'submitted'    => 'badge-submitted',

@@ -175,14 +175,15 @@ class UserModel extends Model
         $oldEncoded = is_array($oldValue) ? json_encode($oldValue) : $oldValue;
         $newEncoded = is_array($newValue) ? json_encode($newValue) : $newValue;
 
-        // Get the requester's IP address safely
-        $ip = $_SERVER['REMOTE_ADDR'] ?? null;
+        // Get the requester's IP address and location safely
+        $ip = class_exists('GeoIPHelper') ? GeoIPHelper::getClientIp() : ($_SERVER['REMOTE_ADDR'] ?? null);
+        $location = class_exists('GeoIPHelper') && $ip ? GeoIPHelper::getLocation($ip) : null;
 
         return (bool) $this->query(
             "INSERT INTO audit_logs
-                (user_id, action, table_name, record_id, old_value, new_value, ip_address, created_at)
+                (user_id, action, table_name, record_id, old_value, new_value, ip_address, location, created_at)
              VALUES
-                (:user_id, :action, :table_name, :record_id, :old_value, :new_value, :ip_address, NOW())",
+                (:user_id, :action, :table_name, :record_id, :old_value, :new_value, :ip_address, :location, NOW())",
             [
                 ':user_id'    => $userId,
                 ':action'     => strtoupper($action),
@@ -191,6 +192,7 @@ class UserModel extends Model
                 ':old_value'  => $oldEncoded,
                 ':new_value'  => $newEncoded,
                 ':ip_address' => $ip,
+                ':location'   => $location,
             ]
         );
     }
