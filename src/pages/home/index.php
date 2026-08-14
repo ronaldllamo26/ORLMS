@@ -215,6 +215,18 @@
             margin: 12px auto 0 auto;
             border-radius: 2px;
         }
+        @media (min-width: 768px) {
+            .feature-cards-grid {
+                display: grid !important;
+                grid-template-columns: repeat(3, 1fr) !important;
+                gap: 24px !important;
+            }
+            .feature-card-wrapper {
+                width: 100% !important;
+                max-width: 100% !important;
+                padding: 0 !important;
+            }
+        }
         
         .feature-card-wrapper {
             padding: 10px;
@@ -531,7 +543,7 @@
                 I-click ang kategorya upang maghanap ng mga opisyal na ordinansa at resolusyon na pinagtibay sa ilalim ng bawat komite.
             </p>
             
-            <div class="row g-4 text-start justify-content-center">
+            <div class="row g-4 text-start justify-content-center feature-cards-grid">
                 <!-- Card 1: Laws & Rules -->
                 <div class="col-sm-6 col-md-4 col-lg-4 feature-card-wrapper">
                     <a href="<?= APP_URL ?>/portal?search=Laws" class="feature-card">
