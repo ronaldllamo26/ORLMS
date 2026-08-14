@@ -217,14 +217,14 @@
         }
         @media (min-width: 768px) {
             .feature-cards-grid {
-                display: grid !important;
-                grid-template-columns: repeat(3, 1fr) !important;
-                gap: 24px !important;
+                display: flex !important;
+                flex-wrap: wrap !important;
             }
             .feature-card-wrapper {
-                width: 100% !important;
-                max-width: 100% !important;
-                padding: 0 !important;
+                flex: 0 0 33.333333% !important;
+                max-width: 33.333333% !important;
+                width: 33.333333% !important;
+                padding: 12px !important;
             }
         }
         
@@ -545,7 +545,7 @@
             
             <div class="row g-4 text-start justify-content-center feature-cards-grid">
                 <!-- Card 1: Laws & Rules -->
-                <div class="col-sm-6 col-md-4 col-lg-4 feature-card-wrapper">
+                <div class="col-12 col-md-4 feature-card-wrapper">
                     <a href="<?= APP_URL ?>/portal?search=Laws" class="feature-card">
                         <div class="feature-icon-wrapper">
                             <i class="bi bi-bank"></i>
@@ -557,7 +557,7 @@
                 </div>
 
                 <!-- Card 2: Finance & Appropriations -->
-                <div class="col-sm-6 col-md-4 col-lg-4 feature-card-wrapper">
+                <div class="col-12 col-md-4 feature-card-wrapper">
                     <a href="<?= APP_URL ?>/portal?search=Finance" class="feature-card">
                         <div class="feature-icon-wrapper">
                             <i class="bi bi-cash-coin"></i>
@@ -569,7 +569,7 @@
                 </div>
 
                 <!-- Card 3: Health & Environment -->
-                <div class="col-sm-6 col-md-4 col-lg-4 feature-card-wrapper">
+                <div class="col-12 col-md-4 feature-card-wrapper">
                     <a href="<?= APP_URL ?>/portal?search=Health" class="feature-card">
                         <div class="feature-icon-wrapper">
                             <i class="bi bi-heart-pulse"></i>
@@ -581,7 +581,7 @@
                 </div>
 
                 <!-- Card 4: Education & Social Welfare -->
-                <div class="col-sm-6 col-md-4 col-lg-4 feature-card-wrapper">
+                <div class="col-12 col-md-4 feature-card-wrapper">
                     <a href="<?= APP_URL ?>/portal?search=Education" class="feature-card">
                         <div class="feature-icon-wrapper">
                             <i class="bi bi-book"></i>
@@ -593,7 +593,7 @@
                 </div>
 
                 <!-- Card 5: Infrastructure & Zoning -->
-                <div class="col-sm-6 col-md-4 col-lg-4 feature-card-wrapper">
+                <div class="col-12 col-md-4 feature-card-wrapper">
                     <a href="<?= APP_URL ?>/portal?search=Infrastructure" class="feature-card">
                         <div class="feature-icon-wrapper">
                             <i class="bi bi-buildings"></i>
@@ -605,7 +605,7 @@
                 </div>
 
                 <!-- Card 6: Trade, Business & Labor -->
-                <div class="col-sm-6 col-md-4 col-lg-4 feature-card-wrapper">
+                <div class="col-12 col-md-4 feature-card-wrapper">
                     <a href="<?= APP_URL ?>/portal?search=Trade" class="feature-card">
                         <div class="feature-icon-wrapper">
                             <i class="bi bi-briefcase"></i>
