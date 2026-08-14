@@ -533,7 +533,7 @@
             
             <div class="row g-4 text-start justify-content-center">
                 <!-- Card 1: Laws & Rules -->
-                <div class="col-sm-6 col-md-6 col-lg-3 feature-card-wrapper">
+                <div class="col-sm-6 col-md-4 col-lg-4 feature-card-wrapper">
                     <a href="<?= APP_URL ?>/portal?search=Laws" class="feature-card">
                         <div class="feature-icon-wrapper">
                             <i class="bi bi-bank"></i>
@@ -545,7 +545,7 @@
                 </div>
 
                 <!-- Card 2: Finance & Appropriations -->
-                <div class="col-sm-6 col-md-6 col-lg-3 feature-card-wrapper">
+                <div class="col-sm-6 col-md-4 col-lg-4 feature-card-wrapper">
                     <a href="<?= APP_URL ?>/portal?search=Finance" class="feature-card">
                         <div class="feature-icon-wrapper">
                             <i class="bi bi-cash-coin"></i>
@@ -557,7 +557,7 @@
                 </div>
 
                 <!-- Card 3: Health & Environment -->
-                <div class="col-sm-6 col-md-6 col-lg-3 feature-card-wrapper">
+                <div class="col-sm-6 col-md-4 col-lg-4 feature-card-wrapper">
                     <a href="<?= APP_URL ?>/portal?search=Health" class="feature-card">
                         <div class="feature-icon-wrapper">
                             <i class="bi bi-heart-pulse"></i>
@@ -569,7 +569,7 @@
                 </div>
 
                 <!-- Card 4: Education & Social Welfare -->
-                <div class="col-sm-6 col-md-6 col-lg-3 feature-card-wrapper">
+                <div class="col-sm-6 col-md-4 col-lg-4 feature-card-wrapper">
                     <a href="<?= APP_URL ?>/portal?search=Education" class="feature-card">
                         <div class="feature-icon-wrapper">
                             <i class="bi bi-book"></i>
@@ -577,6 +577,30 @@
                         <h3>Edukasyon at Kapakanan</h3>
                         <p>Programa sa pampublikong paaralan, kultura, sining, turismo, at pagsuporta sa kapakanan ng kabataan at senior citizens.</p>
                         <span class="feature-card-link">Tingnan ang Edukasyon <i class="bi bi-arrow-right"></i></span>
+                    </a>
+                </div>
+
+                <!-- Card 5: Infrastructure & Zoning -->
+                <div class="col-sm-6 col-md-4 col-lg-4 feature-card-wrapper">
+                    <a href="<?= APP_URL ?>/portal?search=Infrastructure" class="feature-card">
+                        <div class="feature-icon-wrapper">
+                            <i class="bi bi-buildings"></i>
+                        </div>
+                        <h3>Imprastraktura at Lupaing Pampubliko</h3>
+                        <p>Mga ordinansa ukol sa pampublikong pasilidad, land use zoning, pabahay, kalsada, at urban development sa lungsod.</p>
+                        <span class="feature-card-link">Tingnan ang Imprastraktura <i class="bi bi-arrow-right"></i></span>
+                    </a>
+                </div>
+
+                <!-- Card 6: Trade, Business & Labor -->
+                <div class="col-sm-6 col-md-4 col-lg-4 feature-card-wrapper">
+                    <a href="<?= APP_URL ?>/portal?search=Trade" class="feature-card">
+                        <div class="feature-icon-wrapper">
+                            <i class="bi bi-briefcase"></i>
+                        </div>
+                        <h3>Komersyo at Trabaho</h3>
+                        <p>Promosyon ng lokal na negosyo, pamilihan, kabuhayan, mga lisensya sa merkado, at oportunidad sa paggawa sa CSJDM.</p>
+                        <span class="feature-card-link">Tingnan ang Komersyo <i class="bi bi-arrow-right"></i></span>
                     </a>
                 </div>
             </div>
