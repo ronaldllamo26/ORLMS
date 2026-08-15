@@ -231,6 +231,7 @@ CREATE TABLE public.audit_logs (
     old_value text,
     new_value text,
     ip_address character varying(45) DEFAULT NULL::character varying,
+    location character varying(150) DEFAULT NULL::character varying,
     created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL
 );
 

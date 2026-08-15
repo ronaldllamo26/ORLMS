@@ -16,6 +16,14 @@ try {
     $db = Database::getInstance()->getConnection();
     echo "<p style='color:blue;'>Connected to PostgreSQL Database (" . DB_HOST . ")...</p>";
 
+    // Ensure audit_logs table schema is up-to-date
+    try {
+        $db->exec("ALTER TABLE audit_logs ADD COLUMN IF NOT EXISTS location VARCHAR(150)");
+        echo "<p style='color:green;'>✓ Ensured 'location' column exists on audit_logs table.</p>";
+    } catch (\Throwable $ex) {
+        // Ignore if error or already exists
+    }
+
     // Sample Committees
     $committees = [
         ['name' => 'Committee on Laws, Rules, and Internal Government', 'jurisdiction' => 'Review of legal compliance, ordinances, resolutions, and council rules.'],

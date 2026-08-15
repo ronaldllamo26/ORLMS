@@ -171,30 +171,79 @@ class UserModel extends Model
         mixed $oldValue = null,
         mixed $newValue = null
     ): bool {
-        // Encode arrays/objects to JSON for storage
-        $oldEncoded = is_array($oldValue) ? json_encode($oldValue) : $oldValue;
-        $newEncoded = is_array($newValue) ? json_encode($newValue) : $newValue;
+        try {
+            // Encode arrays/objects to JSON for storage
+            $oldEncoded = is_array($oldValue) ? json_encode($oldValue) : $oldValue;
+            $newEncoded = is_array($newValue) ? json_encode($newValue) : $newValue;
 
-        // Get the requester's IP address and location safely
-        $ip = class_exists('GeoIPHelper') ? GeoIPHelper::getClientIp() : ($_SERVER['REMOTE_ADDR'] ?? null);
-        $location = class_exists('GeoIPHelper') && $ip ? GeoIPHelper::getLocation($ip) : null;
+            // Get the requester's IP address and location safely
+            $ip = class_exists('GeoIPHelper') ? GeoIPHelper::getClientIp() : ($_SERVER['REMOTE_ADDR'] ?? null);
+            $location = class_exists('GeoIPHelper') && $ip ? GeoIPHelper::getLocation($ip) : null;
 
-        return (bool) $this->query(
-            "INSERT INTO audit_logs
-                (user_id, action, table_name, record_id, old_value, new_value, ip_address, location, created_at)
-             VALUES
-                (:user_id, :action, :table_name, :record_id, :old_value, :new_value, :ip_address, :location, NOW())",
-            [
-                ':user_id'    => $userId,
-                ':action'     => strtoupper($action),
-                ':table_name' => $tableName,
-                ':record_id'  => $recordId,
-                ':old_value'  => $oldEncoded,
-                ':new_value'  => $newEncoded,
-                ':ip_address' => $ip,
-                ':location'   => $location,
-            ]
-        );
+            try {
+                return (bool) $this->query(
+                    "INSERT INTO audit_logs
+                        (user_id, action, table_name, record_id, old_value, new_value, ip_address, location, created_at)
+                     VALUES
+                        (:user_id, :action, :table_name, :record_id, :old_value, :new_value, :ip_address, :location, NOW())",
+                    [
+                        ':user_id'    => $userId,
+                        ':action'     => strtoupper($action),
+                        ':table_name' => $tableName,
+                        ':record_id'  => $recordId,
+                        ':old_value'  => $oldEncoded,
+                        ':new_value'  => $newEncoded,
+                        ':ip_address' => $ip,
+                        ':location'   => $location,
+                    ]
+                );
+            } catch (\Throwable $e) {
+                // If 'location' column is missing in PostgreSQL/MySQL database, attempt auto schema patch or fallback query
+                if (strpos($e->getMessage(), 'location') !== false || strpos($e->getMessage(), '42703') !== false) {
+                    try {
+                        $this->query("ALTER TABLE audit_logs ADD COLUMN IF NOT EXISTS location VARCHAR(150)");
+                        return (bool) $this->query(
+                            "INSERT INTO audit_logs
+                                (user_id, action, table_name, record_id, old_value, new_value, ip_address, location, created_at)
+                             VALUES
+                                (:user_id, :action, :table_name, :record_id, :old_value, :new_value, :ip_address, :location, NOW())",
+                            [
+                                ':user_id'    => $userId,
+                                ':action'     => strtoupper($action),
+                                ':table_name' => $tableName,
+                                ':record_id'  => $recordId,
+                                ':old_value'  => $oldEncoded,
+                                ':new_value'  => $newEncoded,
+                                ':ip_address' => $ip,
+                                ':location'   => $location,
+                            ]
+                        );
+                    } catch (\Throwable $ex) {
+                        // Fallback: Insert without location column if schema alter is prohibited
+                        return (bool) $this->query(
+                            "INSERT INTO audit_logs
+                                (user_id, action, table_name, record_id, old_value, new_value, ip_address, created_at)
+                             VALUES
+                                (:user_id, :action, :table_name, :record_id, :old_value, :new_value, :ip_address, NOW())",
+                            [
+                                ':user_id'    => $userId,
+                                ':action'     => strtoupper($action),
+                                ':table_name' => $tableName,
+                                ':record_id'  => $recordId,
+                                ':old_value'  => $oldEncoded,
+                                ':new_value'  => $newEncoded,
+                                ':ip_address' => $ip,
+                            ]
+                        );
+                    }
+                }
+                error_log("logAudit failed: " . $e->getMessage());
+                return false;
+            }
+        } catch (\Throwable $e) {
+            error_log("logAudit exception: " . $e->getMessage());
+            return false;
+        }
     }
 
     /**
