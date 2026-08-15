@@ -54,6 +54,14 @@ define('SMTP_PASS',          getenv('SMTP_PASS') ?: 'your_smtp_app_password_here
 define('SMTP_FROM_NAME',     'CSJDM Sangguniang Panlungsod');
 
 // ─────────────────────────────────────────────────────────────────────────────
+// VISITOR & ANALYTICS TRACKING CONFIGURATION (Google Analytics & MS Clarity)
+// ─────────────────────────────────────────────────────────────────────────────
+$gaEnv = getenv('GA_TRACKING_ID');
+$gaId  = (!empty($gaEnv) && trim($gaEnv) !== '') ? trim($gaEnv) : 'G-M0BYB5DP6M';
+define('GA_TRACKING_ID', $gaId);
+define('CLARITY_PROJECT_ID', getenv('CLARITY_PROJECT_ID') ?: '');
+
+// ─────────────────────────────────────────────────────────────────────────────
 // FILE UPLOAD SETTINGS
 // ─────────────────────────────────────────────────────────────────────────────
 define('UPLOAD_PATH',     dirname(__DIR__) . '/public/uploads/documents/');
