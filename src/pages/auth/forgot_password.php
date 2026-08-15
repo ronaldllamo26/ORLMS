@@ -13,16 +13,15 @@
 
     <title>Forgot Password | <?= APP_SHORT ?></title>
 
-    <?php if (defined('GA_TRACKING_ID') && !empty(GA_TRACKING_ID)): ?>
+    <?php $gaCode = (defined('GA_TRACKING_ID') && !empty(trim(GA_TRACKING_ID))) ? trim(GA_TRACKING_ID) : 'G-M0BYB5DP6M'; ?>
     <!-- Google Analytics (GA4) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=<?= GA_TRACKING_ID ?>"></script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=<?= $gaCode ?>"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
         function gtag(){dataLayer.push(arguments);}
         gtag('js', new Date());
-        gtag('config', '<?= GA_TRACKING_ID ?>');
+        gtag('config', '<?= $gaCode ?>');
     </script>
-    <?php endif; ?>
 
     <?php if (defined('CLARITY_PROJECT_ID') && !empty(CLARITY_PROJECT_ID)): ?>
     <!-- Microsoft Clarity -->
