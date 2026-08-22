@@ -33,6 +33,27 @@ class ApiController extends Controller
         $this->consultationModel = $this->model('ConsultationModel');
     }
 
+    /**
+     * GET /api
+     * API Root Endpoint - Returns system status and available API endpoints.
+     */
+    public function index(): void
+    {
+        $this->json([
+            'status'      => 'online',
+            'system'      => APP_NAME,
+            'version'     => APP_VERSION,
+            'timestamp'   => date('c'),
+            'endpoints'   => [
+                'POST /api/receive'              => 'Submit drafted ordinance or resolution for processing',
+                'GET  /api/documents'            => 'Fetch list of all ordinances and resolutions',
+                'GET  /api/documents/{type}'     => 'Fetch documents filtered by type (ordinance or resolution)',
+                'GET  /api/detail/{type}/{id}'   => 'Fetch full details and AI validation report of a document',
+                'POST /api/consultations'        => 'Submit public consultation and hearing results'
+            ]
+        ]);
+    }
+
     // ─────────────────────────────────────────────────────────────────────────
     // 1. POST /api/receive — Receive document from another subsystem
     // ─────────────────────────────────────────────────────────────────────────

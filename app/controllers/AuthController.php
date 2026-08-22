@@ -21,6 +21,15 @@ class AuthController extends Controller
         $this->userModel = $this->model('UserModel');
     }
 
+    /**
+     * Default Auth Controller Action (GET /auth).
+     * Forwards to login action.
+     */
+    public function index(): void
+    {
+        $this->login();
+    }
+
     // ─────────────────────────────────────────────────────────────────────────
     // LOGIN — GET: show form | POST: process credentials
     // ─────────────────────────────────────────────────────────────────────────

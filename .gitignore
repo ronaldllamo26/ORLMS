@@ -50,3 +50,7 @@ vendor/
 
 # Exclude large ngrok executable
 ngrok.exe
+
+# Scratch / test artifacts
+scratch/
+
