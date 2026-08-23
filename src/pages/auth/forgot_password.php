@@ -128,5 +128,7 @@
     });
 </script>
 
+<!-- ORLMS Global JavaScript & Client Protection Module -->
+<script src="<?= APP_URL ?>/public/js/main.js"></script>
 </body>
 </html>
