@@ -958,5 +958,8 @@
 
     <!-- Bootstrap 5 JS Bundle -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- ORLMS Global JavaScript & Client Protection Module -->
+    <script src="<?= APP_URL ?>/public/js/main.js"></script>
 </body>
 </html>
