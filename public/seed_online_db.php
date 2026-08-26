@@ -220,10 +220,11 @@ try {
         try {
             $db->exec($sql);
         } catch (\Throwable $ex) {
-            // Log or ignore
+            echo "<p style='color:orange;'>Notice executing query: " . htmlspecialchars($ex->getMessage()) . "</p>";
         }
     }
     $db->exec("SET FOREIGN_KEY_CHECKS = 1;");
+
 
     echo "<p style='color:green;'>✓ Database tables created/verified successfully.</p>";
 
