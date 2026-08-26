@@ -25,11 +25,17 @@ define('PUBLIC_ROOT', ROOT . '/public');
 session_start();
 
 // ─────────────────────────────────────────────────────────────────────────────
-// 3. SET ERROR REPORTING (Development Mode)
-//    Change E_ALL to 0 in production to hide errors from end users.
+// 3. SET ERROR REPORTING (Environment Aware)
 // ─────────────────────────────────────────────────────────────────────────────
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
+$appEnv = getenv('APP_ENV') ?: 'development';
+if ($appEnv === 'production') {
+    error_reporting(0);
+    ini_set('display_errors', '0');
+} else {
+    error_reporting(E_ALL);
+    ini_set('display_errors', '1');
+}
+
 
 // ─────────────────────────────────────────────────────────────────────────────
 // 4. LOAD COMPOSER AUTOLOADER

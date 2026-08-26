@@ -10,7 +10,17 @@ require_once __DIR__ . '/../core/Database.php';
 
 header('Content-Type: text/html; charset=utf-8');
 
+// Security Check: Requires ?key=orlms_secret_seed_2026 or matching SEED_SECRET env var
+$secretKey = getenv('SEED_SECRET') ?: 'orlms_secret_seed_2026';
+$providedKey = $_GET['key'] ?? '';
+
+if ($providedKey !== $secretKey) {
+    http_response_code(403);
+    die("<h2 style='color:red;'>403 Forbidden: Invalid or missing secret key.</h2><p>Access to database seeder is restricted.</p>");
+}
+
 echo "<h2>ORLMS Online Database Seeder</h2>";
+
 
 try {
     $db = Database::getInstance()->getConnection();

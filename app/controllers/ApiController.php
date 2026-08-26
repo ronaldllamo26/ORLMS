@@ -1,328 +1,186 @@
 <?php
 
 /**
- * ORLMS - REST API Controller
+ * ORLMS - Integration API Controller
  *
- * Provides RESTful API endpoints for integration with other subsystems:
- *   1. POST /api/receive             → Submits a new document from another subsystem.
- *   2. GET  /api/documents           → Lists ordinances/resolutions (can filter by ?status=).
- *   3. GET  /api/documents/{type}    → Lists only ordinances or resolutions.
- *   4. GET  /api/detail/{type}/{id}  → Gets full details of a specific document + AI report.
+ * Provides RESTful API endpoints for external systems (e.g. LGU mobile apps,
+ * Mayor's Office portal, or external Capstone projects) to safely consume
+ * published legislative data.
  */
 
 class ApiController extends Controller
 {
-    /** @var OrdinanceModel */
-    private OrdinanceModel $ordinanceModel;
-
-    /** @var ResolutionModel */
-    private ResolutionModel $resolutionModel;
-
-    /** @var UserModel */
-    private UserModel $userModel;
-
-    /** @var ConsultationModel */
-    private ConsultationModel $consultationModel;
-
-    public function __construct()
+    /**
+     * Set CORS headers to allow cross-origin requests from partner apps.
+     */
+    private function applyCorsHeaders(): void
     {
-        // No session check ($this->requireLogin()) so external subsystems can connect.
-        $this->ordinanceModel = $this->model('OrdinanceModel');
-        $this->resolutionModel = $this->model('ResolutionModel');
-        $this->userModel = $this->model('UserModel');
-        $this->consultationModel = $this->model('ConsultationModel');
+        header("Access-Control-Allow-Origin: *");
+        header("Access-Control-Allow-Methods: GET, OPTIONS");
+        header("Access-Control-Allow-Headers: Content-Type, X-API-KEY");
+
+        // Handle preflight OPTIONS request
+        if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+            http_response_code(200);
+            exit;
+        }
     }
 
     /**
      * GET /api
-     * API Root Endpoint - Returns system status and available API endpoints.
+     * API Root / Documentation & Health Status
      */
     public function index(): void
     {
+        $this->applyCorsHeaders();
+
         $this->json([
             'status'      => 'online',
             'system'      => APP_NAME,
+            'short_name'  => APP_SHORT,
             'version'     => APP_VERSION,
-            'timestamp'   => date('c'),
+            'timestamp'   => date('Y-m-d H:i:s'),
             'endpoints'   => [
-                'POST /api/receive'              => 'Submit drafted ordinance or resolution for processing',
-                'GET  /api/documents'            => 'Fetch list of all ordinances and resolutions',
-                'GET  /api/documents/{type}'     => 'Fetch documents filtered by type (ordinance or resolution)',
-                'GET  /api/detail/{type}/{id}'   => 'Fetch full details and AI validation report of a document',
-                'POST /api/consultations'        => 'Submit public consultation and hearing results'
+                'GET /api/ordinances'  => 'List published ordinances',
+                'GET /api/resolutions' => 'List published resolutions',
+                'GET /api/search?q='   => 'Search legislative documents by keyword',
+                'GET /api/stats'       => 'Public statistics and summary metrics'
             ]
         ]);
     }
 
-    // ─────────────────────────────────────────────────────────────────────────
-    // 1. POST /api/receive — Receive document from another subsystem
-    // ─────────────────────────────────────────────────────────────────────────
-    public function receive(): void
+    /**
+     * GET /api/ordinances
+     * Returns list of published ordinances
+     */
+    public function ordinances(): void
     {
-        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            $this->json(['success' => false, 'message' => 'Only POST requests are allowed.'], 405);
-        }
+        $this->applyCorsHeaders();
 
-        // Get JSON payload or standard POST variables
-        $json = file_get_contents('php://input');
-        $data = json_decode($json, true);
+        $ordinanceModel = $this->model('OrdinanceModel');
+        $limit = isset($_GET['limit']) ? min((int)$_GET['limit'], 50) : 20;
 
-        if (empty($data)) {
-            $data = $_POST;
-        }
-
-        // Validate required fields
-        $requiredFields = ['title', 'subject', 'content', 'document_type'];
-        foreach ($requiredFields as $field) {
-            if (empty($data[$field])) {
-                $this->json(['success' => false, 'message' => "Field '{$field}' is required."], 400);
-            }
-        }
-
-        $docType = strtolower(trim($data['document_type']));
-        if ($docType !== 'ordinance' && $docType !== 'resolution') {
-            $this->json(['success' => false, 'message' => "Field 'document_type' must be 'ordinance' or 'resolution'."], 400);
-        }
-
-        // Determine status (defaults to 'submitted')
-        $status = trim($data['status'] ?? STATUS_PENDING);
-        $allowedStatuses = [STATUS_DRAFT, STATUS_PENDING];
-        if (!in_array($status, $allowedStatuses)) {
-            $status = STATUS_PENDING;
-        }
-
-        // Determine author (defaults to Super Admin / staff ID 1)
-        $authorId = isset($data['author_id']) ? (int)$data['author_id'] : null;
-        if (!$authorId) {
-            $db = Database::getInstance()->getConnection();
-            $stmt = $db->query("SELECT id FROM users WHERE is_active = 1 AND role IN ('legislative_staff', 'super_admin') ORDER BY role DESC LIMIT 1");
-            $defaultUser = $stmt->fetch(PDO::FETCH_ASSOC);
-            $authorId = $defaultUser ? (int)$defaultUser['id'] : 1;
-        }
-
-        $dateFiled = !empty($data['date_filed']) ? trim($data['date_filed']) : date('Y-m-d');
-
-        if ($docType === 'ordinance') {
-            $trackingNo = $this->ordinanceModel->generateOrdinanceNo();
-            $newId = $this->ordinanceModel->insert([
-                'ordinance_no' => $trackingNo,
-                'title'        => trim($data['title']),
-                'subject'      => trim($data['subject']),
-                'content'      => trim($data['content']),
-                'author_id'    => $authorId,
-                'status'       => $status,
-                'date_filed'   => $dateFiled,
-            ]);
-        } else {
-            $trackingNo = $this->resolutionModel->generateResolutionNo();
-            $newId = $this->resolutionModel->insert([
-                'resolution_no' => $trackingNo,
-                'title'         => trim($data['title']),
-                'subject'       => trim($data['subject']),
-                'content'       => trim($data['content']),
-                'author_id'     => $authorId,
-                'status'        => $status,
-                'date_filed'    => $dateFiled,
-            ]);
-        }
-
-        if ($newId) {
-            $this->userModel->logAudit(
-                $authorId,
-                'API_RECEIVE',
-                $docType === 'ordinance' ? 'ordinances' : 'resolutions',
-                (int) $newId,
-                null,
-                ['tracking_no' => $trackingNo, 'title' => trim($data['title']), 'source' => 'external_api']
-            );
-
-            // Trigger AI validation if status is submitted
-            $aiTriggered = false;
-            if ($status === STATUS_PENDING && !empty(GROQ_API_KEY) && GROQ_API_KEY !== 'your_groq_api_key_here') {
-                $aiModel = $this->model('AiValidationModel');
-                $reportId = $aiModel->runValidation($docType, (int) $newId, $authorId);
-                if ($reportId) {
-                    $this->userModel->logAudit(
-                        $authorId,
-                        'AI_VALIDATE',
-                        $docType === 'ordinance' ? 'ordinances' : 'resolutions',
-                        (int) $newId,
-                        null,
-                        ['report_id' => $reportId, 'triggered_on' => 'api_submit']
-                    );
-                    $aiTriggered = true;
-                }
-            }
-
-            $this->json([
-                'success'      => true,
-                'message'      => ucfirst($docType) . ' received and saved successfully.',
-                'id'           => (int)$newId,
-                'tracking_no'  => $trackingNo,
-                'status'       => $status,
-                'ai_validated' => $aiTriggered
-            ], 201);
-        } else {
-            $this->json(['success' => false, 'message' => 'Failed to save document.'], 500);
-        }
-    }
-
-    // ─────────────────────────────────────────────────────────────────────────
-    // 2. GET /api/documents — List all ordinances and resolutions
-    // ─────────────────────────────────────────────────────────────────────────
-    public function documents(string $type = ''): void
-    {
-        if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
-            $this->json(['success' => false, 'message' => 'Only GET requests are allowed.'], 405);
-        }
-
-        $type = strtolower(trim($type));
-        $status = $this->get('status', ''); // e.g. ?status=submitted
-
-        $ordinances = [];
-        $resolutions = [];
-
-        if (empty($type) || $type === 'ordinance') {
-            if (!empty($status)) {
-                $ordinances = $this->ordinanceModel->getByStatus($status);
-            } else {
-                $ordinances = $this->ordinanceModel->getAllWithAuthor();
-            }
-        }
-
-        if (empty($type) || $type === 'resolution') {
-            if (!empty($status)) {
-                $resolutions = $this->resolutionModel->getByStatus($status);
-            } else {
-                $resolutions = $this->resolutionModel->getAllWithAuthor();
-            }
-        }
+        $ordinances = $ordinanceModel->query(
+            "SELECT o.id, o.ordinance_no, o.title, o.subject, o.status, o.ai_summary, o.date_filed, o.created_at,
+                    c.name AS committee_name
+             FROM ordinances o
+             LEFT JOIN committees c ON o.committee_id = c.id
+             WHERE o.status IN ('published', 'enacted', 'approved', 'signed_lce')
+             ORDER BY o.created_at DESC
+             LIMIT :limit",
+            [':limit' => $limit]
+        );
 
         $this->json([
-            'success' => true,
-            'count'   => count($ordinances) + count($resolutions),
-            'data'    => [
-                'ordinances'  => $ordinances,
-                'resolutions' => $resolutions
-            ]
+            'status' => 'success',
+            'count'  => count($ordinances),
+            'data'   => $ordinances
         ]);
     }
 
-    // ─────────────────────────────────────────────────────────────────────────
-    // 3. GET /api/detail/{type}/{id} — View single document details + AI validation report
-    // ─────────────────────────────────────────────────────────────────────────
-    public function detail(string $type = '', string $id = ''): void
+    /**
+     * GET /api/resolutions
+     * Returns list of published resolutions
+     */
+    public function resolutions(): void
     {
-        if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
-            $this->json(['success' => false, 'message' => 'Only GET requests are allowed.'], 405);
-        }
+        $this->applyCorsHeaders();
 
-        $type = strtolower(trim($type));
-        $id = (int)$id;
+        $resolutionModel = $this->model('ResolutionModel');
+        $limit = isset($_GET['limit']) ? min((int)$_GET['limit'], 50) : 20;
 
-        if ($type !== 'ordinance' && $type !== 'resolution') {
-            $this->json(['success' => false, 'message' => "Type must be 'ordinance' or 'resolution'."], 400);
-        }
-
-        if ($id <= 0) {
-            $this->json(['success' => false, 'message' => 'Valid ID is required.'], 400);
-        }
-
-        $document = ($type === 'ordinance') 
-            ? $this->ordinanceModel->getByIdWithAuthor($id) 
-            : $this->resolutionModel->getByIdWithAuthor($id);
-
-        if (!$document) {
-            $this->json(['success' => false, 'message' => 'Document not found.'], 404);
-        }
-
-        // Get latest AI validation report
-        $aiModel = $this->model('AiValidationModel');
-        $aiReport = $aiModel->getLatestForDocument($type, $id);
+        $resolutions = $resolutionModel->query(
+            "SELECT r.id, r.resolution_no, r.title, r.subject, r.status, r.date_filed, r.created_at,
+                    c.name AS committee_name
+             FROM resolutions r
+             LEFT JOIN committees c ON r.committee_id = c.id
+             WHERE r.status IN ('published', 'enacted', 'approved', 'signed_lce')
+             ORDER BY r.created_at DESC
+             LIMIT :limit",
+            [':limit' => $limit]
+        );
 
         $this->json([
-            'success' => true,
-            'data'    => [
-                'document'  => $document,
-                'ai_report' => $aiReport ?: null
-            ]
+            'status' => 'success',
+            'count'  => count($resolutions),
+            'data'   => $resolutions
         ]);
     }
 
-    // ─────────────────────────────────────────────────────────────────────────
-    // 4. POST /api/consultations — Receive public hearing consultation data
-    // ─────────────────────────────────────────────────────────────────────────
-    public function consultations(): void
+    /**
+     * GET /api/search?q=keyword
+     * Searches published ordinances and resolutions
+     */
+    public function search(): void
     {
-        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            $this->json(['success' => false, 'message' => 'Only POST requests are allowed.'], 405);
-        }
+        $this->applyCorsHeaders();
 
-        $json = file_get_contents('php://input');
-        $data = json_decode($json, true);
+        $query = trim($_GET['q'] ?? $_GET['keyword'] ?? '');
 
-        if (empty($data)) {
-            $data = $_POST;
-        }
-
-        // Validate required fields
-        $requiredFields = ['document_id', 'document_type', 'hearing_date', 'venue'];
-        foreach ($requiredFields as $field) {
-            if (empty($data[$field])) {
-                $this->json(['success' => false, 'message' => "Field '{$field}' is required."], 400);
-            }
-        }
-
-        $docType = strtolower(trim($data['document_type']));
-        if ($docType !== 'ordinance' && $docType !== 'resolution') {
-            $this->json(['success' => false, 'message' => "Field 'document_type' must be 'ordinance' or 'resolution'."], 400);
-        }
-
-        $docId = (int)$data['document_id'];
-        if ($docId <= 0) {
-            $this->json(['success' => false, 'message' => 'Invalid document ID.'], 400);
-        }
-
-        // Verify the document exists in our database
-        $document = ($docType === 'ordinance') 
-            ? $this->ordinanceModel->findById($docId) 
-            : $this->resolutionModel->findById($docId);
-
-        if (!$document) {
-            $this->json(['success' => false, 'message' => "Document not found in ORLMS database."], 404);
-        }
-
-        // Save consultation
-        $newId = $this->consultationModel->insert([
-            'document_id'        => $docId,
-            'document_type'      => $docType,
-            'hearing_date'       => trim($data['hearing_date']),
-            'venue'              => trim($data['venue']),
-            'total_participants' => isset($data['total_participants']) ? (int)$data['total_participants'] : 0,
-            'total_opinions'     => isset($data['total_opinions']) ? (int)$data['total_opinions'] : 0,
-            'sentiment_summary'  => isset($data['sentiment_summary']) ? trim($data['sentiment_summary']) : null,
-            'summary_report'     => isset($data['summary_report']) ? trim($data['summary_report']) : null,
-            'report_file_url'    => isset($data['report_file_url']) ? trim($data['report_file_url']) : null,
-        ]);
-
-        if ($newId) {
-            // Log audit using system default user
-            $this->userModel->logAudit(
-                1,
-                'API_RECEIVE_CONSULTATION',
-                $docType === 'ordinance' ? 'ordinances' : 'resolutions',
-                $docId,
-                null,
-                ['consultation_id' => (int)$newId, 'source' => 'external_api']
-            );
-
+        if (empty($query)) {
             $this->json([
-                'success' => true,
-                'message' => 'Public consultation data received and linked successfully.',
-                'id'      => (int)$newId
-            ], 201);
-        } else {
-            $this->json(['success' => false, 'message' => 'Failed to save consultation data.'], 500);
+                'status'  => 'error',
+                'message' => 'Query parameter "q" or "keyword" is required.'
+            ], 400);
         }
+
+        $db = Database::getInstance()->getConnection();
+        $searchTerm = '%' . $query . '%';
+
+        // Search ordinances
+        $stmtOrd = $db->prepare(
+            "SELECT 'ordinance' AS type, id, ordinance_no AS doc_no, title, subject, status, date_filed, created_at
+             FROM ordinances
+             WHERE (title LIKE :q OR subject LIKE :q OR content LIKE :q)
+               AND status IN ('published', 'enacted', 'approved', 'signed_lce')
+             ORDER BY created_at DESC LIMIT 20"
+        );
+        $stmtOrd->execute([':q' => $searchTerm]);
+        $ordinances = $stmtOrd->fetchAll(PDO::FETCH_ASSOC);
+
+        // Search resolutions
+        $stmtRes = $db->prepare(
+            "SELECT 'resolution' AS type, id, resolution_no AS doc_no, title, subject, status, date_filed, created_at
+             FROM resolutions
+             WHERE (title LIKE :q OR subject LIKE :q OR content LIKE :q)
+               AND status IN ('published', 'enacted', 'approved', 'signed_lce')
+             ORDER BY created_at DESC LIMIT 20"
+        );
+        $stmtRes->execute([':q' => $searchTerm]);
+        $resolutions = $stmtRes->fetchAll(PDO::FETCH_ASSOC);
+
+        $results = array_merge($ordinances, $resolutions);
+
+        $this->json([
+            'status' => 'success',
+            'query'  => $query,
+            'count'  => count($results),
+            'data'   => $results
+        ]);
+    }
+
+    /**
+     * GET /api/stats
+     * Returns system statistics overview
+     */
+    public function stats(): void
+    {
+        $this->applyCorsHeaders();
+
+        $db = Database::getInstance()->getConnection();
+
+        $totalOrdinances = (int)$db->query("SELECT COUNT(*) FROM ordinances WHERE status IN ('published', 'enacted', 'approved', 'signed_lce')")->fetchColumn();
+        $totalResolutions = (int)$db->query("SELECT COUNT(*) FROM resolutions WHERE status IN ('published', 'enacted', 'approved', 'signed_lce')")->fetchColumn();
+        $totalCommittees = (int)$db->query("SELECT COUNT(*) FROM committees WHERE is_active = 1")->fetchColumn();
+
+        $this->json([
+            'status' => 'success',
+            'stats'  => [
+                'published_ordinances'  => $totalOrdinances,
+                'published_resolutions' => $totalResolutions,
+                'active_committees'     => $totalCommittees,
+                'last_updated'          => date('Y-m-d H:i:s')
+            ]
+        ]);
     }
 }

@@ -49,7 +49,8 @@ define('GROQ_TEMPERATURE', 0.3); // Low temperature = more consistent/factual AI
 define('MFA_SMTP_ENABLE',    getenv('MFA_SMTP_ENABLE') !== 'false'); // Set to false to disable
 define('SMTP_HOST',          getenv('SMTP_HOST') ?: 'smtp.gmail.com');
 define('SMTP_PORT',          getenv('SMTP_PORT') ?: 587);
-define('SMTP_USER',          getenv('SMTP_USER') ?: 'llamo.ronald.estiler@gmail.com');
+define('SMTP_USER',          getenv('SMTP_USER') ?: 'orlms2026@gmail.com');
+
 define('SMTP_PASS',          getenv('SMTP_PASS') ?: 'your_smtp_app_password_here');
 define('SMTP_FROM_NAME',     'CSJDM Sangguniang Panlungsod');
 
