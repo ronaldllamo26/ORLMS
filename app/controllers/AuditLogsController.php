@@ -27,6 +27,10 @@ class AuditLogsController extends Controller
     {
         $db = \Database::getInstance()->getConnection();
 
+        // Ensure columns exist on audit_logs
+        try { $db->exec("ALTER TABLE audit_logs ADD COLUMN table_name VARCHAR(100) DEFAULT NULL"); } catch (\Throwable $e) {}
+        try { $db->exec("ALTER TABLE audit_logs ADD COLUMN record_id INT UNSIGNED DEFAULT NULL"); } catch (\Throwable $e) {}
+
         // Filter params
         $filterAction = trim($_GET['action'] ?? '');
         $filterTable  = trim($_GET['table']  ?? '');
@@ -41,7 +45,7 @@ class AuditLogsController extends Controller
             $params[':action'] = $filterAction;
         }
         if (!empty($filterTable)) {
-            $where[]  = 'al.table_name = :table_name';
+            $where[]  = '(al.table_name = :table_name OR al.target_table = :table_name)';
             $params[':table_name'] = $filterTable;
         }
         if (!empty($filterUser)) {
@@ -56,7 +60,7 @@ class AuditLogsController extends Controller
         $whereClause = implode(' AND ', $where);
 
         $stmt = $db->prepare(
-            "SELECT al.*, u.name AS user_name, u.role AS user_role
+            "SELECT al.*, COALESCE(al.table_name, al.target_table, '') AS table_name, u.name AS user_name, u.role AS user_role
              FROM audit_logs al
              LEFT JOIN users u ON al.user_id = u.id
              WHERE {$whereClause}
@@ -67,15 +71,17 @@ class AuditLogsController extends Controller
         $logs = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         // Get distinct actions and tables for filter dropdowns
-        $actionsStmt = $db->query(
-            "SELECT DISTINCT action FROM audit_logs ORDER BY action ASC"
-        );
-        $allActions = $actionsStmt->fetchAll(PDO::FETCH_COLUMN);
+        $allActions = [];
+        try {
+            $actionsStmt = $db->query("SELECT DISTINCT action FROM audit_logs ORDER BY action ASC");
+            $allActions = $actionsStmt->fetchAll(PDO::FETCH_COLUMN) ?: [];
+        } catch (\Throwable $e) {}
 
-        $tablesStmt = $db->query(
-            "SELECT DISTINCT table_name FROM audit_logs ORDER BY table_name ASC"
-        );
-        $allTables = $tablesStmt->fetchAll(PDO::FETCH_COLUMN);
+        $allTables = [];
+        try {
+            $tablesStmt = $db->query("SELECT DISTINCT COALESCE(table_name, target_table) FROM audit_logs WHERE table_name IS NOT NULL OR target_table IS NOT NULL ORDER BY 1 ASC");
+            $allTables = $tablesStmt->fetchAll(PDO::FETCH_COLUMN) ?: [];
+        } catch (\Throwable $e) {}
 
         $this->render('audit_logs/index', [
             'pageTitle'    => 'Audit Logs',
