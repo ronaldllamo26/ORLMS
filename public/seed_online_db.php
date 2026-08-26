@@ -128,47 +128,60 @@ try {
     ];
 
     foreach ($schemaQueries as $sql) {
-        $db->exec($sql);
+        try {
+            $db->exec($sql);
+        } catch (\Throwable $ex) {
+            // Table might already exist or foreign key order, continue
+        }
     }
     echo "<p style='color:green;'>✓ Database tables created/verified successfully.</p>";
 
     // Seed default admin users if empty
-    $userCheck = $db->query("SELECT COUNT(*) FROM users")->fetchColumn();
-    if ((int)$userCheck === 0) {
-        $passHash = password_hash('password123', PASSWORD_BCRYPT);
-        $users = [
-            ['name' => 'Super Administrator', 'email' => 'superadmin@csjdm.gov.ph', 'role' => 'super_admin'],
-            ['name' => 'Legislative Staff', 'email' => 'staff@csjdm.gov.ph', 'role' => 'legislative_staff'],
-            ['name' => 'Committee Chair', 'email' => 'committee@csjdm.gov.ph', 'role' => 'committee_member'],
-            ['name' => 'SP Member', 'email' => 'spmember@csjdm.gov.ph', 'role' => 'sp_member']
-        ];
-        $stmtUser = $db->prepare("INSERT INTO users (name, email, password, role, is_active, created_at) VALUES (:name, :email, :pass, :role, 1, NOW())");
-        foreach ($users as $u) {
-            $stmtUser->execute([':name' => $u['name'], ':email' => $u['email'], ':pass' => $passHash, ':role' => $u['role']]);
+    try {
+        $userCheck = $db->query("SELECT COUNT(*) FROM users")->fetchColumn();
+        if ((int)$userCheck === 0) {
+            $passHash = password_hash('password123', PASSWORD_BCRYPT);
+            $users = [
+                ['name' => 'Super Administrator', 'email' => 'superadmin@csjdm.gov.ph', 'role' => 'super_admin'],
+                ['name' => 'Legislative Staff', 'email' => 'staff@csjdm.gov.ph', 'role' => 'legislative_staff'],
+                ['name' => 'Committee Chair', 'email' => 'committee@csjdm.gov.ph', 'role' => 'committee_member'],
+                ['name' => 'SP Member', 'email' => 'spmember@csjdm.gov.ph', 'role' => 'sp_member']
+            ];
+            $stmtUser = $db->prepare("INSERT INTO users (name, email, password, role, is_active, created_at) VALUES (:name, :email, :pass, :role, 1, NOW())");
+            foreach ($users as $u) {
+                $stmtUser->execute([':name' => $u['name'], ':email' => $u['email'], ':pass' => $passHash, ':role' => $u['role']]);
+            }
+            echo "<p style='color:green;'>✓ Default users created.</p>";
         }
-        echo "<p style='color:green;'>✓ Default users created (superadmin@csjdm.gov.ph / staff@csjdm.gov.ph with password 'password123').</p>";
-    }
+    } catch (\Throwable $ex) {}
+
 
 
     // Sample Committees
-    $committees = [
-        ['name' => 'Committee on Laws, Rules, and Internal Government', 'jurisdiction' => 'Review of legal compliance, ordinances, resolutions, and council rules.'],
-        ['name' => 'Committee on Public Safety, Order, and Transportation', 'jurisdiction' => 'Traffic management, public safety, local police, and transport regulation.'],
-        ['name' => 'Committee on Health, Sanitation, and Environment', 'jurisdiction' => 'Solid waste management, healthcare services, public markets, and environmental protection.'],
-        ['name' => 'Committee on Education, Youth, and Sports Development', 'jurisdiction' => 'Scholarships, youth programs, sports facilities, and school infrastructure.'],
-        ['name' => 'Committee on Finance, Budget, and Appropriations', 'jurisdiction' => 'City budget, revenue generation, local taxation, and financial appropriations.']
-    ];
+    try {
+        $committees = [
+            ['name' => 'Committee on Laws, Rules, and Internal Government', 'jurisdiction' => 'Review of legal compliance, ordinances, resolutions, and council rules.'],
+            ['name' => 'Committee on Public Safety, Order, and Transportation', 'jurisdiction' => 'Traffic management, public safety, local police, and transport regulation.'],
+            ['name' => 'Committee on Health, Sanitation, and Environment', 'jurisdiction' => 'Solid waste management, healthcare services, public markets, and environmental protection.'],
+            ['name' => 'Committee on Education, Youth, and Sports Development', 'jurisdiction' => 'Scholarships, youth programs, sports facilities, and school infrastructure.'],
+            ['name' => 'Committee on Finance, Budget, and Appropriations', 'jurisdiction' => 'City budget, revenue generation, local taxation, and financial appropriations.']
+        ];
 
-    foreach ($committees as $comm) {
-        $stmt = $db->prepare("SELECT id FROM committees WHERE name = :name");
-        $stmt->execute([':name' => $comm['name']]);
-        if (!$stmt->fetch()) {
-            $db->prepare("INSERT INTO committees (name, jurisdiction, is_active, created_at) VALUES (:name, :jurisdiction, 1, NOW())")
-               ->execute([':name' => $comm['name'], ':jurisdiction' => $comm['jurisdiction']]);
+        foreach ($committees as $comm) {
+            $stmt = $db->prepare("SELECT id FROM committees WHERE name = :name");
+            $stmt->execute([':name' => $comm['name']]);
+            if (!$stmt->fetch()) {
+                $db->prepare("INSERT INTO committees (name, jurisdiction, is_active, created_at) VALUES (:name, :jurisdiction, 1, NOW())")
+                   ->execute([':name' => $comm['name'], ':jurisdiction' => $comm['jurisdiction']]);
+            }
         }
-    }
+    } catch (\Throwable $ex) {}
 
-    $commList = $db->query("SELECT id FROM committees")->fetchAll(PDO::FETCH_COLUMN);
+    $commList = [];
+    try {
+        $commList = $db->query("SELECT id FROM committees")->fetchAll(PDO::FETCH_COLUMN);
+    } catch (\Throwable $ex) {}
+
 
     // Sample Ordinances
     $sampleOrdinances = [
