@@ -26,13 +26,129 @@ try {
     $db = Database::getInstance()->getConnection();
     echo "<p style='color:blue;'>Connected to MySQL Database (" . DB_HOST . ")...</p>";
 
-    // Ensure audit_logs table schema is up-to-date
-    try {
-        $db->exec("ALTER TABLE audit_logs ADD COLUMN location VARCHAR(150) DEFAULT NULL");
-        echo "<p style='color:green;'>✓ Ensured 'location' column exists on audit_logs table.</p>";
-    } catch (\Throwable $ex) {
-        // Ignore if error or already exists
+    // Execute full database schema creation
+    $schemaQueries = [
+        "CREATE TABLE IF NOT EXISTS `users` (
+            `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+            `name` VARCHAR(150) NOT NULL,
+            `email` VARCHAR(255) NOT NULL,
+            `password` VARCHAR(255) NOT NULL,
+            `role` ENUM('super_admin','legislative_staff','committee_member','sp_member') NOT NULL DEFAULT 'legislative_staff',
+            `is_active` TINYINT(1) NOT NULL DEFAULT 1,
+            `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            PRIMARY KEY (`id`),
+            UNIQUE KEY `uk_users_email` (`email`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;",
+
+        "CREATE TABLE IF NOT EXISTS `committees` (
+            `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+            `name` VARCHAR(255) NOT NULL,
+            `jurisdiction` TEXT NOT NULL,
+            `chairperson_id` INT UNSIGNED DEFAULT NULL,
+            `is_active` TINYINT(1) NOT NULL DEFAULT 1,
+            `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            PRIMARY KEY (`id`),
+            KEY `fk_committees_chairperson` (`chairperson_id`),
+            CONSTRAINT `fk_committees_chairperson` FOREIGN KEY (`chairperson_id`) REFERENCES `users` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;",
+
+        "CREATE TABLE IF NOT EXISTS `ordinances` (
+            `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+            `ordinance_no` VARCHAR(50) NOT NULL,
+            `title` VARCHAR(500) NOT NULL,
+            `subject` VARCHAR(500) DEFAULT NULL,
+            `content` LONGTEXT DEFAULT NULL,
+            `author_id` INT UNSIGNED DEFAULT NULL,
+            `committee_id` INT UNSIGNED DEFAULT NULL,
+            `status` ENUM('draft','submitted','under_review','endorsed','approved','enacted','rejected','archived','published','certified','signed_lce','vetoed','sp_review_approved','sp_review_disapproved','sp_review_comments') NOT NULL DEFAULT 'draft',
+            `ai_summary` TEXT DEFAULT NULL,
+            `file_path` VARCHAR(500) DEFAULT NULL,
+            `date_filed` DATE DEFAULT NULL,
+            `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+            PRIMARY KEY (`id`),
+            UNIQUE KEY `uk_ordinances_no` (`ordinance_no`),
+            KEY `fk_ordinances_author` (`author_id`),
+            KEY `fk_ordinances_committee` (`committee_id`),
+            KEY `idx_ordinances_status` (`status`),
+            CONSTRAINT `fk_ordinances_author` FOREIGN KEY (`author_id`) REFERENCES `users` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
+            CONSTRAINT `fk_ordinances_committee` FOREIGN KEY (`committee_id`) REFERENCES `committees` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;",
+
+        "CREATE TABLE IF NOT EXISTS `resolutions` (
+            `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+            `resolution_no` VARCHAR(50) NOT NULL,
+            `title` VARCHAR(500) NOT NULL,
+            `subject` VARCHAR(500) DEFAULT NULL,
+            `content` LONGTEXT DEFAULT NULL,
+            `author_id` INT UNSIGNED DEFAULT NULL,
+            `committee_id` INT UNSIGNED DEFAULT NULL,
+            `status` ENUM('draft','submitted','under_review','endorsed','approved','enacted','rejected','archived','published','certified','signed_lce','vetoed','sp_review_approved','sp_review_disapproved','sp_review_comments') NOT NULL DEFAULT 'draft',
+            `ai_summary` TEXT DEFAULT NULL,
+            `file_path` VARCHAR(500) DEFAULT NULL,
+            `date_filed` DATE DEFAULT NULL,
+            `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+            PRIMARY KEY (`id`),
+            UNIQUE KEY `uk_resolutions_no` (`resolution_no`),
+            KEY `fk_resolutions_author` (`author_id`),
+            KEY `fk_resolutions_committee` (`committee_id`),
+            KEY `idx_resolutions_status` (`status`),
+            CONSTRAINT `fk_resolutions_author` FOREIGN KEY (`author_id`) REFERENCES `users` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
+            CONSTRAINT `fk_resolutions_committee` FOREIGN KEY (`committee_id`) REFERENCES `committees` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;",
+
+        "CREATE TABLE IF NOT EXISTS `publications` (
+            `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+            `document_type` ENUM('ordinance','resolution') NOT NULL,
+            `document_id` INT UNSIGNED NOT NULL,
+            `publication_ref` VARCHAR(100) NOT NULL,
+            `plain_summary` TEXT DEFAULT NULL,
+            `published_by` INT UNSIGNED DEFAULT NULL,
+            `published_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            PRIMARY KEY (`id`),
+            KEY `fk_publications_user` (`published_by`),
+            CONSTRAINT `fk_publications_user` FOREIGN KEY (`published_by`) REFERENCES `users` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;",
+
+        "CREATE TABLE IF NOT EXISTS `audit_logs` (
+            `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+            `user_id` INT UNSIGNED DEFAULT NULL,
+            `action` VARCHAR(100) NOT NULL,
+            `target_table` VARCHAR(100) DEFAULT NULL,
+            `target_id` INT UNSIGNED DEFAULT NULL,
+            `location` VARCHAR(150) DEFAULT NULL,
+            `ip_address` VARCHAR(45) DEFAULT NULL,
+            `details` TEXT DEFAULT NULL,
+            `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            PRIMARY KEY (`id`),
+            KEY `fk_audit_user` (`user_id`),
+            CONSTRAINT `fk_audit_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;"
+    ];
+
+    foreach ($schemaQueries as $sql) {
+        $db->exec($sql);
     }
+    echo "<p style='color:green;'>✓ Database tables created/verified successfully.</p>";
+
+    // Seed default admin users if empty
+    $userCheck = $db->query("SELECT COUNT(*) FROM users")->fetchColumn();
+    if ((int)$userCheck === 0) {
+        $passHash = password_hash('password123', PASSWORD_BCRYPT);
+        $users = [
+            ['name' => 'Super Administrator', 'email' => 'superadmin@csjdm.gov.ph', 'role' => 'super_admin'],
+            ['name' => 'Legislative Staff', 'email' => 'staff@csjdm.gov.ph', 'role' => 'legislative_staff'],
+            ['name' => 'Committee Chair', 'email' => 'committee@csjdm.gov.ph', 'role' => 'committee_member'],
+            ['name' => 'SP Member', 'email' => 'spmember@csjdm.gov.ph', 'role' => 'sp_member']
+        ];
+        $stmtUser = $db->prepare("INSERT INTO users (name, email, password, role, is_active, created_at) VALUES (:name, :email, :pass, :role, 1, NOW())");
+        foreach ($users as $u) {
+            $stmtUser->execute([':name' => $u['name'], ':email' => $u['email'], ':pass' => $passHash, ':role' => $u['role']]);
+        }
+        echo "<p style='color:green;'>✓ Default users created (superadmin@csjdm.gov.ph / staff@csjdm.gov.ph with password 'password123').</p>";
+    }
+
 
     // Sample Committees
     $committees = [
