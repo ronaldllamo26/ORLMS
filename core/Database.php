@@ -38,8 +38,8 @@ class Database
 
         try {
             $this->connection = new PDO(DB_DSN, DB_USER, DB_PASS, $options);
-            // Set client encoding for PostgreSQL
-            $this->connection->exec("SET client_encoding TO '" . DB_CHARSET . "'");
+            // Set character encoding for MySQL
+            $this->connection->exec("SET NAMES '" . DB_CHARSET . "'");
         } catch (PDOException $e) {
             // Show a clean error — never expose raw PDO errors in production
             die('ORLMS Database Error: Unable to connect to the database. ' . $e->getMessage());

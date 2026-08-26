@@ -8,5 +8,11 @@ echo.
 echo Starting PHP server...
 echo Press Ctrl+C to stop the server.
 echo.
-c:\xampp\php\php.exe -S localhost:8000 router.php
+IF EXIST "C:\xampp2\php\php.exe" (
+    C:\xampp2\php\php.exe -S localhost:8000 router.php
+) ELSE IF EXIST "C:\xampp\php\php.exe" (
+    C:\xampp\php\php.exe -S localhost:8000 router.php
+) ELSE (
+    php -S localhost:8000 router.php
+)
 pause

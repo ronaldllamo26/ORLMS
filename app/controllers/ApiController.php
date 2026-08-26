@@ -95,7 +95,7 @@ class ApiController extends Controller
         $authorId = isset($data['author_id']) ? (int)$data['author_id'] : null;
         if (!$authorId) {
             $db = Database::getInstance()->getConnection();
-            $stmt = $db->query("SELECT id FROM users WHERE is_active = TRUE AND role IN ('legislative_staff', 'super_admin') ORDER BY role DESC LIMIT 1");
+            $stmt = $db->query("SELECT id FROM users WHERE is_active = 1 AND role IN ('legislative_staff', 'super_admin') ORDER BY role DESC LIMIT 1");
             $defaultUser = $stmt->fetch(PDO::FETCH_ASSOC);
             $authorId = $defaultUser ? (int)$defaultUser['id'] : 1;
         }

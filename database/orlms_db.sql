@@ -60,7 +60,7 @@ CREATE TABLE IF NOT EXISTS `ordinances` (
     `content`       LONGTEXT      DEFAULT NULL,
     `author_id`     INT UNSIGNED  DEFAULT NULL,
     `committee_id`  INT UNSIGNED  DEFAULT NULL,
-    `status`        ENUM('draft','submitted','under_review','endorsed','approved','enacted','rejected','archived','published')
+    `status`        ENUM('draft','submitted','under_review','endorsed','approved','enacted','rejected','archived','published','certified','signed_lce','vetoed','sp_review_approved','sp_review_disapproved','sp_review_comments')
                                   NOT NULL DEFAULT 'draft',
     `ai_summary`    TEXT          DEFAULT NULL,
     `file_path`     VARCHAR(500)  DEFAULT NULL,
@@ -91,7 +91,7 @@ CREATE TABLE IF NOT EXISTS `resolutions` (
     `content`        LONGTEXT      DEFAULT NULL,
     `author_id`      INT UNSIGNED  DEFAULT NULL,
     `committee_id`   INT UNSIGNED  DEFAULT NULL,
-    `status`         ENUM('draft','submitted','under_review','endorsed','approved','enacted','rejected','archived','published')
+    `status`         ENUM('draft','submitted','under_review','endorsed','approved','enacted','rejected','archived','published','certified','signed_lce','vetoed','sp_review_approved','sp_review_disapproved','sp_review_comments')
                                    NOT NULL DEFAULT 'draft',
     `ai_summary`     TEXT          DEFAULT NULL,
     `file_path`      VARCHAR(500)  DEFAULT NULL,
@@ -239,6 +239,26 @@ CREATE TABLE IF NOT EXISTS `publications` (
     CONSTRAINT `fk_pub_user`
         FOREIGN KEY (`published_by`) REFERENCES `users` (`id`)
         ON DELETE SET NULL ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ─────────────────────────────────────────────────────────────────────────────
+-- 11. PUBLIC CONSULTATIONS
+-- ─────────────────────────────────────────────────────────────────────────────
+CREATE TABLE IF NOT EXISTS `public_consultations` (
+    `id`                  INT UNSIGNED  NOT NULL AUTO_INCREMENT,
+    `document_id`         INT UNSIGNED  NOT NULL,
+    `document_type`       ENUM('ordinance','resolution') NOT NULL,
+    `hearing_date`        DATE          NOT NULL,
+    `venue`               VARCHAR(255)  NOT NULL,
+    `total_participants`  INT           NOT NULL DEFAULT 0,
+    `total_opinions`      INT           NOT NULL DEFAULT 0,
+    `sentiment_summary`   VARCHAR(100)  DEFAULT NULL,
+    `summary_report`      TEXT          DEFAULT NULL,
+    `report_file_url`     VARCHAR(500)  DEFAULT NULL,
+    `created_at`          DATETIME      NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `updated_at`          DATETIME      NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (`id`),
+    KEY `idx_pc_document` (`document_type`, `document_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ─────────────────────────────────────────────────────────────────────────────

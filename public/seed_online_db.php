@@ -14,11 +14,11 @@ echo "<h2>ORLMS Online Database Seeder</h2>";
 
 try {
     $db = Database::getInstance()->getConnection();
-    echo "<p style='color:blue;'>Connected to PostgreSQL Database (" . DB_HOST . ")...</p>";
+    echo "<p style='color:blue;'>Connected to MySQL Database (" . DB_HOST . ")...</p>";
 
     // Ensure audit_logs table schema is up-to-date
     try {
-        $db->exec("ALTER TABLE audit_logs ADD COLUMN IF NOT EXISTS location VARCHAR(150)");
+        $db->exec("ALTER TABLE audit_logs ADD COLUMN location VARCHAR(150) DEFAULT NULL");
         echo "<p style='color:green;'>✓ Ensured 'location' column exists on audit_logs table.</p>";
     } catch (\Throwable $ex) {
         // Ignore if error or already exists
@@ -37,7 +37,7 @@ try {
         $stmt = $db->prepare("SELECT id FROM committees WHERE name = :name");
         $stmt->execute([':name' => $comm['name']]);
         if (!$stmt->fetch()) {
-            $db->prepare("INSERT INTO committees (name, jurisdiction, is_active, created_at) VALUES (:name, :jurisdiction, true, NOW())")
+            $db->prepare("INSERT INTO committees (name, jurisdiction, is_active, created_at) VALUES (:name, :jurisdiction, 1, NOW())")
                ->execute([':name' => $comm['name'], ':jurisdiction' => $comm['jurisdiction']]);
         }
     }

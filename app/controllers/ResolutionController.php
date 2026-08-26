@@ -69,7 +69,7 @@ class ResolutionController extends Controller
         $reviewHistory = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         // Fetch all active committees for the referral dropdown
-        $stmtComm = $db->prepare("SELECT id, name FROM committees WHERE is_active = TRUE ORDER BY name ASC");
+        $stmtComm = $db->prepare("SELECT id, name FROM committees WHERE is_active = 1 ORDER BY name ASC");
         $stmtComm->execute();
         $committees = $stmtComm->fetchAll(PDO::FETCH_ASSOC);
 

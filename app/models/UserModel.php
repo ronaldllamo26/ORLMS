@@ -70,7 +70,7 @@ class UserModel extends Model
             'email'      => $email,
             'password'   => password_hash($plainPassword, PASSWORD_BCRYPT),
             'role'       => $role,
-            'is_active'  => true,
+            'is_active'  => 1,
         ]);
     }
 
@@ -133,7 +133,7 @@ class UserModel extends Model
         $rows = $this->query(
             "SELECT role, COUNT(*) as total
              FROM users
-             WHERE is_active = TRUE
+             WHERE is_active = 1
              GROUP BY role"
         );
 
@@ -201,7 +201,12 @@ class UserModel extends Model
                 // If 'location' column is missing in PostgreSQL/MySQL database, attempt auto schema patch or fallback query
                 if (strpos($e->getMessage(), 'location') !== false || strpos($e->getMessage(), '42703') !== false) {
                     try {
-                        $this->query("ALTER TABLE audit_logs ADD COLUMN IF NOT EXISTS location VARCHAR(150)");
+                        // Attempt to add 'location' column — ignore error if it already exists (MySQL error 1060)
+                        try {
+                            $this->query("ALTER TABLE audit_logs ADD COLUMN location VARCHAR(150) DEFAULT NULL");
+                        } catch (\Throwable $ignore) {
+                            // Column already exists — safe to ignore
+                        }
                         return (bool) $this->query(
                             "INSERT INTO audit_logs
                                 (user_id, action, table_name, record_id, old_value, new_value, ip_address, location, created_at)
