@@ -27,12 +27,13 @@ date_default_timezone_set('Asia/Manila');
 // ─────────────────────────────────────────────────────────────────────────────
 // DATABASE CREDENTIALS
 // ─────────────────────────────────────────────────────────────────────────────
-define('DB_HOST',    getenv('DB_HOST') ?: 'localhost');
-define('DB_PORT',    getenv('DB_PORT') ?: '3306');
-define('DB_USER',    getenv('DB_USER') ?: 'root');
-define('DB_PASS',    getenv('DB_PASS') ?: '');
-define('DB_NAME',    getenv('DB_NAME') ?: 'orlms_db');
+define('DB_HOST',    getenv('DB_HOST') ?: getenv('MYSQL_HOST') ?: 'localhost');
+define('DB_PORT',    getenv('DB_PORT') ?: getenv('MYSQL_PORT') ?: '3306');
+define('DB_USER',    getenv('DB_USER') ?: getenv('DB_USERNAME') ?: getenv('MYSQL_USER') ?: 'root');
+define('DB_PASS',    getenv('DB_PASS') ?: getenv('DB_PASSWORD') ?: getenv('MYSQL_PASSWORD') ?: '');
+define('DB_NAME',    getenv('DB_NAME') ?: getenv('DB_DATABASE') ?: getenv('MYSQL_DATABASE') ?: 'orlms_db');
 define('DB_CHARSET', getenv('DB_CHARSET') ?: 'utf8');
+
 
 // ─────────────────────────────────────────────────────────────────────────────
 // GROQ API CONFIGURATION
