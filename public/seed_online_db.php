@@ -228,24 +228,23 @@ try {
 
     echo "<p style='color:green;'>✓ Database tables created/verified successfully.</p>";
 
-    // Seed default admin users if empty
+    // Ensure all 5 standard accounts exist with password 'password'
     try {
-        $userCheck = $db->query("SELECT COUNT(*) FROM users")->fetchColumn();
-        if ((int)$userCheck === 0) {
-            $passHash = password_hash('password123', PASSWORD_BCRYPT);
-            $users = [
-                ['name' => 'Super Administrator', 'email' => 'superadmin@csjdm.gov.ph', 'role' => 'super_admin'],
-                ['name' => 'Legislative Staff', 'email' => 'staff@csjdm.gov.ph', 'role' => 'legislative_staff'],
-                ['name' => 'Committee Chair', 'email' => 'committee@csjdm.gov.ph', 'role' => 'committee_member'],
-                ['name' => 'SP Member', 'email' => 'spmember@csjdm.gov.ph', 'role' => 'sp_member']
-            ];
-            $stmtUser = $db->prepare("INSERT INTO users (name, email, password, role, is_active, created_at) VALUES (:name, :email, :pass, :role, 1, NOW())");
-            foreach ($users as $u) {
-                $stmtUser->execute([':name' => $u['name'], ':email' => $u['email'], ':pass' => $passHash, ':role' => $u['role']]);
-            }
-            echo "<p style='color:green;'>✓ Default users created.</p>";
+        $passHash = password_hash('password', PASSWORD_BCRYPT);
+        $users = [
+            ['name' => 'Administrator', 'email' => 'admin@orlms.ph', 'role' => 'super_admin'],
+            ['name' => 'Super Administrator', 'email' => 'superadmin@csjdm.gov.ph', 'role' => 'super_admin'],
+            ['name' => 'Legislative Staff', 'email' => 'staff@csjdm.gov.ph', 'role' => 'legislative_staff'],
+            ['name' => 'Committee Chair', 'email' => 'committee@csjdm.gov.ph', 'role' => 'committee_member'],
+            ['name' => 'SP Member', 'email' => 'spmember@csjdm.gov.ph', 'role' => 'sp_member']
+        ];
+        $stmtUser = $db->prepare("INSERT INTO users (name, email, password, role, is_active, created_at) VALUES (:name, :email, :pass, :role, 1, NOW()) ON DUPLICATE KEY UPDATE name = VALUES(name), password = VALUES(password), role = VALUES(role), is_active = 1");
+        foreach ($users as $u) {
+            $stmtUser->execute([':name' => $u['name'], ':email' => $u['email'], ':pass' => $passHash, ':role' => $u['role']]);
         }
+        echo "<p style='color:green;'>✓ All 5 user accounts configured with password 'password'.</p>";
     } catch (\Throwable $ex) {}
+
 
 
 
