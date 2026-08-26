@@ -27,6 +27,7 @@ try {
     echo "<p style='color:blue;'>Connected to MySQL Database (" . DB_HOST . ")...</p>";
 
     // Execute full database schema creation
+    $db->exec("SET FOREIGN_KEY_CHECKS = 0;");
     $schemaQueries = [
         "CREATE TABLE IF NOT EXISTS `users` (
             `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -124,6 +125,90 @@ try {
             PRIMARY KEY (`id`),
             KEY `fk_audit_user` (`user_id`),
             CONSTRAINT `fk_audit_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;",
+
+        "CREATE TABLE IF NOT EXISTS `ai_validation_reports` (
+            `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+            `document_type` ENUM('ordinance','resolution') NOT NULL,
+            `document_id` INT UNSIGNED NOT NULL,
+            `validation_status` ENUM('passed','flagged','failed') NOT NULL DEFAULT 'flagged',
+            `completeness_score` INT NOT NULL DEFAULT 0,
+            `similarity_score` FLOAT NOT NULL DEFAULT 0,
+            `similar_document_type` ENUM('ordinance','resolution') DEFAULT NULL,
+            `similar_document_id` INT UNSIGNED DEFAULT NULL,
+            `similar_document_no` VARCHAR(50) DEFAULT NULL,
+            `completeness_details` JSON DEFAULT NULL,
+            `similarity_details` JSON DEFAULT NULL,
+            `ai_summary` TEXT DEFAULT NULL,
+            `recommendation` TEXT DEFAULT NULL,
+            `raw_response` LONGTEXT DEFAULT NULL,
+            `validated_by` INT UNSIGNED DEFAULT NULL,
+            `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            PRIMARY KEY (`id`),
+            KEY `idx_aivr_document` (`document_type`, `document_id`),
+            KEY `fk_aivr_validator` (`validated_by`),
+            CONSTRAINT `fk_aivr_validator` FOREIGN KEY (`validated_by`) REFERENCES `users` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;",
+
+        "CREATE TABLE IF NOT EXISTS `review_logs` (
+            `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+            `document_type` ENUM('ordinance','resolution') NOT NULL,
+            `document_id` INT UNSIGNED NOT NULL,
+            `action` VARCHAR(100) NOT NULL,
+            `reason` TEXT DEFAULT NULL,
+            `reviewed_by` INT UNSIGNED DEFAULT NULL,
+            `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            PRIMARY KEY (`id`),
+            KEY `idx_rl_document` (`document_type`, `document_id`),
+            KEY `fk_rl_reviewer` (`reviewed_by`),
+            CONSTRAINT `fk_rl_reviewer` FOREIGN KEY (`reviewed_by`) REFERENCES `users` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;",
+
+        "CREATE TABLE IF NOT EXISTS `amendments` (
+            `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+            `document_type` ENUM('ordinance','resolution') NOT NULL,
+            `document_id` INT UNSIGNED NOT NULL,
+            `amendment_no` VARCHAR(100) NOT NULL,
+            `description` TEXT NOT NULL,
+            `changes` LONGTEXT NOT NULL,
+            `status` ENUM('draft','submitted','approved','rejected') NOT NULL DEFAULT 'draft',
+            `amended_by` INT UNSIGNED DEFAULT NULL,
+            `amended_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            PRIMARY KEY (`id`),
+            KEY `idx_amend_document` (`document_type`, `document_id`),
+            KEY `fk_amend_user` (`amended_by`),
+            CONSTRAINT `fk_amend_user` FOREIGN KEY (`amended_by`) REFERENCES `users` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;",
+
+        "CREATE TABLE IF NOT EXISTS `monitoring_logs` (
+            `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+            `document_type` ENUM('ordinance','resolution') NOT NULL,
+            `document_id` INT UNSIGNED NOT NULL,
+            `implementation_status` ENUM('pending','ongoing','completed','delayed') NOT NULL,
+            `implementation_notes` TEXT NOT NULL,
+            `logged_by` INT UNSIGNED DEFAULT NULL,
+            `logged_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            PRIMARY KEY (`id`),
+            KEY `idx_ml_document` (`document_type`, `document_id`),
+            KEY `fk_ml_user` (`logged_by`),
+            CONSTRAINT `fk_ml_user` FOREIGN KEY (`logged_by`) REFERENCES `users` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;",
+
+        "CREATE TABLE IF NOT EXISTS `public_consultations` (
+            `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+            `document_id` INT UNSIGNED NOT NULL,
+            `document_type` ENUM('ordinance','resolution') NOT NULL,
+            `hearing_date` DATE NOT NULL,
+            `venue` VARCHAR(255) NOT NULL,
+            `total_participants` INT NOT NULL DEFAULT 0,
+            `total_opinions` INT NOT NULL DEFAULT 0,
+            `sentiment_summary` VARCHAR(100) DEFAULT NULL,
+            `summary_report` TEXT DEFAULT NULL,
+            `report_file_url` VARCHAR(500) DEFAULT NULL,
+            `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+            PRIMARY KEY (`id`),
+            KEY `idx_pc_document` (`document_type`, `document_id`)
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;"
     ];
 
@@ -131,9 +216,11 @@ try {
         try {
             $db->exec($sql);
         } catch (\Throwable $ex) {
-            // Table might already exist or foreign key order, continue
+            // Log or ignore
         }
     }
+    $db->exec("SET FOREIGN_KEY_CHECKS = 1;");
+
     echo "<p style='color:green;'>✓ Database tables created/verified successfully.</p>";
 
     // Seed default admin users if empty
