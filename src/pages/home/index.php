@@ -704,7 +704,9 @@
                     <h5>Mga Links</h5>
                     <ul class="list-unstyled d-flex flex-column gap-2">
                         <li><a href="<?= APP_URL ?>/portal"><i class="bi bi-chevron-right me-1"></i> Public Registry Search</a></li>
+                        <?php if (is_internal_portal()): ?>
                         <li><a href="<?= APP_URL ?>/auth/login"><i class="bi bi-chevron-right me-1"></i> Staff Portal Login</a></li>
+                        <?php endif; ?>
                         <li><a href="https://csjdm.gov.ph/" target="_blank"><i class="bi bi-chevron-right me-1"></i> Official CSJDM Website</a></li>
                         <li><a href="https://bulacan.gov.ph/" target="_blank"><i class="bi bi-chevron-right me-1"></i> Bulacan Province Portal</a></li>
                     </ul>
