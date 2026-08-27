@@ -131,22 +131,22 @@ class ApiController extends Controller
         $stmtOrd = $db->prepare(
             "SELECT 'ordinance' AS type, id, ordinance_no AS doc_no, title, subject, status, date_filed, created_at
              FROM ordinances
-             WHERE (title LIKE :q OR subject LIKE :q OR content LIKE :q)
+             WHERE (title LIKE :q1 OR subject LIKE :q2 OR content LIKE :q3)
                AND status IN ('published', 'enacted', 'approved', 'signed_lce')
              ORDER BY created_at DESC LIMIT 20"
         );
-        $stmtOrd->execute([':q' => $searchTerm]);
+        $stmtOrd->execute([':q1' => $searchTerm, ':q2' => $searchTerm, ':q3' => $searchTerm]);
         $ordinances = $stmtOrd->fetchAll(PDO::FETCH_ASSOC);
 
         // Search resolutions
         $stmtRes = $db->prepare(
             "SELECT 'resolution' AS type, id, resolution_no AS doc_no, title, subject, status, date_filed, created_at
              FROM resolutions
-             WHERE (title LIKE :q OR subject LIKE :q OR content LIKE :q)
+             WHERE (title LIKE :q1 OR subject LIKE :q2 OR content LIKE :q3)
                AND status IN ('published', 'enacted', 'approved', 'signed_lce')
              ORDER BY created_at DESC LIMIT 20"
         );
-        $stmtRes->execute([':q' => $searchTerm]);
+        $stmtRes->execute([':q1' => $searchTerm, ':q2' => $searchTerm, ':q3' => $searchTerm]);
         $resolutions = $stmtRes->fetchAll(PDO::FETCH_ASSOC);
 
         $results = array_merge($ordinances, $resolutions);

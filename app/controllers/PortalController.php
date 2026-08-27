@@ -32,16 +32,25 @@ class PortalController extends Controller
         $params = [];
 
         if (!empty($search)) {
-            $where[] = '(o.title LIKE :search OR o.subject LIKE :search OR o.content LIKE :search OR r.title LIKE :search OR r.subject LIKE :search OR r.content LIKE :search OR p.plain_summary LIKE :search)';
-            $params[':search'] = '%' . $search . '%';
+            $where[] = '(o.title LIKE :s1 OR o.subject LIKE :s2 OR o.content LIKE :s3 OR r.title LIKE :s4 OR r.subject LIKE :s5 OR r.content LIKE :s6 OR p.plain_summary LIKE :s7)';
+            $searchVal = '%' . $search . '%';
+            $params[':s1'] = $searchVal;
+            $params[':s2'] = $searchVal;
+            $params[':s3'] = $searchVal;
+            $params[':s4'] = $searchVal;
+            $params[':s5'] = $searchVal;
+            $params[':s6'] = $searchVal;
+            $params[':s7'] = $searchVal;
         }
         if (!empty($type) && in_array($type, ['ordinance', 'resolution'])) {
             $where[] = 'p.document_type = :type';
             $params[':type'] = $type;
         }
         if (!empty($year) && preg_match('/^\d{4}$/', $year)) {
-            $where[] = '( (p.document_type = \'ordinance\' AND o.ordinance_no LIKE :year) OR (p.document_type = \'resolution\' AND r.resolution_no LIKE :year) )';
-            $params[':year'] = '%-' . $year . '-%';
+            $where[] = '( (p.document_type = \'ordinance\' AND o.ordinance_no LIKE :y1) OR (p.document_type = \'resolution\' AND r.resolution_no LIKE :y2) )';
+            $yearVal = '%-' . $year . '-%';
+            $params[':y1'] = $yearVal;
+            $params[':y2'] = $yearVal;
         }
 
         $whereClause = implode(' AND ', $where);
