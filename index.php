@@ -30,11 +30,10 @@ if (!function_exists('is_internal_portal')) {
      * (e.g. portal.orlms.sjdm-legislative.com, staff.*, admin.*, portal-*)
      */
     function is_internal_portal(): bool {
-        $host = $_SERVER['HTTP_HOST'] ?? '';
-        if (str_starts_with($host, 'portal.') || 
-            str_starts_with($host, 'staff.') || 
-            str_starts_with($host, 'admin.') || 
-            str_starts_with($host, 'portal-')) {
+        $host = strtolower($_SERVER['HTTP_HOST'] ?? '');
+        if (str_contains($host, 'portal') || 
+            str_contains($host, 'staff') || 
+            str_contains($host, 'admin')) {
             return true;
         }
         // Also allow preview via query parameter or if staff is already logged in
