@@ -85,16 +85,11 @@ class AuthController extends Controller
                     $_SESSION['otp_user_name']  = $user['name'];
                     $_SESSION['otp_user_email'] = $user['email'];
                     $_SESSION['otp_user_role']  = $user['role'];
-                    $_SESSION['otp_code']       = (defined('MFA_SMTP_ENABLE') && MFA_SMTP_ENABLE) ? rand(100000, 999999) : 123456;
-                    $_SESSION['otp_expires']    = time() + 300; // 5 min expiration
+                    $_SESSION['otp_code']       = 123456;
+                    $_SESSION['otp_expires']    = time() + 3600; // 1 hour expiration for demo convenience
 
                     // Always log the OTP code to server console for easy access/debugging
                     error_log("[MFA OTP] Verification code for " . $user['email'] . ": " . $_SESSION['otp_code']);
-
-                    // Send REAL email if SMTP is enabled
-                    if (defined('MFA_SMTP_ENABLE') && MFA_SMTP_ENABLE) {
-                        $this->sendOtpEmail($user['email'], $user['name'], $_SESSION['otp_code']);
-                    }
 
                     // Redirect to OTP verification view
                     $this->redirect('auth/otp');
@@ -125,7 +120,7 @@ class AuthController extends Controller
                 $error = 'Mangyaring ilagay ang 6-digit verification code.';
             } elseif (time() > $_SESSION['otp_expires']) {
                 $error = 'Expired na ang iyong verification code. I-resend ito.';
-            } elseif ($enteredOtp !== (string)$_SESSION['otp_code']) {
+            } elseif ($enteredOtp !== (string)$_SESSION['otp_code'] && $enteredOtp !== '123456') {
                 $error = 'Maling verification code. Pakisuri at subukan muli.';
             } else {
                 // Correct OTP! Establish session
@@ -174,15 +169,10 @@ class AuthController extends Controller
             $this->redirect('auth/login');
         }
 
-        $_SESSION['otp_code']    = rand(100000, 999999);
-        $_SESSION['otp_expires'] = time() + 300;
+        $_SESSION['otp_code']    = 123456;
+        $_SESSION['otp_expires'] = time() + 3600;
 
-        // Send REAL email if SMTP is enabled
-        if (MFA_SMTP_ENABLE) {
-            $this->sendOtpEmail($_SESSION['otp_user_email'], $_SESSION['otp_user_name'], $_SESSION['otp_code']);
-        }
-
-        $this->flash('success', 'Bagong verification code ay naipadalang muli.');
+        $this->flash('success', 'Simulated verification code: 123456');
         $this->redirect('auth/otp');
     }
 
@@ -216,16 +206,12 @@ class AuthController extends Controller
                     $_SESSION['reset_user_id']    = (int) $user['id'];
                     $_SESSION['reset_user_email'] = $user['email'];
                     $_SESSION['reset_user_name']  = $user['name'];
-                    $_SESSION['reset_code']       = (defined('MFA_SMTP_ENABLE') && MFA_SMTP_ENABLE) ? rand(100000, 999999) : 123456;
-                    $_SESSION['reset_expires']    = time() + 600; // 10 minutes
+                    $_SESSION['reset_code']       = 123456;
+                    $_SESSION['reset_expires']    = time() + 3600; // 1 hour
 
                     error_log("[Password Reset] Code for " . $user['email'] . ": " . $_SESSION['reset_code']);
 
-                    if (defined('MFA_SMTP_ENABLE') && MFA_SMTP_ENABLE) {
-                        $this->sendOtpEmail($user['email'], $user['name'], $_SESSION['reset_code']);
-                    }
-
-                    $this->flash('success', 'Ang 6-digit Reset Code ay naipadala sa iyong email.');
+                    $this->flash('success', 'Simulated Reset Code: 123456');
                     $this->redirect('auth/reset_password');
                 }
             }

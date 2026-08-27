@@ -220,19 +220,13 @@
             </div>
         <?php endif; ?>
 
-        <!-- Simulated OTP Code Banner or Live Email Notification -->
-        <?php if (!MFA_SMTP_ENABLE): ?>
-            <div style="background-color: rgba(242, 169, 0, 0.15); border: 1px dashed var(--color-lgu-gold); border-radius: 6px; padding: 12px; margin-bottom: 24px; font-size: 11.5px; color: var(--color-lgu-gold); text-align: center; line-height: 1.5;">
-                <i class="bi bi-shield-lock-fill me-1"></i> <strong>[DEMO MODE]</strong> Simulated Verification Code:<br>
-                <span style="font-size: 20px; font-weight: 800; letter-spacing: 3px; display: block; margin-top: 4px; color: #ffffff;">
-                    <?= $_SESSION['otp_code'] ?>
-                </span>
-            </div>
-        <?php else: ?>
-            <div style="background-color: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 6px; padding: 12px; margin-bottom: 24px; font-size: 12px; color: #ffffff; text-align: center; line-height: 1.5;">
-                <i class="bi bi-envelope-fill me-1" style="color: var(--color-lgu-gold);"></i> Nagpadala kami ng 6-digit verification code sa iyong rehistradong email. Pakisuri ang iyong **Inbox / Spam folder**.
-            </div>
-        <?php endif; ?>
+        <!-- Simulated OTP Code Banner -->
+        <div style="background-color: rgba(242, 169, 0, 0.15); border: 1px dashed var(--color-lgu-gold); border-radius: 6px; padding: 12px; margin-bottom: 24px; font-size: 11.5px; color: var(--color-lgu-gold); text-align: center; line-height: 1.5;">
+            <i class="bi bi-shield-lock-fill me-1"></i> <strong>[DEMO MODE]</strong> Simulated Verification Code:<br>
+            <span style="font-size: 24px; font-weight: 800; letter-spacing: 4px; display: block; margin-top: 4px; color: #ffffff;">
+                <?= $_SESSION['otp_code'] ?? '123456' ?>
+            </span>
+        </div>
 
         <form action="<?= APP_URL ?>/auth/otp" method="POST" autocomplete="off">
             <div class="mb-4">
