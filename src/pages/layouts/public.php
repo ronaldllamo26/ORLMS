@@ -86,9 +86,11 @@ $pageTitle = $pageTitle ?? APP_SHORT;
             <a href="<?= APP_URL ?>/" class="text-white text-xs font-semibold hover:text-white/85 transition no-underline flex items-center gap-1">
                 <i class="bi bi-arrow-left-circle-fill"></i> Back to Home
             </a>
+            <?php if (is_internal_portal()): ?>
             <a href="<?= APP_ROOT_URL ?>/dashboard" class="text-white text-xs font-semibold hover:bg-white/10 border border-white/40 hover:border-white px-3 py-1.5 rounded transition no-underline">
                 Staff Login
             </a>
+            <?php endif; ?>
         </div>
     </nav>
 

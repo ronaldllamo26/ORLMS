@@ -24,6 +24,27 @@ define('PUBLIC_ROOT', ROOT . '/public');
 // ─────────────────────────────────────────────────────────────────────────────
 session_start();
 
+if (!function_exists('is_internal_portal')) {
+    /**
+     * Check if current request is accessing through the Internal / Staff Portal domain
+     * (e.g. portal.orlms.sjdm-legislative.com, staff.*, admin.*, portal-*)
+     */
+    function is_internal_portal(): bool {
+        $host = $_SERVER['HTTP_HOST'] ?? '';
+        if (str_starts_with($host, 'portal.') || 
+            str_starts_with($host, 'staff.') || 
+            str_starts_with($host, 'admin.') || 
+            str_starts_with($host, 'portal-')) {
+            return true;
+        }
+        // Also allow preview via query parameter or if staff is already logged in
+        if (isset($_GET['staff']) || isset($_GET['portal']) || !empty($_SESSION['user_id'])) {
+            return true;
+        }
+        return false;
+    }
+}
+
 // ─────────────────────────────────────────────────────────────────────────────
 // 3. SET ERROR REPORTING (Environment Aware)
 // ─────────────────────────────────────────────────────────────────────────────

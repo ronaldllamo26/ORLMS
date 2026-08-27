@@ -519,9 +519,11 @@
                 <a href="<?= APP_URL ?>/portal" class="btn btn-sm btn-outline-dark px-2 px-sm-3 py-1.5 fw-semibold" style="font-size: 12px; border-radius: 4px; border-color: #dee2e6;">
                     <i class="bi bi-search me-1"></i> <span class="header-btn-text-full">Public Search</span><span class="header-btn-text-short">Search</span>
                 </a>
+                <?php if (is_internal_portal()): ?>
                 <a href="<?= APP_URL ?>/auth/login" class="btn btn-sm btn-primary px-2 px-sm-3 py-1.5 fw-semibold" style="font-size: 12px; border-radius: 4px; background-color: var(--color-lgu-blue); border-color: var(--color-lgu-blue);">
                     <i class="bi bi-box-arrow-in-right me-1"></i> <span class="header-btn-text-full">Staff Login</span><span class="header-btn-text-short">Login</span>
                 </a>
+                <?php endif; ?>
             </div>
         </div>
     </header>
@@ -542,9 +544,11 @@
                         <a href="<?= APP_URL ?>/portal" class="btn btn-custom-gold">
                             <i class="bi bi-search me-2"></i> Maghanap sa Public Registry
                         </a>
+                        <?php if (is_internal_portal()): ?>
                         <a href="<?= APP_URL ?>/auth/login" class="btn btn-custom-outline">
                             <i class="bi bi-lock me-2"></i> Legislative Staff Portal
                         </a>
+                        <?php endif; ?>
                     </div>
                 </div>
             </div>
