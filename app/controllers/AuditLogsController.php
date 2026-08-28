@@ -27,9 +27,24 @@ class AuditLogsController extends Controller
     {
         $db = \Database::getInstance()->getConnection();
 
-        // Ensure columns exist on audit_logs
-        try { $db->exec("ALTER TABLE audit_logs ADD COLUMN table_name VARCHAR(100) DEFAULT NULL"); } catch (\Throwable $e) {}
-        try { $db->exec("ALTER TABLE audit_logs ADD COLUMN record_id INT UNSIGNED DEFAULT NULL"); } catch (\Throwable $e) {}
+        // Ensure all required columns exist on audit_logs table
+        $columnsToEnsure = [
+            'table_name'   => "VARCHAR(100) DEFAULT NULL",
+            'target_table' => "VARCHAR(100) DEFAULT NULL",
+            'record_id'    => "INT UNSIGNED DEFAULT NULL",
+            'target_id'    => "INT UNSIGNED DEFAULT NULL",
+            'ip_address'   => "VARCHAR(45) DEFAULT NULL",
+            'location'     => "VARCHAR(150) DEFAULT NULL",
+            'details'      => "TEXT DEFAULT NULL",
+            'old_value'    => "TEXT DEFAULT NULL",
+            'new_value'    => "TEXT DEFAULT NULL",
+        ];
+
+        foreach ($columnsToEnsure as $col => $typeDef) {
+            try {
+                $db->exec("ALTER TABLE audit_logs ADD COLUMN `{$col}` {$typeDef}");
+            } catch (\Throwable $e) {}
+        }
 
         // Filter params
         $filterAction = trim($_GET['action'] ?? '');
@@ -59,28 +74,36 @@ class AuditLogsController extends Controller
 
         $whereClause = implode(' AND ', $where);
 
-        $stmt = $db->prepare(
-            "SELECT al.*, COALESCE(al.table_name, al.target_table, '') AS table_name, u.name AS user_name, u.role AS user_role
-             FROM audit_logs al
-             LEFT JOIN users u ON al.user_id = u.id
-             WHERE {$whereClause}
-             ORDER BY al.created_at DESC
-             LIMIT 500"
-        );
-        $stmt->execute($params);
-        $logs = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $logs = [];
+        try {
+            $stmt = $db->prepare(
+                "SELECT al.*,
+                        COALESCE(NULLIF(al.table_name, ''), NULLIF(al.target_table, ''), 'general') AS table_name,
+                        COALESCE(al.record_id, al.target_id, 0) AS record_id,
+                        u.name AS user_name, u.role AS user_role
+                 FROM audit_logs al
+                 LEFT JOIN users u ON al.user_id = u.id
+                 WHERE {$whereClause}
+                 ORDER BY al.created_at DESC
+                 LIMIT 500"
+            );
+            $stmt->execute($params);
+            $logs = $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
+        } catch (\Throwable $e) {
+            error_log("AuditLogs query error: " . $e->getMessage());
+        }
 
         // Get distinct actions and tables for filter dropdowns
         $allActions = [];
         try {
-            $actionsStmt = $db->query("SELECT DISTINCT action FROM audit_logs ORDER BY action ASC");
+            $actionsStmt = $db->query("SELECT DISTINCT action FROM audit_logs WHERE action IS NOT NULL AND action != '' ORDER BY action ASC");
             $allActions = $actionsStmt->fetchAll(PDO::FETCH_COLUMN) ?: [];
         } catch (\Throwable $e) {}
 
         $allTables = [];
         try {
-            $tablesStmt = $db->query("SELECT DISTINCT COALESCE(table_name, target_table) FROM audit_logs WHERE table_name IS NOT NULL OR target_table IS NOT NULL ORDER BY 1 ASC");
-            $allTables = $tablesStmt->fetchAll(PDO::FETCH_COLUMN) ?: [];
+            $tablesStmt = $db->query("SELECT DISTINCT COALESCE(NULLIF(table_name, ''), NULLIF(target_table, '')) FROM audit_logs WHERE table_name IS NOT NULL OR target_table IS NOT NULL ORDER BY 1 ASC");
+            $allTables = array_filter($tablesStmt->fetchAll(PDO::FETCH_COLUMN) ?: []);
         } catch (\Throwable $e) {}
 
         $this->render('audit_logs/index', [

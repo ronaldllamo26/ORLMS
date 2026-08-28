@@ -95,6 +95,18 @@ class PostEnactmentController extends Controller
 
         if (in_array($status, $allowed)) {
             $model->updateStatus($id, $status);
+
+            // Audit log
+            $userModel = $this->model('UserModel');
+            $userModel->logAudit(
+                $this->userId(),
+                'STATUS_UPDATE',
+                $type . 's',
+                $id,
+                null,
+                ['status' => $status]
+            );
+
             $this->flash('success', 'Document status successfully updated.');
         } else {
             $this->flash('error', 'Invalid status selection.');

@@ -103,8 +103,9 @@ try {
             `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
             `document_type` ENUM('ordinance','resolution') NOT NULL,
             `document_id` INT UNSIGNED NOT NULL,
-            `publication_ref` VARCHAR(100) NOT NULL,
+            `publication_ref` VARCHAR(255) NOT NULL,
             `plain_summary` TEXT DEFAULT NULL,
+            `file_path` VARCHAR(500) DEFAULT NULL,
             `published_by` INT UNSIGNED DEFAULT NULL,
             `published_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
             PRIMARY KEY (`id`),
@@ -223,8 +224,10 @@ try {
             echo "<p style='color:orange;'>Notice executing query: " . htmlspecialchars($ex->getMessage()) . "</p>";
         }
     }
-    $db->exec("SET FOREIGN_KEY_CHECKS = 1;");
-
+    // Alter patch for existing publications table missing file_path column
+    try {
+        $db->exec("ALTER TABLE `publications` ADD COLUMN `file_path` VARCHAR(500) DEFAULT NULL;");
+    } catch (\Throwable $ex) {}
 
     echo "<p style='color:green;'>✓ Database tables created/verified successfully.</p>";
 

@@ -203,20 +203,62 @@ class PublicationsController extends Controller
             }
 
             if (empty($errors)) {
-                $db   = \Database::getInstance()->getConnection();
-                $stmt = $db->prepare(
-                    "INSERT INTO publications
-                     (document_type, document_id, publication_ref, plain_summary, file_path, published_by)
-                     VALUES (:type, :doc_id, :ref, :summary, :file, :user)"
-                );
-                $stmt->execute([
-                    ':type'    => $type,
-                    ':doc_id'  => (int) $id,
-                    ':ref'     => $input['publication_ref'],
-                    ':summary' => $input['plain_summary'],
-                    ':file'    => $filePath,
-                    ':user'    => $this->userId(),
-                ]);
+                $db = \Database::getInstance()->getConnection();
+                
+                try {
+                    $stmt = $db->prepare(
+                        "INSERT INTO publications
+                         (document_type, document_id, publication_ref, plain_summary, file_path, published_by)
+                         VALUES (:type, :doc_id, :ref, :summary, :file, :user)"
+                    );
+                    $stmt->execute([
+                        ':type'    => $type,
+                        ':doc_id'  => (int) $id,
+                        ':ref'     => $input['publication_ref'],
+                        ':summary' => $input['plain_summary'],
+                        ':file'    => $filePath,
+                        ':user'    => $this->userId(),
+                    ]);
+                } catch (\Throwable $e) {
+                    // Handle missing 'file_path' column in existing database schema
+                    if (str_contains(strtolower($e->getMessage()), 'file_path') || str_contains($e->getMessage(), '1054') || str_contains($e->getMessage(), '42703')) {
+                        try {
+                            $db->exec("ALTER TABLE publications ADD COLUMN file_path VARCHAR(500) DEFAULT NULL");
+                        } catch (\Throwable $ignored) {}
+
+                        try {
+                            $stmt = $db->prepare(
+                                "INSERT INTO publications
+                                 (document_type, document_id, publication_ref, plain_summary, file_path, published_by)
+                                 VALUES (:type, :doc_id, :ref, :summary, :file, :user)"
+                            );
+                            $stmt->execute([
+                                ':type'    => $type,
+                                ':doc_id'  => (int) $id,
+                                ':ref'     => $input['publication_ref'],
+                                ':summary' => $input['plain_summary'],
+                                ':file'    => $filePath,
+                                ':user'    => $this->userId(),
+                            ]);
+                        } catch (\Throwable $ex) {
+                            // Fallback insert without file_path column
+                            $stmt = $db->prepare(
+                                "INSERT INTO publications
+                                 (document_type, document_id, publication_ref, plain_summary, published_by)
+                                 VALUES (:type, :doc_id, :ref, :summary, :user)"
+                            );
+                            $stmt->execute([
+                                ':type'    => $type,
+                                ':doc_id'  => (int) $id,
+                                ':ref'     => $input['publication_ref'],
+                                ':summary' => $input['plain_summary'],
+                                ':user'    => $this->userId(),
+                            ]);
+                        }
+                    } else {
+                        throw $e;
+                    }
+                }
 
                 // Update document status to published
                 $model->updateStatus((int) $id, STATUS_PUBLISHED);
