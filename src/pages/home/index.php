@@ -494,10 +494,182 @@
             }
         }
 
-        @media (min-width: 481px) {
-            .header-btn-text-short {
-                display: none;
+        .header-btn-text-short {
+            display: none;
+        }
+
+        /* Citizen Portal Enhancements CSS */
+        .topic-chips-wrapper {
+            margin-top: 24px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 8px;
+        }
+        .topic-chips-label {
+            font-size: 12px;
+            font-weight: 700;
+            color: rgba(255, 255, 255, 0.75);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-right: 4px;
+        }
+        .topic-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            background: rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(4px);
+            color: #ffffff;
+            font-size: 12px;
+            font-weight: 600;
+            padding: 5px 13px;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+        .topic-chip:hover {
+            background: var(--color-lgu-gold);
+            color: var(--color-lgu-blue);
+            border-color: var(--color-lgu-gold);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(242, 169, 0, 0.3);
+        }
+        
+        /* Stats Cards Section */
+        .stats-section {
+            background-color: #ffffff;
+            padding: 40px 0;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .stats-cards-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            width: 100%;
+        }
+        @media (max-width: 992px) {
+            .stats-cards-grid {
+                grid-template-columns: repeat(2, 1fr);
             }
+        }
+        @media (max-width: 576px) {
+            .stats-cards-grid {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+        }
+        .stat-card {
+            background: #ffffff;
+            border: 1px solid var(--color-lgu-border);
+            border-top: 4px solid var(--color-lgu-blue);
+            border-radius: 12px;
+            padding: 22px 18px;
+            text-align: center;
+            transition: all 0.25s ease;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+            height: 100%;
+        }
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px rgba(12, 35, 64, 0.08);
+            border-top-color: var(--color-lgu-gold);
+        }
+        .stat-card-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background-color: var(--color-lgu-gold-light);
+            color: var(--color-lgu-blue);
+            font-size: 22px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 12px auto;
+        }
+        .stat-card-number {
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--color-lgu-blue);
+            line-height: 1.1;
+            margin-bottom: 4px;
+        }
+        .stat-card-label {
+            font-size: 13px;
+            font-weight: 600;
+            color: #64748b;
+        }
+
+        /* 3-Step Citizen Guide */
+        .guide-step-card {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 28px 20px;
+            text-align: center;
+            height: 100%;
+            transition: all 0.25s ease;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.02);
+            position: relative;
+        }
+        .guide-step-card:hover {
+            border-color: var(--color-lgu-sky);
+            box-shadow: 0 10px 25px rgba(0, 132, 255, 0.08);
+            transform: translateY(-3px);
+        }
+        .guide-step-badge {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background-color: var(--color-lgu-blue);
+            color: var(--color-lgu-gold);
+            font-size: 15px;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 16px auto;
+            border: 2px solid var(--color-lgu-gold);
+        }
+        .guide-step-card h4 {
+            font-size: 17px;
+            font-weight: 700;
+            color: var(--color-lgu-blue);
+            margin-bottom: 8px;
+        }
+        .guide-step-card p {
+            font-size: 13.5px;
+            color: #64748b;
+            line-height: 1.5;
+            margin: 0;
+        }
+
+        /* Citizen FAQ Accordion */
+        .faq-accordion .accordion-item {
+            border: 1px solid #e2e8f0;
+            border-radius: 10px !important;
+            margin-bottom: 12px;
+            overflow: hidden;
+        }
+        .faq-accordion .accordion-button {
+            font-weight: 700;
+            font-size: 15px;
+            color: var(--color-lgu-blue);
+            background-color: #ffffff;
+            padding: 16px 20px;
+        }
+        .faq-accordion .accordion-button:not(.collapsed) {
+            color: var(--color-lgu-blue);
+            background-color: var(--color-lgu-gold-light);
+            box-shadow: none;
+        }
+        .faq-accordion .accordion-body {
+            font-size: 14px;
+            color: #475569;
+            line-height: 1.6;
+            background-color: #ffffff;
+            padding: 18px 20px;
         }
     </style>
 </head>
@@ -550,6 +722,17 @@
                         </a>
                         <?php endif; ?>
                     </div>
+
+                    <!-- Popular Topic Search Chips for Citizens -->
+                    <div class="topic-chips-wrapper">
+                        <span class="topic-chips-label"><i class="bi bi-fire me-1"></i> POPULAR TOPICS:</span>
+                        <a href="<?= APP_URL ?>/portal?search=Tricycle" class="topic-chip"><i class="bi bi-search"></i> #TricycleFare</a>
+                        <a href="<?= APP_URL ?>/portal?search=Senior" class="topic-chip"><i class="bi bi-search"></i> #SeniorCitizen</a>
+                        <a href="<?= APP_URL ?>/portal?search=Business" class="topic-chip"><i class="bi bi-search"></i> #BusinessPermit</a>
+                        <a href="<?= APP_URL ?>/portal?search=Curfew" class="topic-chip"><i class="bi bi-search"></i> #Curfew</a>
+                        <a href="<?= APP_URL ?>/portal?search=Waste" class="topic-chip"><i class="bi bi-search"></i> #WasteManagement</a>
+                        <a href="<?= APP_URL ?>/portal?search=Health" class="topic-chip"><i class="bi bi-search"></i> #HealthOrdinance</a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -559,6 +742,42 @@
     <div class="arya-banner">
         Arya San Joseño! • Disiplinado, Progresibo, at Makabagong Pamahalaan
     </div>
+
+    <!-- 3.1 Public Transparency Live Stats Counter -->
+    <section class="stats-section">
+        <div class="container">
+            <div class="stats-cards-grid">
+                <div class="stat-card">
+                    <div class="stat-card-icon">
+                        <i class="bi bi-file-earmark-text"></i>
+                    </div>
+                    <div class="stat-card-number"><?= number_format($stats['ordinances'] ?? 0) ?></div>
+                    <div class="stat-card-label">Napasang Ordinansa</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-card-icon">
+                        <i class="bi bi-file-earmark-check"></i>
+                    </div>
+                    <div class="stat-card-number"><?= number_format($stats['resolutions'] ?? 0) ?></div>
+                    <div class="stat-card-label">Pinagtibay na Resolusyon</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-card-icon">
+                        <i class="bi bi-building"></i>
+                    </div>
+                    <div class="stat-card-number"><?= number_format($stats['committees'] ?? 18) ?></div>
+                    <div class="stat-card-label">Aktibong Komite</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-card-icon">
+                        <i class="bi bi-shield-check"></i>
+                    </div>
+                    <div class="stat-card-number">100%</div>
+                    <div class="stat-card-label">Libreng Access ng Publiko</div>
+                </div>
+            </div>
+        </div>
+    </section>
 
     <!-- 4. Premium Legislative Committees Section (The 4 Boxes - Tailored for CSJDM LGU) -->
     <section class="py-5 my-3">
@@ -644,6 +863,46 @@
         </div>
     </section>
 
+    <!-- 4.1 Citizen How-It-Works Guide -->
+    <section class="py-5 bg-light border-top border-bottom">
+        <div class="container text-center">
+            <h3 class="section-title">Paano Gamitin ang Public Portal?</h3>
+            <p class="text-muted mx-auto mb-5" style="max-width: 600px; font-size:15px; line-height:1.6;">
+                Mabilis at simpleng paraan para sa mga San Joseño upang maghanap at mag-download ng mga opisyal na lokal na batas.
+            </p>
+
+            <div class="row g-4 justify-content-center">
+                <div class="col-md-4">
+                    <div class="guide-step-card">
+                        <div class="guide-step-badge">1</div>
+                        <div class="mb-3 text-warning" style="font-size: 32px;"><i class="bi bi-search"></i></div>
+                        <h4>1. Maghanap ng Paksa</h4>
+                        <p>I-type ang paksa o gamitin ang aming <strong>Mabilisang Hanap chips</strong> (halimbawa: <em>#TricycleFare, #BusinessPermit</em>) sa pampublikong rehistro.</p>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="guide-step-card">
+                        <div class="guide-step-badge">2</div>
+                        <div class="mb-3 text-warning" style="font-size: 32px;"><i class="bi bi-robot"></i></div>
+                        <h4>2. Magtanong sa ORLMS AI</h4>
+                        <p>I-click ang <strong>AI Chatbot widget</strong> sa kanang ibaba upang magtanong sa Tagalog/Ingles tungkol sa anumang ordinansa o resolusyon.</p>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="guide-step-card">
+                        <div class="guide-step-badge">3</div>
+                        <div class="mb-3 text-warning" style="font-size: 32px;"><i class="bi bi-file-earmark-arrow-down"></i></div>
+                        <h4>3. Libreng I-download</h4>
+                        <p>Basahin ang buod o i-download nang libre ang opisyal na <strong>PDF copy</strong> ng aprubadong batas para sa iyong kailangan.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <?php if (is_internal_portal()): ?>
     <!-- 5. Premium Connected Workflow (The Timeline - Aligned & Beautified) -->
     <section class="py-5" style="background-color: #ffffff; border-top: 1px solid #dee2e6; border-bottom: 1px solid #dee2e6;">
         <div class="container text-center">
@@ -682,6 +941,77 @@
                     <div class="timeline-number">5</div>
                     <h4>Publication</h4>
                     <p>Pag-upload sa Public Registry para sa mga mamamayan.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    <?php endif; ?>
+
+    <!-- 5.1 Citizen Frequently Asked Questions (FAQ) Section -->
+    <section class="py-5 my-4">
+        <div class="container" style="max-width: 860px;">
+            <div class="text-center mb-5">
+                <h3 class="section-title">Mga Madalas Itanong ng Mamamayan (FAQ)</h3>
+                <p class="text-muted" style="font-size:15px;">
+                    Mga kasagutan sa karaniwang katanungan ng mga mamamayan tungkol sa mga opisyal na batas sa San Jose del Monte.
+                </p>
+            </div>
+
+            <div class="accordion faq-accordion" id="citizenFaqAccordion">
+                <!-- FAQ 1 -->
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="faqHeadingOne">
+                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faqCollapseOne" aria-expanded="true" aria-controls="faqCollapseOne">
+                            <i class="bi bi-question-circle text-warning me-2"></i> Paano ako makakakuha ng opisyal na kopya ng isang ordinansa o resolusyon?
+                        </button>
+                    </h2>
+                    <div id="faqCollapseOne" class="accordion-collapse collapse show" aria-labelledby="faqHeadingOne" data-bs-parent="#citizenFaqAccordion">
+                        <div class="accordion-body">
+                            Maaari mong i-search ang pamagat o paksa ng ordinansa sa aming <strong>Public Registry</strong> at i-download agad ang libreng PDF copy. Kung kailangan mo naman ng <em>Certified True Copy</em> na may opisyal na dry seal, maaari kang bumisita sa Sangguniang Panlungsod Office sa CSJDM City Hall.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FAQ 2 -->
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="faqHeadingTwo">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faqCollapseTwo" aria-expanded="false" aria-controls="faqCollapseTwo">
+                            <i class="bi bi-question-circle text-warning me-2"></i> Libre ba ang paggamit at pag-download sa ORLMS Portal?
+                        </button>
+                    </h2>
+                    <div id="faqCollapseTwo" class="accordion-collapse collapse" aria-labelledby="faqHeadingTwo" data-bs-parent="#citizenFaqAccordion">
+                        <div class="accordion-body">
+                            <strong>Opo, 100% libre po.</strong> Ang ORLMS ay inisyatiba ng Pamahalaang Lungsod ng San Jose del Monte upang tiyakin ang transparency at mabilis na access ng bawat San Joseño sa ating mga lokal na batas.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FAQ 3 -->
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="faqHeadingThree">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faqCollapseThree" aria-expanded="false" aria-controls="faqCollapseThree">
+                            <i class="bi bi-question-circle text-warning me-2"></i> Ano ang ginagawa ng ORLMS AI Chatbot sa gilid ng screen?
+                        </button>
+                    </h2>
+                    <div id="faqCollapseThree" class="accordion-collapse collapse" aria-labelledby="faqHeadingThree" data-bs-parent="#citizenFaqAccordion">
+                        <div class="accordion-body">
+                            Ang ORLMS AI ay ang ating opisyal na <strong>Smart Legislative Assistant</strong>. Maaari mo itong tanungin tungkol sa mga ordinansa (halimbawa: <em>"Magkano ang pamasahe sa tricycle?"</em> o <em>"Ano ang mga kailangan sa business permit?"</em>) at magbibigay ito ng mabilisang paliwanag sa Tagalog o Ingles.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FAQ 4 -->
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="faqHeadingFour">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faqCollapseFour" aria-expanded="false" aria-controls="faqCollapseFour">
+                            <i class="bi bi-question-circle text-warning me-2"></i> Paano mag-endorso o maghain ng panukala sa Sangguniang Panlungsod?
+                        </button>
+                    </h2>
+                    <div id="faqCollapseFour" class="accordion-collapse collapse" aria-labelledby="faqHeadingFour" data-bs-parent="#citizenFaqAccordion">
+                        <div class="accordion-body">
+                            Maaaring magsumite ng pormal na liham o panukalang resolusyon sa Tanggapan ng Sangguniang Panlungsod sa City Hall. Isasailalim ito sa review ng kaukulang Komite para sa kauna-unahang pagbasa (First Reading) sa regular session.
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

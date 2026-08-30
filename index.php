@@ -79,12 +79,18 @@ require_once CORE_ROOT . '/Database.php';
 require_once CORE_ROOT . '/Model.php';
 require_once CORE_ROOT . '/Controller.php';
 require_once CORE_ROOT . '/App.php';
+require_once CORE_ROOT . '/RateLimiter.php';
 if (file_exists(APP_ROOT . '/helpers/GeoIPHelper.php')) {
     require_once APP_ROOT . '/helpers/GeoIPHelper.php';
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// 6. START THE ROUTER
+// 6. ENFORCE RATE LIMITING & DOS PROTECTION
+// ─────────────────────────────────────────────────────────────────────────────
+RateLimiter::check(100, 20, 60);
+
+// ─────────────────────────────────────────────────────────────────────────────
+// 7. START THE ROUTER
 //    App.php reads the URL and loads the correct controller and method.
 // ─────────────────────────────────────────────────────────────────────────────
 $app = new App();
