@@ -33,13 +33,19 @@ class DashboardController extends Controller
         $resolutionModel = $this->model('ResolutionModel');
 
         // ── Document Counts ───────────────────────────────────────────────────
+        $db = \Database::getInstance()->getConnection();
+
+        $enactedOrd = (int) $db->query("SELECT COUNT(*) FROM ordinances WHERE status IN ('enacted','published','approved','signed_lce')")->fetchColumn();
+        $enactedRes = (int) $db->query("SELECT COUNT(*) FROM resolutions WHERE status IN ('enacted','published','approved')")->fetchColumn();
+
+        $reviewOrd  = (int) $db->query("SELECT COUNT(*) FROM ordinances WHERE status IN ('submitted','under_review','endorsed')")->fetchColumn();
+        $reviewRes  = (int) $db->query("SELECT COUNT(*) FROM resolutions WHERE status IN ('submitted','under_review','endorsed')")->fetchColumn();
+
         $stats = [
             'total_ordinances'      => $ordinanceModel->count(),
             'total_resolutions'     => $resolutionModel->count(),
-            'pending_review'        => $ordinanceModel->countWhere('status', 'submitted')
-                                     + $resolutionModel->countWhere('status', 'submitted'),
-            'enacted'               => $ordinanceModel->countWhere('status', 'enacted')
-                                     + $resolutionModel->countWhere('status', 'enacted'),
+            'pending_review'        => $reviewOrd + $reviewRes,
+            'enacted'               => $enactedOrd + $enactedRes,
             'draft'                 => $ordinanceModel->countWhere('status', 'draft')
                                      + $resolutionModel->countWhere('status', 'draft'),
             'rejected'              => $ordinanceModel->countWhere('status', 'rejected')
