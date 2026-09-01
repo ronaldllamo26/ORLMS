@@ -257,30 +257,35 @@ class PortalController extends Controller
             exit;
         }
 
-        $db = \Database::getInstance()->getConnection();
-        
-        // Fetch all published documents, including their full text content, to feed to the AI context
-        $stmt = $db->query(
-            "SELECT p.document_type,
-                    CASE p.document_type
-                        WHEN 'ordinance'  THEN o.ordinance_no
-                        WHEN 'resolution' THEN r.resolution_no
-                    END AS doc_no,
-                    CASE p.document_type
-                        WHEN 'ordinance'  THEN o.title
-                        WHEN 'resolution' THEN r.title
-                    END AS doc_title,
-                    CASE p.document_type
-                        WHEN 'ordinance'  THEN o.content
-                        WHEN 'resolution' THEN r.content
-                    END AS doc_content,
-                    p.plain_summary
-             FROM publications p
-             LEFT JOIN ordinances o ON p.document_type = 'ordinance' AND p.document_id = o.id
-             LEFT JOIN resolutions r ON p.document_type = 'resolution' AND p.document_id = r.id
-             ORDER BY p.published_at DESC"
-        );
-        $docs = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $docs = [];
+        try {
+            $db = \Database::getInstance()->getConnection();
+            $stmt = $db->query(
+                "SELECT p.document_type,
+                        CASE p.document_type
+                            WHEN 'ordinance'  THEN o.ordinance_no
+                            WHEN 'resolution' THEN r.resolution_no
+                        END AS doc_no,
+                        CASE p.document_type
+                            WHEN 'ordinance'  THEN o.title
+                            WHEN 'resolution' THEN r.title
+                        END AS doc_title,
+                        CASE p.document_type
+                            WHEN 'ordinance'  THEN o.content
+                            WHEN 'resolution' THEN r.content
+                        END AS doc_content,
+                        p.plain_summary
+                 FROM publications p
+                 LEFT JOIN ordinances o ON p.document_type = 'ordinance' AND p.document_id = o.id
+                 LEFT JOIN resolutions r ON p.document_type = 'resolution' AND p.document_id = r.id
+                 ORDER BY p.published_at DESC"
+            );
+            if ($stmt) {
+                $docs = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            }
+        } catch (\Throwable $e) {
+            $docs = [];
+        }
 
         // Build a stable, intelligent, grounded, and bounded system prompt for ORLMS AI
         $systemPrompt = "Ikaw si 'ORLMS AI', ang matalino, magalang, at makabagong AI Legislative Assistant ng Ordinance and Resolution Lifecycle Management System (ORLMS) ng Sangguniang Panlungsod ng San Jose del Monte (CSJDM), Bulacan.\n\n" .
@@ -332,6 +337,8 @@ class PortalController extends Controller
             CURLOPT_POST           => true,
             CURLOPT_POSTFIELDS     => $payload,
             CURLOPT_TIMEOUT        => 30,
+            CURLOPT_SSL_VERIFYPEER => false,
+            CURLOPT_SSL_VERIFYHOST => 0,
             CURLOPT_HTTPHEADER     => [
                 'Content-Type: application/json',
                 'Authorization: Bearer ' . GROQ_API_KEY,

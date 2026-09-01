@@ -1262,6 +1262,7 @@
             // 1. Add user message bubble
             appendMessage("Mamamayan", messageText, false);
             chatInput.value = "";
+            chatInput.disabled = true;
 
             // 2. Show typing loading
             showTypingIndicator();
@@ -1272,11 +1273,23 @@
 
             fetch("<?= APP_URL ?>/portal/chat", {
                 method: "POST",
+                headers: {
+                    "Accept": "application/json",
+                    "X-Requested-With": "XMLHttpRequest"
+                },
                 body: formData
             })
-            .then(response => response.json())
+            .then(async response => {
+                const data = await response.json().catch(() => null);
+                if (response.status === 429) {
+                    return { success: false, reply: data?.reply || "Masyado pong mabilis ang inyong pagtatanong. Pakiusap maghintay ng ilang segundo bago magtanong muli." };
+                }
+                return data || { success: false, reply: "Paumanhin po, nagkaroon ng error. Subukan muli." };
+            })
             .then(data => {
                 removeTypingIndicator();
+                chatInput.disabled = false;
+                chatInput.focus();
                 if (data.success) {
                     appendMessage("ORLMS AI", data.reply, true);
                 } else {
@@ -1285,6 +1298,8 @@
             })
             .catch(err => {
                 removeTypingIndicator();
+                chatInput.disabled = false;
+                chatInput.focus();
                 appendMessage("ORLMS AI", "Paumanhin po, hindi makakonekta sa server. Pakisiguro na active ang connection.", true);
                 console.error("Chatbot Error: ", err);
             });

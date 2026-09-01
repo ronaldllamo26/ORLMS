@@ -119,14 +119,17 @@ class RateLimiter
 
         $isJson = isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest'
             || str_contains($_SERVER['HTTP_ACCEPT'] ?? '', 'application/json')
-            || str_contains($_SERVER['REQUEST_URI'] ?? '', '/api/');
+            || str_contains($_SERVER['REQUEST_URI'] ?? '', '/api/')
+            || str_contains($_SERVER['REQUEST_URI'] ?? '', 'chat');
 
         if ($isJson) {
             header('Content-Type: application/json');
             echo json_encode([
-                'status' => 429,
-                'error' => 'Too Many Requests',
-                'message' => "Rate limit exceeded ({$limit} req/min). Please try again in {$retryAfter} seconds.",
+                'status'      => 429,
+                'success'     => false,
+                'error'       => 'Too Many Requests',
+                'reply'       => "Masyado pong mabilis ang inyong pagtatanong (Rate Limit Exceeded). Pakiusap maghintay ng {$retryAfter} segundo bago magtanong muli.",
+                'message'     => "Rate limit exceeded ({$limit} req/min). Please try again in {$retryAfter} seconds.",
                 'retry_after' => $retryAfter
             ]);
             return;
