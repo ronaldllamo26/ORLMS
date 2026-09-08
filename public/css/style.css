@@ -1412,7 +1412,9 @@ textarea.form-control {
         left: 0;
         right: 0;
         bottom: 0;
-        background-color: rgba(0, 0, 0, 0.4);
+        background-color: rgba(0, 0, 0, 0.55);
+        backdrop-filter: blur(3px);
+        -webkit-backdrop-filter: blur(3px);
         z-index: 1050;
         opacity: 0;
         visibility: hidden;
@@ -1424,22 +1426,27 @@ textarea.form-control {
         visibility: visible;
     }
 
-    /* Sidebar starts offscreen for mobile/tablet */
+    /* Sidebar drawer starts offscreen for mobile/tablet */
     .orlms-sidebar {
-        width: var(--sidebar-width);
-        transform: translateX(-100%);
-        z-index: 1100;
-        box-shadow: var(--shadow-md);
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        bottom: 0 !important;
+        width: 260px !important;
+        z-index: 1100 !important;
+        transform: translateX(-100%) !important;
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5) !important;
     }
 
     body.sidebar-open .orlms-sidebar {
-        transform: translateX(0);
+        transform: translateX(0) !important;
     }
 
     .orlms-main {
-        margin-left: 0;
-        padding: 16px;
-        /* slightly smaller padding for mobile */
+        margin-top: 56px !important;
+        margin-left: 0 !important;
+        padding: 14px !important;
     }
 
     .ai-comparison-box {

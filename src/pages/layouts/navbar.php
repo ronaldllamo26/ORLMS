@@ -29,8 +29,8 @@ $roleLabel    = $roleLabels[$currentRole] ?? ucfirst(str_replace('_', ' ', $curr
 
 <nav class="no-print print:hidden fixed top-0 left-0 right-0 h-[56px] bg-primary flex items-center justify-between z-[1001] shadow-md px-0" id="main-navbar">
 
-    <!-- ── Left: Brand Header (240px Width, Collapses smoothly when sidebar is toggled) ── -->
-    <div class="brand-header-box h-full bg-[#122840] border-r border-white/10 flex items-center px-4 gap-3 overflow-hidden shrink-0" id="nav-brand-box">
+    <!-- ── Desktop Left: Brand Header (240px Width, Collapses smoothly on desktop toggle) ── -->
+    <div class="brand-header-box hidden md:flex h-full bg-[#122840] border-r border-white/10 flex items-center px-4 gap-3 overflow-hidden shrink-0" id="nav-brand-box">
         <img src="<?= APP_ROOT_URL ?>/public/img/csjdm_logo.png" alt="CSJDM Logo" class="w-8 h-8 rounded-full object-cover shadow-sm border border-white/20 shrink-0">
         <div class="flex flex-col min-w-0">
             <span class="text-white font-bold text-sm leading-tight tracking-wide truncate"><?= APP_SHORT ?></span>
@@ -38,8 +38,8 @@ $roleLabel    = $roleLabels[$currentRole] ?? ucfirst(str_replace('_', ' ', $curr
         </div>
     </div>
 
-    <!-- ── Middle: Hamburger Menu Button + System Title ── -->
-    <div class="flex items-center gap-3 px-4 md:px-6 flex-1 min-w-0">
+    <!-- ── Middle/Main Section: Hamburger Button + Logo/Title ── -->
+    <div class="flex items-center gap-2.5 md:gap-3 px-3 md:px-6 flex-1 min-w-0">
         <!-- Sidebar Hamburger Toggle Button -->
         <button type="button" class="bg-transparent border-0 text-white cursor-pointer flex items-center justify-center p-2 rounded-md hover:bg-white/10 transition-colors focus:outline-none shrink-0" id="sidebar-toggle-btn" aria-label="Toggle Sidebar">
             <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -49,18 +49,22 @@ $roleLabel    = $roleLabels[$currentRole] ?? ucfirst(str_replace('_', ' ', $curr
             </svg>
         </button>
 
-        <div class="flex items-center gap-2 text-white font-semibold text-sm md:text-base tracking-wide truncate">
-            <span class="hidden md:inline font-medium text-white/90 text-xs md:text-sm truncate">
+        <!-- Mobile Logo & Brand (Shown on mobile < md) -->
+        <div class="flex items-center gap-2 md:hidden shrink-0">
+            <img src="<?= APP_ROOT_URL ?>/public/img/csjdm_logo.png" alt="CSJDM Logo" class="w-7 h-7 rounded-full object-cover border border-white/20">
+            <span class="text-white font-bold text-sm tracking-wide"><?= APP_SHORT ?></span>
+        </div>
+
+        <!-- Desktop System Title (Shown on md and up) -->
+        <div class="hidden md:flex items-center gap-2 text-white font-semibold text-sm md:text-base tracking-wide truncate">
+            <span class="font-medium text-white/90 text-xs md:text-sm truncate">
                 Ordinance and Resolution Lifecycle Management System
-            </span>
-            <span class="md:hidden font-bold text-white text-xs truncate">
-                <?= APP_SHORT ?>
             </span>
         </div>
     </div>
 
-    <!-- ── Right: User Info + Logout ────────────────────── -->
-    <div class="flex items-center gap-3 sm:gap-4 text-white/90 text-xs px-4 md:px-6 shrink-0">
+    <!-- ── Right: User Info + Logout ── -->
+    <div class="flex items-center gap-2.5 sm:gap-4 text-white/90 text-xs px-3 md:px-6 shrink-0">
 
         <!-- Logged-in user info -->
         <div class="flex items-center gap-2">
