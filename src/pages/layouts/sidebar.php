@@ -58,17 +58,6 @@ $roleLabel    = $roleLabels[$role] ?? ucfirst(str_replace('_', ' ', $role));
         </div>
     </div>
 
-    <!-- Sidebar User Profile Card -->
-    <div class="flex items-center gap-3 p-4 border-b border-white/10 bg-black/15">
-        <div class="w-9 h-9 rounded-full bg-accent text-primary font-bold text-sm flex items-center justify-center shrink-0 shadow-md">
-            <?= strtoupper(substr(htmlspecialchars($currentName), 0, 1)) ?>
-        </div>
-        <div class="flex flex-col min-w-0">
-            <div class="font-semibold text-xs text-white truncate"><?= htmlspecialchars($currentName) ?></div>
-            <div class="text-[10px] text-accent/80 font-semibold tracking-wider uppercase truncate"><?= htmlspecialchars($roleLabel) ?></div>
-        </div>
-    </div>
-
     <!-- ══════════════════════════════════════════
          SECTION: MAIN
          ══════════════════════════════════════════ -->

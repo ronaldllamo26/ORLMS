@@ -29,10 +29,10 @@ $roleLabel    = $roleLabels[$currentRole] ?? ucfirst(str_replace('_', ' ', $curr
 
 <nav class="no-print print:hidden orlms-navbar flex items-center justify-between px-4 md:px-6 shadow-md" id="main-navbar">
 
-    <!-- ── Left: Hamburger Toggle + Page Title (Matches ☰ Dashboard Layout) ── -->
-    <div class="flex items-center gap-2.5 min-w-0">
+    <!-- ── Left: Hamburger Toggle + System Title ── -->
+    <div class="flex items-center gap-3 min-w-0">
         <!-- Sidebar Hamburger Toggle Button -->
-        <button type="button" class="bg-transparent border-0 text-white cursor-pointer flex items-center justify-center p-1.5 rounded hover:bg-white/10 transition-colors focus:outline-none shrink-0" id="sidebar-toggle-btn" aria-label="Toggle Sidebar">
+        <button type="button" class="bg-transparent border-0 text-white cursor-pointer flex items-center justify-center p-2 rounded-md hover:bg-white/10 transition-colors focus:outline-none shrink-0" id="sidebar-toggle-btn" aria-label="Toggle Sidebar">
             <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                 <line x1="4" y1="6" x2="20" y2="6"></line>
                 <line x1="4" y1="12" x2="20" y2="12"></line>
@@ -40,9 +40,12 @@ $roleLabel    = $roleLabels[$currentRole] ?? ucfirst(str_replace('_', ' ', $curr
             </svg>
         </button>
 
-        <div class="flex items-center text-white font-bold text-base tracking-wide truncate">
-            <span class="text-white text-sm md:text-base font-bold truncate">
-                <?= htmlspecialchars($pageTitle ?? 'Dashboard') ?>
+        <div class="flex items-center gap-2 text-white font-medium text-sm md:text-base tracking-wide truncate">
+            <span class="hidden md:inline text-white/90 text-xs md:text-sm font-medium truncate">
+                Ordinance and Resolution Lifecycle Management System
+            </span>
+            <span class="md:hidden text-white text-xs font-bold truncate">
+                <?= APP_SHORT ?>
             </span>
         </div>
     </div>
