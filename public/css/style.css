@@ -119,10 +119,10 @@ img {
    ──────────────────────────────────────────────────────────── */
 
 /* Top Navbar */
-.orlms-navbar {
+.orlms-navbar, #main-navbar {
     position: fixed;
     top: 0;
-    left: var(--sidebar-width);
+    left: var(--sidebar-width) !important;
     right: 0;
     height: var(--navbar-height);
     background-color: var(--color-primary);
@@ -136,8 +136,9 @@ img {
 }
 
 /* Collapsed Navbar State (Desktop) */
-body.sidebar-collapsed .orlms-navbar {
-    left: 0;
+body.sidebar-collapsed .orlms-navbar,
+body.sidebar-collapsed #main-navbar {
+    left: 0 !important;
 }
 
 /* Sidebar Toggle Hamburger Button */

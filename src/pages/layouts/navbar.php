@@ -27,7 +27,7 @@ if ($currentName === 'System Administrator') {
 $roleLabel    = $roleLabels[$currentRole] ?? ucfirst(str_replace('_', ' ', $currentRole));
 ?>
 
-<nav class="no-print print:hidden orlms-navbar flex items-center justify-between px-4 md:px-6 shadow-md" id="main-navbar">
+<nav class="no-print print:hidden fixed top-0 left-0 md:left-[240px] right-0 h-[56px] bg-primary flex items-center justify-between px-4 md:px-6 z-[1000] shadow-md transition-all duration-300" id="main-navbar">
 
     <!-- ── Left: Hamburger Toggle + System Title ── -->
     <div class="flex items-center gap-3 min-w-0">
