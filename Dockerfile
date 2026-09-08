@@ -22,7 +22,8 @@ RUN cp /var/www/html/config/config.php.example /var/www/html/config/config.php
 WORKDIR /var/www/html/
 
 # Install composer dependencies
-RUN composer install --no-dev --optimize-autoloader
+RUN composer config -g process-timeout 3000 \
+    && (composer install --no-dev --optimize-autoloader || composer install --no-dev --optimize-autoloader --prefer-source || composer install --no-dev)
 
 # Expose standard port
 EXPOSE 80
