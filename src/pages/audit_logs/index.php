@@ -17,16 +17,18 @@ $filterTable  = $filterTable ?? '';
 $filterUser   = $filterUser ?? '';
 $filterDate   = $filterDate ?? '';
 
-function auditActionBadge(string $action): string {
-    return match(true) {
-        str_contains($action, 'CREATE') => 'badge-endorsed',
-        str_contains($action, 'DELETE') => 'badge-rejected',
-        str_contains($action, 'REJECT') => 'badge-rejected',
-        str_contains($action, 'ENACT')  => 'badge-enacted',
-        str_contains($action, 'ENDORSE')|| str_contains($action, 'APPROVE') => 'badge-approved',
-        str_contains($action, 'SUBMIT') => 'badge-submitted',
-        default => 'badge-draft',
-    };
+if (!function_exists('auditActionBadge')) {
+    function auditActionBadge(string $action): string {
+        return match(true) {
+            str_contains($action, 'CREATE') => 'badge-endorsed',
+            str_contains($action, 'DELETE') => 'badge-rejected',
+            str_contains($action, 'REJECT') => 'badge-rejected',
+            str_contains($action, 'ENACT')  => 'badge-enacted',
+            str_contains($action, 'ENDORSE')|| str_contains($action, 'APPROVE') => 'badge-approved',
+            str_contains($action, 'SUBMIT') => 'badge-submitted',
+            default => 'badge-draft',
+        };
+    }
 }
 ?>
 

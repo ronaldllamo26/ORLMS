@@ -49,9 +49,18 @@ $roleLabel    = $roleLabels[$role] ?? ucfirst(str_replace('_', ' ', $role));
 
 <aside class="no-print print:hidden orlms-sidebar bg-primary-dark border-r border-black/20 flex flex-col" id="main-sidebar">
 
+    <!-- Sidebar Top Brand Header (Top-Left of Screen, 56px Height) -->
+    <div class="h-[56px] min-h-[56px] bg-[#122840] border-b border-white/10 flex items-center px-4 gap-3 shrink-0">
+        <img src="<?= APP_ROOT_URL ?>/public/img/csjdm_logo.png" alt="CSJDM Logo" class="w-8 h-8 rounded-full object-cover shadow-sm border border-white/20 shrink-0">
+        <div class="flex flex-col min-w-0">
+            <span class="text-white font-bold text-sm leading-tight tracking-wide truncate"><?= APP_SHORT ?></span>
+            <span class="text-[10px] text-accent font-medium tracking-wider leading-tight truncate">CSJDM Portal</span>
+        </div>
+    </div>
+
     <!-- Sidebar User Profile Card -->
-    <div class="flex items-center gap-3 p-5 border-b border-white/10 bg-black/15">
-        <div class="w-10 h-10 rounded-full bg-accent text-primary font-bold text-base flex items-center justify-center shrink-0 shadow-md">
+    <div class="flex items-center gap-3 p-4 border-b border-white/10 bg-black/15">
+        <div class="w-9 h-9 rounded-full bg-accent text-primary font-bold text-sm flex items-center justify-center shrink-0 shadow-md">
             <?= strtoupper(substr(htmlspecialchars($currentName), 0, 1)) ?>
         </div>
         <div class="flex flex-col min-w-0">

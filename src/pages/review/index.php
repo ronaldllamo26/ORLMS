@@ -8,12 +8,14 @@
 
 $pending = $pending ?? [];
 
-function reviewStatusBadge(string $status): string {
-    return match($status) {
-        'submitted'    => 'badge-submitted',
-        'under_review' => 'badge-under-review',
-        default        => 'badge-draft',
-    };
+if (!function_exists('reviewStatusBadge')) {
+    function reviewStatusBadge(string $status): string {
+        return match($status) {
+            'submitted'    => 'badge-submitted',
+            'under_review' => 'badge-under-review',
+            default        => 'badge-draft',
+        };
+    }
 }
 ?>
 

@@ -5,7 +5,7 @@
  *
  * Provides Super Admin with 1-click utilities for:
  *   1. Viewing System Health & Database Backup Status
- *   2. Downloading full PostgreSQL database backup (.sql file)
+ *   2. Downloading full MySQL database backup (.sql file)
  *   3. Exporting ordinances and resolutions to CSV (Excel format)
  */
 class BackupController extends Controller

@@ -46,7 +46,7 @@ $committees = $committees ?? [];
             <?php
             $activeCount = 0;
             foreach ($committees as $c) {
-                if ($c['is_active']) $activeCount++;
+                if (!empty($c['is_active'])) $activeCount++;
             }
             echo $activeCount;
             ?>

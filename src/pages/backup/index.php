@@ -36,11 +36,11 @@ $tableCounts = $tableCounts ?? [];
                 </div>
                 <div>
                     <h2 class="text-base font-bold text-slate-800">Database Backup (.SQL)</h2>
-                    <span class="text-xs text-slate-500">Full PostgreSQL Schema & Data Export</span>
+                    <span class="text-xs text-slate-500">Full MySQL Schema & Data Export</span>
                 </div>
             </div>
             <p class="text-xs text-slate-600 leading-relaxed mb-4">
-                Mag-download ng kompletong <code>.sql</code> backup file ng buong PostgreSQL database kasama ang lahat ng tables, users, ordinances, resolutions, AI reports, at audit logs.
+                Mag-download ng kompletong <code>.sql</code> backup file ng buong MySQL database kasama ang lahat ng tables, users, ordinances, resolutions, AI reports, at audit logs.
             </p>
         </div>
         <a href="<?= APP_ROOT_URL ?>/backup/downloadSql" class="btn btn-primary btn-sm flex items-center justify-center gap-2">
