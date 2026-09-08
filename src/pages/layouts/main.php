@@ -152,7 +152,34 @@ $pageTitle = $pageTitle ?? APP_SHORT;
     <script>
         (function () {
             var toggleBtn = document.getElementById('sidebar-toggle-btn');
+            var brandBox  = document.getElementById('nav-brand-box');
             var overlay   = document.getElementById('sidebar-overlay');
+
+            function syncBrandBox() {
+                if (!brandBox) return;
+                var isCollapsed = document.body.classList.contains('sidebar-collapsed');
+                if (isCollapsed) {
+                    brandBox.style.setProperty('width', '0px', 'important');
+                    brandBox.style.setProperty('min-width', '0px', 'important');
+                    brandBox.style.setProperty('padding-left', '0px', 'important');
+                    brandBox.style.setProperty('padding-right', '0px', 'important');
+                    brandBox.style.setProperty('border-right-width', '0px', 'important');
+                    brandBox.style.opacity = '0';
+                    brandBox.style.visibility = 'hidden';
+                } else {
+                    brandBox.style.setProperty('width', '240px', 'important');
+                    brandBox.style.setProperty('min-width', '240px', 'important');
+                    brandBox.style.setProperty('padding-left', '16px', 'important');
+                    brandBox.style.setProperty('padding-right', '16px', 'important');
+                    brandBox.style.setProperty('border-right-width', '1px', 'important');
+                    brandBox.style.opacity = '1';
+                    brandBox.style.visibility = 'visible';
+                }
+            }
+
+            // Sync brand box state immediately
+            document.addEventListener('DOMContentLoaded', syncBrandBox);
+            syncBrandBox();
 
             if (toggleBtn) {
                 toggleBtn.addEventListener('click', function () {
@@ -161,6 +188,7 @@ $pageTitle = $pageTitle ?? APP_SHORT;
                         document.body.classList.toggle('sidebar-collapsed');
                         var isCollapsed = document.body.classList.contains('sidebar-collapsed');
                         localStorage.setItem('sidebar-collapsed', isCollapsed);
+                        syncBrandBox();
                     } else {
                         // Mobile slide-out drawer
                         document.body.classList.toggle('sidebar-open');
@@ -179,6 +207,7 @@ $pageTitle = $pageTitle ?? APP_SHORT;
                 if (window.innerWidth > 900) {
                     document.body.classList.remove('sidebar-open');
                 }
+                syncBrandBox();
             });
 
             // Auto-dismiss flash message after 4 seconds
