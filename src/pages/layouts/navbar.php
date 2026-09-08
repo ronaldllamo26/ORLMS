@@ -29,8 +29,8 @@ $roleLabel    = $roleLabels[$currentRole] ?? ucfirst(str_replace('_', ' ', $curr
 
 <nav class="no-print print:hidden fixed top-0 left-0 right-0 h-[56px] bg-primary flex items-center justify-between z-[1001] shadow-md px-0" id="main-navbar">
 
-    <!-- ── Left: Brand Header (240px Width Matching Sidebar) ── -->
-    <div class="w-[240px] shrink-0 h-full bg-[#122840] border-r border-white/10 flex items-center px-4 gap-3">
+    <!-- ── Left: Brand Header (240px Width, Collapses smoothly when sidebar is toggled) ── -->
+    <div class="brand-header-box w-[240px] shrink-0 h-full bg-[#122840] border-r border-white/10 flex items-center px-4 gap-3 transition-all duration-300 overflow-hidden" id="nav-brand-box">
         <img src="<?= APP_ROOT_URL ?>/public/img/csjdm_logo.png" alt="CSJDM Logo" class="w-8 h-8 rounded-full object-cover shadow-sm border border-white/20 shrink-0">
         <div class="flex flex-col min-w-0">
             <span class="text-white font-bold text-sm leading-tight tracking-wide truncate"><?= APP_SHORT ?></span>

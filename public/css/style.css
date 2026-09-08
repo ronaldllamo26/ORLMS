@@ -134,6 +134,18 @@ img {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
+/* Collapsed Brand Box Header (smoothly collapses brand logo box when hamburger menu is toggled) */
+body.sidebar-collapsed .brand-header-box,
+body.sidebar-collapsed #nav-brand-box {
+    width: 0 !important;
+    min-width: 0 !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    border-right-width: 0 !important;
+    opacity: 0;
+    visibility: hidden;
+}
+
 /* Sidebar Toggle Hamburger Button */
 .sidebar-toggle-btn {
     background: none;
