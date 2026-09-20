@@ -36,24 +36,28 @@
     </div>
 
     <!-- Flash Messages -->
-    <?php if ($flashSuccess = \Controller::getFlash('success')): ?>
-    <div class="bg-emerald-50 border border-emerald-200 text-emerald-800 p-4 rounded-xl flex items-start gap-3 text-sm shadow-sm">
-        <i class="bi bi-check-circle-fill text-emerald-600 text-lg mt-0.5"></i>
-        <div>
-            <h4 class="font-bold text-emerald-900">Kahilingan Naitala!</h4>
-            <p><?= htmlspecialchars($flashSuccess) ?></p>
+    <?php if (isset($_SESSION['flash'])): 
+        $flashType = $_SESSION['flash']['type'] ?? 'info';
+        $flashMsg  = $_SESSION['flash']['message'] ?? '';
+        unset($_SESSION['flash']);
+    ?>
+        <?php if ($flashType === 'success'): ?>
+        <div class="bg-emerald-50 border border-emerald-200 text-emerald-800 p-4 rounded-xl flex items-start gap-3 text-sm shadow-sm">
+            <i class="bi bi-check-circle-fill text-emerald-600 text-lg mt-0.5"></i>
+            <div>
+                <h4 class="font-bold text-emerald-900">Kahilingan Naitala!</h4>
+                <p><?= htmlspecialchars($flashMsg) ?></p>
+            </div>
         </div>
-    </div>
-    <?php endif; ?>
-
-    <?php if ($flashError = \Controller::getFlash('error')): ?>
-    <div class="bg-rose-50 border border-rose-200 text-rose-800 p-4 rounded-xl flex items-start gap-3 text-sm shadow-sm">
-        <i class="bi bi-exclamation-triangle-fill text-rose-600 text-lg mt-0.5"></i>
-        <div>
-            <h4 class="font-bold text-rose-900">Hindi Naitala</h4>
-            <p><?= htmlspecialchars($flashError) ?></p>
+        <?php else: ?>
+        <div class="bg-rose-50 border border-rose-200 text-rose-800 p-4 rounded-xl flex items-start gap-3 text-sm shadow-sm">
+            <i class="bi bi-exclamation-triangle-fill text-rose-600 text-lg mt-0.5"></i>
+            <div>
+                <h4 class="font-bold text-rose-900">Hindi Naitala</h4>
+                <p><?= htmlspecialchars($flashMsg) ?></p>
+            </div>
         </div>
-    </div>
+        <?php endif; ?>
     <?php endif; ?>
 
     <!-- Quick Compliance Pillars Grid -->

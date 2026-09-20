@@ -155,6 +155,31 @@ class Controller
         ];
     }
 
+    /**
+     * Alias for flash().
+     */
+    public function setFlash(string $type, string $message): void
+    {
+        $this->flash($type, $message);
+    }
+
+    /**
+     * Static helper to retrieve and clear flash message.
+     */
+    public static function getFlash(?string $type = null): ?string
+    {
+        if (!isset($_SESSION['flash'])) {
+            return null;
+        }
+        $f = $_SESSION['flash'];
+        if ($type === null || ($f['type'] ?? '') === $type) {
+            $msg = $f['message'] ?? '';
+            unset($_SESSION['flash']);
+            return $msg;
+        }
+        return null;
+    }
+
     // ─────────────────────────────────────────────────────────────────────────
     // AUTHENTICATION GUARDS
     // ─────────────────────────────────────────────────────────────────────────
