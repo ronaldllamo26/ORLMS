@@ -177,27 +177,30 @@ class UserModel extends Model
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
         } catch (\Throwable $e) {}
 
-        // Ensure default oral defense demo admin account exists with Password@123
+        // Ensure default oral defense demo admin accounts exist with Password@123
         try {
             $db = \Database::getInstance()->getConnection();
-            $checkStmt = $db->prepare("SELECT id FROM users WHERE email = 'admin@orlms.ph' LIMIT 1");
-            $checkStmt->execute();
-            $adminUser = $checkStmt->fetch();
-
             $hashedPwd = password_hash('Password@123', PASSWORD_BCRYPT);
-            if ($adminUser) {
-                $updStmt = $db->prepare(
-                    "UPDATE users 
-                     SET password = :pwd, is_active = 1, failed_login_attempts = 0, lockout_until = NULL 
-                     WHERE email = 'admin@orlms.ph'"
-                );
-                $updStmt->execute([':pwd' => $hashedPwd]);
-            } else {
-                $insStmt = $db->prepare(
-                    "INSERT INTO users (name, email, password, role, is_active, failed_login_attempts, lockout_until) 
-                     VALUES ('Administrator', 'admin@orlms.ph', :pwd, 'super_admin', 1, 0, NULL)"
-                );
-                $insStmt->execute([':pwd' => $hashedPwd]);
+
+            foreach (['admin@csjdm.gov.ph', 'admin@orlms.ph'] as $adminEmail) {
+                $checkStmt = $db->prepare("SELECT id FROM users WHERE email = :email LIMIT 1");
+                $checkStmt->execute([':email' => $adminEmail]);
+                $adminUser = $checkStmt->fetch();
+
+                if ($adminUser) {
+                    $updStmt = $db->prepare(
+                        "UPDATE users 
+                         SET password = :pwd, is_active = 1, failed_login_attempts = 0, lockout_until = NULL 
+                         WHERE email = :email"
+                    );
+                    $updStmt->execute([':pwd' => $hashedPwd, ':email' => $adminEmail]);
+                } else {
+                    $insStmt = $db->prepare(
+                        "INSERT INTO users (name, email, password, role, is_active, failed_login_attempts, lockout_until) 
+                         VALUES ('City Administrator', :email, :pwd, 'super_admin', 1, 0, NULL)"
+                    );
+                    $insStmt->execute([':email' => $adminEmail, ':pwd' => $hashedPwd]);
+                }
             }
         } catch (\Throwable $e) {}
 

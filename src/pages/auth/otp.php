@@ -221,34 +221,27 @@
         <?php endif; ?>
 
         <?php
-        $userEmail = $_SESSION['otp_user_email'] ?? '';
-        $actualDestination = $userEmail;
-        if (str_ends_with(strtolower($userEmail), '@orlms.ph') || str_ends_with(strtolower($userEmail), '@csjdm.gov.ph')) {
-            $actualDestination = 'orlms2026@gmail.com';
+        $userEmail = $_SESSION['otp_user_email'] ?? 'admin@csjdm.gov.ph';
+        $parts = explode('@', $userEmail);
+        $namePart = $parts[0];
+        $domainPart = $parts[1] ?? 'csjdm.gov.ph';
+        if (strlen($namePart) <= 2) {
+            $maskedName = substr($namePart, 0, 1) . '***';
+        } else {
+            $maskedName = substr($namePart, 0, 2) . str_repeat('*', max(3, strlen($namePart) - 3)) . substr($namePart, -1);
         }
-        $maskedEmail = '';
-        if (!empty($actualDestination)) {
-            $parts = explode('@', $actualDestination);
-            $namePart = $parts[0];
-            $domainPart = $parts[1] ?? '';
-            if (strlen($namePart) <= 2) {
-                $maskedName = substr($namePart, 0, 1) . '***';
-            } else {
-                $maskedName = substr($namePart, 0, 2) . str_repeat('*', max(3, strlen($namePart) - 3)) . substr($namePart, -1);
-            }
-            $maskedEmail = $maskedName . '@' . $domainPart;
-        }
+        $maskedEmail = $maskedName . '@' . $domainPart;
         $remainingSeconds = max(0, ($_SESSION['otp_expires'] ?? (time() + 120)) - time());
         ?>
 
-        <!-- Live Gmail OTP Notification Box -->
+        <!-- Official Security Gateway OTP Notification Box -->
         <div style="background-color: rgba(12, 35, 64, 0.7); border: 1px solid rgba(242, 169, 0, 0.4); border-radius: 8px; padding: 15px; margin-bottom: 22px; font-size: 12px; color: #f8fafc; text-align: center; line-height: 1.6;">
             <div style="color: var(--color-lgu-gold); font-weight: 700; margin-bottom: 4px; font-size: 13px;">
-                <i class="bi bi-envelope-check-fill me-1"></i> Naipadala sa Rehistradong Gmail
+                <i class="bi bi-shield-lock-fill me-1"></i> Two-Factor Authentication Gateway
             </div>
-            Ang 6-digit verification code para sa <strong><?= htmlspecialchars($userEmail) ?></strong> ay naipadala sa:
-            <div style="font-weight: 700; color: #ffffff; letter-spacing: 0.5px; margin-top: 4px; font-size: 13px;">
-                <?= htmlspecialchars($maskedEmail ?: 'orlms2026@gmail.com') ?>
+            Ang 6-digit verification code ay naipadala sa opisyal na email:
+            <div style="font-weight: 700; color: #ffffff; letter-spacing: 0.5px; margin-top: 4px; font-size: 13.5px;">
+                <?= htmlspecialchars($maskedEmail) ?>
             </div>
             <div style="margin-top: 8px; font-size: 11.5px; color: rgba(255,255,255,0.8); display: flex; align-items: center; justify-content: center; gap: 6px;">
                 <i class="bi bi-clock-history"></i> May bisa sa loob ng: <strong id="countdown-timer" style="color: var(--color-lgu-gold); font-family: monospace; font-size: 13px;">02:00</strong>

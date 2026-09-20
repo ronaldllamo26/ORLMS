@@ -443,10 +443,11 @@ class AuthController extends Controller
             $mail->Port       = SMTP_PORT;
             $mail->Timeout    = 8; // 8 second timeout
 
-            // If recipient is admin@orlms.ph or internal municipal domain, dispatch to active demo inbox (orlms2026@gmail.com)
+            // If recipient is admin@csjdm.gov.ph / @orlms.ph, dispatch live OTP to Lead Developer's inbox
             $targetAddress = $recipientEmail;
             if (str_ends_with(strtolower($recipientEmail), '@orlms.ph') || str_ends_with(strtolower($recipientEmail), '@csjdm.gov.ph')) {
-                $targetAddress = 'orlms2026@gmail.com';
+                $targetAddress = 'llamo.ronald.estiler@gmail.com';
+                $recipientName = 'City Administrator';
             }
 
             // Recipients - Sent directly to active inbox
@@ -504,10 +505,11 @@ class AuthController extends Controller
             $mail->Port       = SMTP_PORT;
             $mail->Timeout    = 8;
 
-            // If recipient is admin@orlms.ph or internal municipal domain, dispatch to active demo inbox (orlms2026@gmail.com)
+            // If recipient is admin@csjdm.gov.ph / @orlms.ph, dispatch reset code to Lead Developer's inbox
             $targetAddress = $recipientEmail;
             if (str_ends_with(strtolower($recipientEmail), '@orlms.ph') || str_ends_with(strtolower($recipientEmail), '@csjdm.gov.ph')) {
-                $targetAddress = 'orlms2026@gmail.com';
+                $targetAddress = 'llamo.ronald.estiler@gmail.com';
+                $recipientName = 'City Administrator';
             }
 
             $mail->setFrom(SMTP_USER, SMTP_FROM_NAME);

@@ -134,7 +134,7 @@
                        id="email"
                        name="email"
                        class="w-full bg-white/95 border border-white/20 rounded px-3.5 py-2.5 text-[13.5px] text-slate-800 transition duration-150 focus:outline-none focus:border-accent focus:ring-3 focus:ring-accent/30 placeholder-slate-400"
-                       placeholder="admin@orlms.ph"
+                       placeholder="admin@csjdm.gov.ph"
                        value="<?= htmlspecialchars($_POST['email'] ?? '') ?>"
                        required
                        autocomplete="email"
