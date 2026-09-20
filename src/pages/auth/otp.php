@@ -220,15 +220,42 @@
             </div>
         <?php endif; ?>
 
-        <!-- Simulated OTP Code Banner -->
-        <div style="background-color: rgba(242, 169, 0, 0.15); border: 1px dashed var(--color-lgu-gold); border-radius: 6px; padding: 12px; margin-bottom: 24px; font-size: 11.5px; color: var(--color-lgu-gold); text-align: center; line-height: 1.5;">
-            <i class="bi bi-shield-lock-fill me-1"></i> <strong>[DEMO MODE]</strong> Simulated Verification Code:<br>
-            <span style="font-size: 24px; font-weight: 800; letter-spacing: 4px; display: block; margin-top: 4px; color: #ffffff;">
-                <?= $_SESSION['otp_code'] ?? '123456' ?>
-            </span>
+        <?php
+        $userEmail = $_SESSION['otp_user_email'] ?? '';
+        $actualDestination = $userEmail;
+        if (str_ends_with(strtolower($userEmail), '@orlms.ph') || str_ends_with(strtolower($userEmail), '@csjdm.gov.ph')) {
+            $actualDestination = 'orlms2026@gmail.com';
+        }
+        $maskedEmail = '';
+        if (!empty($actualDestination)) {
+            $parts = explode('@', $actualDestination);
+            $namePart = $parts[0];
+            $domainPart = $parts[1] ?? '';
+            if (strlen($namePart) <= 2) {
+                $maskedName = substr($namePart, 0, 1) . '***';
+            } else {
+                $maskedName = substr($namePart, 0, 2) . str_repeat('*', max(3, strlen($namePart) - 3)) . substr($namePart, -1);
+            }
+            $maskedEmail = $maskedName . '@' . $domainPart;
+        }
+        $remainingSeconds = max(0, ($_SESSION['otp_expires'] ?? (time() + 120)) - time());
+        ?>
+
+        <!-- Live Gmail OTP Notification Box -->
+        <div style="background-color: rgba(12, 35, 64, 0.7); border: 1px solid rgba(242, 169, 0, 0.4); border-radius: 8px; padding: 15px; margin-bottom: 22px; font-size: 12px; color: #f8fafc; text-align: center; line-height: 1.6;">
+            <div style="color: var(--color-lgu-gold); font-weight: 700; margin-bottom: 4px; font-size: 13px;">
+                <i class="bi bi-envelope-check-fill me-1"></i> Naipadala sa Rehistradong Gmail
+            </div>
+            Ang 6-digit verification code para sa <strong><?= htmlspecialchars($userEmail) ?></strong> ay naipadala sa:
+            <div style="font-weight: 700; color: #ffffff; letter-spacing: 0.5px; margin-top: 4px; font-size: 13px;">
+                <?= htmlspecialchars($maskedEmail ?: 'orlms2026@gmail.com') ?>
+            </div>
+            <div style="margin-top: 8px; font-size: 11.5px; color: rgba(255,255,255,0.8); display: flex; align-items: center; justify-content: center; gap: 6px;">
+                <i class="bi bi-clock-history"></i> May bisa sa loob ng: <strong id="countdown-timer" style="color: var(--color-lgu-gold); font-family: monospace; font-size: 13px;">02:00</strong>
+            </div>
         </div>
 
-        <form action="<?= APP_URL ?>/auth/otp" method="POST" autocomplete="off">
+        <form action="<?= APP_URL ?>/auth/otp" method="POST" autocomplete="off" id="otp-form">
             <div class="mb-4">
                 <label for="otp_code" style="display:block; font-size:12px; font-weight:600; text-transform:uppercase; color:rgba(255,255,255,0.7); margin-bottom:8px; text-align:center;">
                     Enter 6-Digit OTP Code
@@ -256,6 +283,35 @@
 
     </div>
 </div>
+
+<script>
+    // Live OTP Countdown Timer
+    let remainingSeconds = <?= (int)$remainingSeconds ?>;
+    const timerElem = document.getElementById('countdown-timer');
+
+    function updateCountdown() {
+        if (!timerElem) return;
+        if (remainingSeconds <= 0) {
+            timerElem.textContent = 'EXPIRED';
+            timerElem.style.color = '#ef4444';
+            return;
+        }
+        const mins = Math.floor(remainingSeconds / 60);
+        const secs = remainingSeconds % 60;
+        timerElem.textContent = String(mins).padStart(2, '0') + ':' + String(secs).padStart(2, '0');
+        remainingSeconds--;
+    }
+    updateCountdown();
+    setInterval(updateCountdown, 1000);
+
+    // Only allow numbers in OTP input
+    const otpInput = document.getElementById('otp_code');
+    if (otpInput) {
+        otpInput.addEventListener('input', function() {
+            this.value = this.value.replace(/[^0-9]/g, '');
+        });
+    }
+</script>
 
 <!-- ORLMS Global JavaScript & Client Protection Module -->
 <script src="<?= APP_URL ?>/public/js/main.js"></script>

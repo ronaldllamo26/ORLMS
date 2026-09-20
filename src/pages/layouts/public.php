@@ -101,16 +101,69 @@ $pageTitle = $pageTitle ?? APP_SHORT;
 
     <!-- Footer -->
     <footer class="public-footer no-print print:hidden bg-white border-t border-slate-200 py-6 text-center text-xs text-slate-500 mt-12">
-        <div>
-            © 2026 Ordinance and Resolution Lifecycle Management System (ORLMS). All rights reserved.
+        <div class="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 mb-2">
+            <span class="font-medium">© 2026 Ordinance and Resolution Lifecycle Management System (ORLMS). All rights reserved.</span>
+            <span class="text-slate-300">|</span>
+            <a href="<?= APP_URL ?>/portal/privacy" class="text-primary hover:text-primary-light font-bold no-underline inline-flex items-center gap-1">
+                <i class="bi bi-shield-check text-teal-600"></i> Data Privacy Policy (RA 10173)
+            </a>
+            <span class="text-slate-300">|</span>
+            <a href="<?= APP_URL ?>/portal/privacy#erasure" class="text-slate-600 hover:text-rose-600 font-medium no-underline inline-flex items-center gap-1">
+                <i class="bi bi-trash3"></i> Request Data Erasure
+            </a>
         </div>
-        <div class="text-[11px] text-slate-400 mt-1">
-            Municipality Legislative Record and AI Gatekeeper Portal.
+        <div class="text-[11px] text-slate-400">
+            Sangguniang Panlungsod ng San Jose del Monte, Bulacan • Legislative Record and AI Gatekeeper Portal.
         </div>
     </footer>
 
+    <!-- Interactive Data Privacy (RA 10173) Consent Banner -->
+    <div id="dpaConsentBanner" class="hidden fixed bottom-4 left-4 right-4 sm:left-auto sm:right-6 sm:max-w-md z-[1900] bg-slate-900/95 backdrop-blur-md text-white p-4 sm:p-5 rounded-2xl shadow-2xl border border-white/10 animate-in fade-in slide-in-from-bottom-4 duration-300">
+        <div class="flex items-start gap-3">
+            <div class="w-9 h-9 rounded-xl bg-teal-500/20 text-teal-400 flex items-center justify-center text-lg shrink-0">
+                <i class="bi bi-shield-lock-fill"></i>
+            </div>
+            <div class="flex-1 text-xs space-y-2">
+                <div class="font-bold text-white text-[13px] flex items-center justify-between">
+                    Data Privacy & Cookie Notice
+                    <span class="text-[10px] bg-teal-500/20 text-teal-300 px-1.5 py-0.5 rounded font-mono">RA 10173</span>
+                </div>
+                <p class="text-white/80 leading-relaxed text-[11px]">
+                    Gumagamit ang ORLMS ng mahahalagang cookies at sumusunod sa Data Privacy Act of 2012 upang mapanatiling ligtas ang iyong pagba-browse sa mga talaan ng Sangguniang Panlungsod.
+                </p>
+                <div class="flex items-center gap-2 pt-1">
+                    <button onclick="acceptDpaConsent()" class="bg-accent hover:bg-accent-dark text-primary font-bold px-3.5 py-1.5 rounded-lg text-xs transition shadow-sm">
+                        Tanggapin (Accept)
+                    </button>
+                    <a href="<?= APP_URL ?>/portal/privacy" class="text-white/70 hover:text-white underline text-[11px] px-2 py-1 transition">
+                        Basahin ang Patakaran
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Check and display DPA consent banner
+        document.addEventListener('DOMContentLoaded', function() {
+            if (!localStorage.getItem('orlms_dpa_consent_v1')) {
+                var banner = document.getElementById('dpaConsentBanner');
+                if (banner) {
+                    banner.classList.remove('hidden');
+                }
+            }
+        });
+
+        function acceptDpaConsent() {
+            localStorage.setItem('orlms_dpa_consent_v1', new Date().toISOString());
+            var banner = document.getElementById('dpaConsentBanner');
+            if (banner) {
+                banner.classList.add('hidden');
+            }
+        }
+    </script>
+
     <!-- ORLMS Global JavaScript & Client Protection Module -->
     <script src="<?= APP_URL ?>/public/js/main.js"></script>
-
 </body>
 </html>

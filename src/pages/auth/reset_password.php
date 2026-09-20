@@ -92,7 +92,7 @@
                        name="reset_code"
                        maxlength="6"
                        class="w-full bg-white/95 border border-white/20 rounded px-3.5 py-2.5 text-[18px] font-bold text-center tracking-[4px] text-slate-800 focus:outline-none focus:border-accent focus:ring-3 focus:ring-accent/30 placeholder-slate-400"
-                       placeholder="123456"
+                       placeholder="6-digit code"
                        required
                        autofocus>
             </div>
@@ -106,8 +106,34 @@
                        id="new_password"
                        name="new_password"
                        class="w-full bg-white/95 border border-white/20 rounded px-3.5 py-2.5 text-[13.5px] text-slate-800 focus:outline-none focus:border-accent focus:ring-3 focus:ring-accent/30 placeholder-slate-400"
-                       placeholder="Minimum 6 characters"
+                       placeholder="Enter strong password"
                        required>
+
+                <!-- Caps Lock Warning Indicator -->
+                <div id="caps-lock-warning" class="hidden mt-2 flex items-center gap-1.5 text-amber-300 text-[11px] font-semibold bg-amber-500/20 border border-amber-500/40 rounded px-2.5 py-1.5 animate-pulse">
+                    <i class="bi bi-exclamation-circle-fill"></i>
+                    <span>BABALA: Naka-ON ang <strong>Caps Lock</strong></span>
+                </div>
+
+                <!-- Password Policy Checklist -->
+                <div class="mt-3 bg-white/5 border border-white/10 rounded-lg p-2.5 text-[11px] space-y-1">
+                    <div class="text-white/70 font-semibold mb-1">Mga Patakaran sa Seguridad ng Password:</div>
+                    <div id="rule-length" class="flex items-center gap-1.5 text-white/40 transition">
+                        <i class="bi bi-circle"></i> Hindi bababa sa 8 na karakter
+                    </div>
+                    <div id="rule-upper" class="flex items-center gap-1.5 text-white/40 transition">
+                        <i class="bi bi-circle"></i> May Uppercase / Caps Lock (A-Z)
+                    </div>
+                    <div id="rule-lower" class="flex items-center gap-1.5 text-white/40 transition">
+                        <i class="bi bi-circle"></i> May Lowercase (a-z)
+                    </div>
+                    <div id="rule-number" class="flex items-center gap-1.5 text-white/40 transition">
+                        <i class="bi bi-circle"></i> May Numero (0-9)
+                    </div>
+                    <div id="rule-special" class="flex items-center gap-1.5 text-white/40 transition">
+                        <i class="bi bi-circle"></i> May Special Character (!@#$%^&*)
+                    </div>
+                </div>
             </div>
 
             <!-- Confirm Password -->
@@ -121,6 +147,9 @@
                        class="w-full bg-white/95 border border-white/20 rounded px-3.5 py-2.5 text-[13.5px] text-slate-800 focus:outline-none focus:border-accent focus:ring-3 focus:ring-accent/30 placeholder-slate-400"
                        placeholder="Ulitin ang bagong password"
                        required>
+                <div id="match-warning" class="hidden mt-1.5 text-rose-300 text-[11px] font-semibold flex items-center gap-1">
+                    <i class="bi bi-x-circle-fill"></i> Hindi magkatugma ang password
+                </div>
             </div>
 
             <button type="submit"
@@ -143,6 +172,69 @@
     </div>
 
 </div>
+
+<script>
+    const newPwd = document.getElementById('new_password');
+    const confPwd = document.getElementById('confirm_password');
+    const capsWarning = document.getElementById('caps-lock-warning');
+    const matchWarning = document.getElementById('match-warning');
+
+    const ruleLength = document.getElementById('rule-length');
+    const ruleUpper = document.getElementById('rule-upper');
+    const ruleLower = document.getElementById('rule-lower');
+    const ruleNumber = document.getElementById('rule-number');
+    const ruleSpecial = document.getElementById('rule-special');
+
+    function updateRule(elem, passed) {
+        if (!elem) return;
+        if (passed) {
+            elem.className = 'flex items-center gap-1.5 text-emerald-400 font-medium transition';
+            elem.querySelector('i').className = 'bi bi-check-circle-fill text-emerald-400';
+        } else {
+            elem.className = 'flex items-center gap-1.5 text-white/40 transition';
+            elem.querySelector('i').className = 'bi bi-circle';
+        }
+    }
+
+    if (newPwd) {
+        newPwd.addEventListener('input', function() {
+            const val = this.value;
+            updateRule(ruleLength, val.length >= 8);
+            updateRule(ruleUpper, /[A-Z]/.test(val));
+            updateRule(ruleLower, /[a-z]/.test(val));
+            updateRule(ruleNumber, /[0-9]/.test(val));
+            updateRule(ruleSpecial, /[^A-Za-z0-9]/.test(val));
+            checkMatch();
+        });
+
+        ['keydown', 'keyup'].forEach(evt => {
+            newPwd.addEventListener(evt, function(e) {
+                if (e.getModifierState && e.getModifierState('CapsLock')) {
+                    capsWarning.classList.remove('hidden');
+                } else {
+                    capsWarning.classList.add('hidden');
+                }
+            });
+        });
+
+        newPwd.addEventListener('blur', function() {
+            capsWarning.classList.add('hidden');
+        });
+    }
+
+    function checkMatch() {
+        if (!confPwd || !newPwd) return;
+        if (confPwd.value && confPwd.value !== newPwd.value) {
+            matchWarning.classList.remove('hidden');
+        } else {
+            matchWarning.classList.add('hidden');
+        }
+    }
+
+    if (confPwd) {
+        confPwd.addEventListener('input', checkMatch);
+    }
+</script>
 
 <!-- ORLMS Global JavaScript & Client Protection Module -->
 <script src="<?= APP_URL ?>/public/js/main.js"></script>

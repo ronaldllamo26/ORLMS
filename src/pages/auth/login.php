@@ -134,7 +134,7 @@
                        id="email"
                        name="email"
                        class="w-full bg-white/95 border border-white/20 rounded px-3.5 py-2.5 text-[13.5px] text-slate-800 transition duration-150 focus:outline-none focus:border-accent focus:ring-3 focus:ring-accent/30 placeholder-slate-400"
-                       placeholder="user@csjdm.gov.ph"
+                       placeholder="admin@orlms.ph"
                        value="<?= htmlspecialchars($_POST['email'] ?? '') ?>"
                        required
                        autocomplete="email"
@@ -158,6 +158,11 @@
                        placeholder="Enter your password"
                        required
                        autocomplete="current-password">
+                <!-- Caps Lock Warning Indicator -->
+                <div id="caps-lock-warning" class="hidden mt-2 flex items-center gap-1.5 text-amber-300 text-[11px] font-semibold bg-amber-500/20 border border-amber-500/40 rounded px-2.5 py-1.5 animate-pulse">
+                    <i class="bi bi-exclamation-circle-fill"></i>
+                    <span>BABALA: Naka-ON ang <strong>Caps Lock</strong></span>
+                </div>
             </div>
 
             <!-- Submit -->
@@ -193,6 +198,24 @@
         btn.textContent = 'Logging in...';
         btn.classList.add('opacity-70', 'cursor-not-allowed');
     });
+
+    // Real-time Caps Lock Detection
+    const pwdInput = document.getElementById('password');
+    const capsWarning = document.getElementById('caps-lock-warning');
+    if (pwdInput && capsWarning) {
+        ['keydown', 'keyup'].forEach(eventType => {
+            pwdInput.addEventListener(eventType, function (e) {
+                if (e.getModifierState && e.getModifierState('CapsLock')) {
+                    capsWarning.classList.remove('hidden');
+                } else {
+                    capsWarning.classList.add('hidden');
+                }
+            });
+        });
+        pwdInput.addEventListener('blur', function () {
+            capsWarning.classList.add('hidden');
+        });
+    }
 </script>
 
 <!-- ORLMS Global JavaScript & Client Protection Module -->

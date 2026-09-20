@@ -363,6 +363,105 @@ class PortalController extends Controller
     }
 
     // ─────────────────────────────────────────────────────────────────────────
+    // DATA PRIVACY ACT OF 2012 (RA 10173) COMPLIANCE & PRIVACY POLICY PAGE
+    // ─────────────────────────────────────────────────────────────────────────
+
+    /**
+     * Renders the public Data Privacy Manual & Governance Policy page.
+     */
+    public function privacy(): void
+    {
+        $this->renderPublic('portal/privacy', [
+            'pageTitle' => 'Data Privacy Policy (RA 10173 Compliance)',
+        ]);
+    }
+
+    /**
+     * Handles Data Erasure / Right to Delete requests under Section 16 of RA 10173.
+     */
+    public function requestDataDeletion(): void
+    {
+        if (!$this->isPost()) {
+            $this->redirect('portal/privacy');
+        }
+
+        require_once ROOT . '/core/Security.php';
+        $userModel = $this->model('UserModel');
+        $userModel->ensureSecurityColumns();
+
+        $name    = trim($this->post('requester_name', ''));
+        $email   = trim($this->post('requester_email', ''));
+        $phone   = trim($this->post('requester_phone', ''));
+        $reason  = trim($this->post('reason', ''));
+        $consent = $this->post('consent');
+
+        if (empty($name) || empty($email) || empty($reason) || empty($consent)) {
+            if ($this->isAjax()) {
+                $this->json(['success' => false, 'message' => 'Lahat ng required fields at DPA consent ay kinakailangan.'], 422);
+            }
+            $this->setFlash('error', 'Punan ang lahat ng kinakailangang impormasyon at lagyan ng tsek ang pahintulot (consent).');
+            $this->redirect('portal/privacy');
+        }
+
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            if ($this->isAjax()) {
+                $this->json(['success' => false, 'message' => 'Di-wastong format ng email address.'], 422);
+            }
+            $this->setFlash('error', 'Di-wastong format ng email address.');
+            $this->redirect('portal/privacy');
+        }
+
+        $ticketNo = 'DPA-' . date('Y') . '-' . strtoupper(bin2hex(random_bytes(3)));
+        $db = \Database::getInstance()->getConnection();
+        $ip = $_SERVER['REMOTE_ADDR'] ?? '127.0.0.1';
+
+        $stmt = $db->prepare(
+            "INSERT INTO data_deletion_requests 
+             (ticket_no, requester_name, requester_email, requester_phone, request_type, reason, status, ip_address, created_at)
+             VALUES (:ticket, :name, :email, :phone, 'erasure', :reason, 'pending', :ip, NOW())"
+        );
+        $stmt->execute([
+            ':ticket' => $ticketNo,
+            ':name'   => $name,
+            ':email'  => $email,
+            ':phone'  => $phone,
+            ':reason' => $reason,
+            ':ip'     => $ip,
+        ]);
+        $requestId = (int) $db->lastInsertId();
+
+        // Audit Trail log
+        $userModel->logAudit(
+            1, // System administrator or automated logger
+            'DATA_ERASURE_REQUEST_SUBMITTED',
+            'data_deletion_requests',
+            $requestId,
+            null,
+            [
+                'ticket_no'       => $ticketNo,
+                'requester_name'  => $name,
+                'requester_email' => Security::maskEmail($email),
+                'status'          => 'pending',
+                'client_ip'       => $ip
+            ]
+        );
+
+        $successMsg = "Ang iyong kahilingan sa pagbura ng datos (Data Erasure Request) ay opisyal na naitala sa ilalim ng Ticket #{$ticketNo}. Aabisuhan ka sa {$email} sa loob ng labinlimang (15) araw alinsunod sa RA 10173.";
+
+        if ($this->isAjax()) {
+            $this->json([
+                'success'   => true,
+                'ticket_no' => $ticketNo,
+                'message'   => $successMsg
+            ]);
+        }
+
+        $this->setFlash('success', $successMsg);
+        $this->redirect('portal/privacy');
+    }
+
+
+    // ─────────────────────────────────────────────────────────────────────────
     // PRIVATE RENDERER FOR PUBLIC VIEWS (WITHOUT SIDEBAR)
     // ─────────────────────────────────────────────────────────────────────────
 

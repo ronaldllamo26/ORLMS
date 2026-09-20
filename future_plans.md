@@ -28,7 +28,13 @@ Ito ang mga inirekomendang karagdagang features na maaari nating ipatupad sa sus
 ## 4. AI-Generated Plain Language Summary (TL;DR) 📝
 * **Deskripsyon:** Sa detalye ng bawat batas sa Public Registry, magpapakita ang system ng maikli at simpleng buod (2 hanggang 3 pangungusap) na binuo ng AI para mas madaling maintindihan ng karaniwang mamamayan ang mahahabang legal na dokumento.
 
+## 5. Category-Specific Attachment Rules & DILG Compliance Checklists 📑
+* **Deskripsyon:** Pagdaragdag ng dynamic attachment checklists batay sa kategorya ng Ordinansa (hal. Appropriation/Budget, Revenue/Tax, Health, Zoning).
+* **Paano Ito Gagana:** Pagkatapos pumili ng kategorya sa drafting phase, awtomatikong hihingi ang system ng mga tiyak na dokumento batay sa DILG Memorandum Circulars (hal. *Certificate of Funds Availability* para sa Budget, o *Minutes of Public Consultation* para sa Tax ordinances).
+* **Bakit Ito Mahalaga:** Mas lalong mapagtutugma ang AI Universal Text Check sa mga tiyak na kategorya ng mga lokal na patakaran sa LGU.
+
 ---
+
 
 ## 📅 Status ng System
 * [x] **MFA / OTP Email Configuration** - Inilipat ang receiver sa `orlms2026@gmail.com` para sa inyong group testing.

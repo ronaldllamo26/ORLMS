@@ -30,9 +30,38 @@ class AuthController extends Controller
         $this->login();
     }
 
-    // ─────────────────────────────────────────────────────────────────────────
-    // LOGIN — GET: show form | POST: process credentials
-    // ─────────────────────────────────────────────────────────────────────────
+    /**
+     * Enforces strong password policy.
+     * Requirements:
+     * - Minimum 8 characters
+     * - At least 1 uppercase letter (Caps Lock / A-Z)
+     * - At least 1 lowercase letter (a-z)
+     * - At least 1 numeric digit (0-9)
+     * - At least 1 special character (@$!%*?&#^()_-+= etc.)
+     *
+     * @param  string $password
+     * @return array ['valid' => bool, 'message' => string]
+     */
+    public static function validatePasswordStrength(string $password): array
+    {
+        if (strlen($password) < 8) {
+            return ['valid' => false, 'message' => 'Ang password ay dapat may hindi bababa sa 8 na karakter.'];
+        }
+        if (!preg_match('/[A-Z]/', $password)) {
+            return ['valid' => false, 'message' => 'Ang password ay dapat mayroong kahit isang malaking titik (Uppercase / Caps Lock, A-Z).'];
+        }
+        if (!preg_match('/[a-z]/', $password)) {
+            return ['valid' => false, 'message' => 'Ang password ay dapat mayroong kahit isang maliit na titik (lowercase, a-z).'];
+        }
+        if (!preg_match('/[0-9]/', $password)) {
+            return ['valid' => false, 'message' => 'Ang password ay dapat mayroong kahit isang numero (0-9).'];
+        }
+        if (!preg_match('/[^A-Za-z0-9]/', $password)) {
+            return ['valid' => false, 'message' => 'Ang password ay dapat mayroong kahit isang special character (hal. !@#$%^&*).'];
+        }
+
+        return ['valid' => true, 'message' => 'Valid'];
+    }
 
     /**
      * Shows the login form on GET.
@@ -68,28 +97,55 @@ class AuthController extends Controller
 
                 if (!$user) {
                     // User not found — use vague error to prevent user enumeration
-                    $error = 'Invalid email address or password.';
+                    $error = 'Maling email address o password.';
 
                 } elseif (!(bool) $user['is_active']) {
                     // Account is deactivated
-                    $error = 'Your account has been deactivated. Please contact the administrator.';
+                    $error = 'Ang account na ito ay deactivated. Makipag-ugnayan sa administrator.';
+
+                } elseif ($this->userModel->isAccountLocked($user)) {
+                    // Account is temporarily locked out due to 3 failed attempts
+                    $remainingSecs = $this->userModel->getRemainingLockoutSeconds($user);
+                    $error = "Pansamantalang naka-lock ang account na ito dahil sa 3 sunod-sunod na maling pagsubok. Pakisubukang muli pagkalipas ng {$remainingSecs} segundo. [DEMO NOTE: Naka-set sa 30 segundo para sa oral defense demonstration; 15 minuto sa aktwal na produksyon].";
 
                 } elseif (!password_verify($password, $user['password'])) {
-                    // Wrong password
-                    $error = 'Invalid email address or password.';
+                    // Wrong password — increment 3-strike failed attempts
+                    $lockStatus = $this->userModel->incrementFailedAttempts((int) $user['id']);
+
+                    $this->userModel->logAudit(
+                        (int) $user['id'],
+                        'FAILED_LOGIN',
+                        'users',
+                        (int) $user['id'],
+                        null,
+                        ['attempt' => $lockStatus['count'], 'email' => $email]
+                    );
+
+                    if ($lockStatus['locked']) {
+                        $error = 'Pansamantalang naka-lock ang iyong account sa loob ng 30 segundo dahil sa 3 sunod-sunod na maling pagsubok sa password. [DEMO NOTE: Naka-set sa 30 segundo para sa live defense demonstration; 15 minuto sa produksyon].';
+                    } else {
+                        $attemptsLeft = 3 - (int) $lockStatus['count'];
+                        $error = "Maling password. Mayroon ka na lamang {$attemptsLeft} natitirang pagsubok bago ma-lock ang account.";
+                    }
 
                 } else {
-                    // ── Credentials correct — store temporary session for OTP ──
+                    // ── Credentials correct! Reset failed attempts ────────────
+                    $this->userModel->resetFailedAttempts((int) $user['id']);
+
+                    // Generate real cryptographically secure 6-digit OTP code
+                    $otpCode = random_int(100000, 999999);
+
+                    // ── Store temporary session for OTP (2-minute expiration) ──
                     $_SESSION['otp_pending']    = true;
                     $_SESSION['otp_user_id']    = (int) $user['id'];
                     $_SESSION['otp_user_name']  = $user['name'];
                     $_SESSION['otp_user_email'] = $user['email'];
                     $_SESSION['otp_user_role']  = $user['role'];
-                    $_SESSION['otp_code']       = 123456;
-                    $_SESSION['otp_expires']    = time() + 3600; // 1 hour expiration for demo convenience
+                    $_SESSION['otp_code']       = $otpCode;
+                    $_SESSION['otp_expires']    = time() + 120; // 2 minutes expiration
 
-                    // Always log the OTP code to server console for easy access/debugging
-                    error_log("[MFA OTP] Verification code for " . $user['email'] . ": " . $_SESSION['otp_code']);
+                    // Send the real OTP via Gmail SMTP
+                    $this->sendOtpEmail($user['email'], $user['name'], $otpCode);
 
                     // Redirect to OTP verification view
                     $this->redirect('auth/otp');
@@ -119,9 +175,9 @@ class AuthController extends Controller
             if (empty($enteredOtp)) {
                 $error = 'Mangyaring ilagay ang 6-digit verification code.';
             } elseif (time() > $_SESSION['otp_expires']) {
-                $error = 'Expired na ang iyong verification code. I-resend ito.';
-            } elseif ($enteredOtp !== (string)$_SESSION['otp_code'] && $enteredOtp !== '123456') {
-                $error = 'Maling verification code. Pakisuri at subukan muli.';
+                $error = 'Expired na ang iyong verification code. Pindutin ang "Resend Code" sa ibaba upang makatanggap ng bago.';
+            } elseif ($enteredOtp !== (string)$_SESSION['otp_code']) {
+                $error = 'Maling verification code. Pakisuri ang pinakabagong email sa iyong Gmail at subukan muli.';
             } else {
                 // Correct OTP! Establish session
                 $user = [
@@ -149,7 +205,7 @@ class AuthController extends Controller
                     'users',
                     $user['id'],
                     null,
-                    ['mfa_verified' => true]
+                    ['mfa_verified' => true, 'channel' => 'gmail_smtp']
                 );
 
                 // Redirect to dashboard
@@ -169,10 +225,18 @@ class AuthController extends Controller
             $this->redirect('auth/login');
         }
 
-        $_SESSION['otp_code']    = 123456;
-        $_SESSION['otp_expires'] = time() + 3600;
+        $newOtp = random_int(100000, 999999);
+        $_SESSION['otp_code']    = $newOtp;
+        $_SESSION['otp_expires'] = time() + 120; // 2 minutes
 
-        $this->flash('success', 'Simulated verification code: 123456');
+        $sent = $this->sendOtpEmail($_SESSION['otp_user_email'], $_SESSION['otp_user_name'], $newOtp);
+
+        if ($sent) {
+            $this->flash('success', 'Bagong 6-digit verification code ay naipadala sa iyong Gmail.');
+        } else {
+            $this->flash('error', 'Hindi naipadala ang email. Pakisubukang muli.');
+        }
+
         $this->redirect('auth/otp');
     }
 
@@ -202,16 +266,17 @@ class AuthController extends Controller
                 } elseif (!(bool) $user['is_active']) {
                     $error = 'Ang account na ito ay deactivated. Makipag-ugnayan sa Administrator.';
                 } else {
+                    $resetCode = random_int(100000, 999999);
                     $_SESSION['reset_pending']    = true;
                     $_SESSION['reset_user_id']    = (int) $user['id'];
                     $_SESSION['reset_user_email'] = $user['email'];
                     $_SESSION['reset_user_name']  = $user['name'];
-                    $_SESSION['reset_code']       = 123456;
-                    $_SESSION['reset_expires']    = time() + 3600; // 1 hour
+                    $_SESSION['reset_code']       = $resetCode;
+                    $_SESSION['reset_expires']    = time() + 900; // 15 minutes
 
-                    error_log("[Password Reset] Code for " . $user['email'] . ": " . $_SESSION['reset_code']);
+                    $this->sendResetPasswordEmail($user['email'], $user['name'], $resetCode);
 
-                    $this->flash('success', 'Simulated Reset Code: 123456');
+                    $this->flash('success', 'Naipadala na ang 6-digit Reset Code sa iyong Gmail.');
                     $this->redirect('auth/reset_password');
                 }
             }
@@ -245,37 +310,43 @@ class AuthController extends Controller
             } elseif (time() > $_SESSION['reset_expires']) {
                 $error = 'Expired na ang Reset Code. Mag-request ng bagong code.';
             } elseif ($enteredCode !== (string)$_SESSION['reset_code']) {
-                $error = 'Maling Reset Code. Pakisuri muli sa iyong email.';
-            } elseif (strlen($newPassword) < 6) {
-                $error = 'Ang bagong password ay dapat may hindi bababa sa 6 na karakter.';
-            } elseif ($newPassword !== $confirmPassword) {
-                $error = 'Hindi magkatugma ang kumpirmasyon ng password.';
+                $error = 'Maling Reset Code. Pakisuri muli ang pinakabagong email sa iyong Gmail.';
             } else {
-                // Update password in database
-                $userId = (int) $_SESSION['reset_user_id'];
-                $updated = $this->userModel->updatePassword($userId, $newPassword);
-
-                if ($updated) {
-                    $this->userModel->logAudit(
-                        $userId,
-                        'PASSWORD_RESET',
-                        'users',
-                        $userId,
-                        null,
-                        ['reset_via' => 'self_service_email_otp']
-                    );
-
-                    unset($_SESSION['reset_pending']);
-                    unset($_SESSION['reset_user_id']);
-                    unset($_SESSION['reset_user_email']);
-                    unset($_SESSION['reset_user_name']);
-                    unset($_SESSION['reset_code']);
-                    unset($_SESSION['reset_expires']);
-
-                    $this->flash('success', 'Matagumpay na na-reset ang iyong password. Maaari ka nang mag-login.');
-                    $this->redirect('auth/login');
+                $strengthCheck = self::validatePasswordStrength($newPassword);
+                if (!$strengthCheck['valid']) {
+                    $error = $strengthCheck['message'];
+                } elseif ($newPassword !== $confirmPassword) {
+                    $error = 'Hindi magkatugma ang kumpirmasyon ng password.';
                 } else {
-                    $error = 'Nagkaroon ng problema sa pag-update ng password. Subukang muli.';
+                    // Update password in database
+                    $userId = (int) $_SESSION['reset_user_id'];
+                    $updated = $this->userModel->updatePassword($userId, $newPassword);
+
+                    if ($updated) {
+                        // Reset failed attempts upon successful password change
+                        $this->userModel->resetFailedAttempts($userId);
+
+                        $this->userModel->logAudit(
+                            $userId,
+                            'PASSWORD_RESET',
+                            'users',
+                            $userId,
+                            null,
+                            ['reset_via' => 'self_service_email_otp']
+                        );
+
+                        unset($_SESSION['reset_pending']);
+                        unset($_SESSION['reset_user_id']);
+                        unset($_SESSION['reset_user_email']);
+                        unset($_SESSION['reset_user_name']);
+                        unset($_SESSION['reset_code']);
+                        unset($_SESSION['reset_expires']);
+
+                        $this->flash('success', 'Matagumpay na na-reset ang iyong password. Maaari ka nang mag-login gamit ang bagong password.');
+                        $this->redirect('auth/login');
+                    } else {
+                        $error = 'Nagkaroon ng problema sa pag-update ng password. Subukang muli.';
+                    }
                 }
             }
         }
@@ -359,9 +430,6 @@ class AuthController extends Controller
      */
     private function sendOtpEmail(string $recipientEmail, string $recipientName, int $otpCode): bool
     {
-        // For development/testing: Redirect all OTP emails to the developer's personal email
-        $recipientEmail = 'orlms2026@gmail.com';
-
         $mail = new \PHPMailer\PHPMailer\PHPMailer(true);
 
         try {
@@ -375,9 +443,15 @@ class AuthController extends Controller
             $mail->Port       = SMTP_PORT;
             $mail->Timeout    = 8; // 8 second timeout
 
-            // Recipients
+            // If recipient is admin@orlms.ph or internal municipal domain, dispatch to active demo inbox (orlms2026@gmail.com)
+            $targetAddress = $recipientEmail;
+            if (str_ends_with(strtolower($recipientEmail), '@orlms.ph') || str_ends_with(strtolower($recipientEmail), '@csjdm.gov.ph')) {
+                $targetAddress = 'orlms2026@gmail.com';
+            }
+
+            // Recipients - Sent directly to active inbox
             $mail->setFrom(SMTP_USER, SMTP_FROM_NAME);
-            $mail->addAddress($recipientEmail, $recipientName);
+            $mail->addAddress($targetAddress, $recipientName);
 
             // Content
             $mail->isHTML(true);
@@ -389,21 +463,80 @@ class AuthController extends Controller
                         <p style='color: #F2A900; font-size: 11px; font-weight: bold; text-transform: uppercase; margin: 5px 0 0 0; letter-spacing: 0.8px;'>Multi-Factor Authentication</p>
                     </div>
                     <p style='font-size: 14px; color: #333333;'>Magandang araw, <strong>{$recipientName}</strong>,</p>
-                    <p style='font-size: 13.5px; color: #4a5568; line-height: 1.6;'>Nakatanggap kami ng kahilingan na mag-login sa iyong account. Gamitin ang sumusunod na verification code para makumpleto ang proseso:</p>
+                    <p style='font-size: 13.5px; color: #4a5568; line-height: 1.6;'>Nakatanggap kami ng kahilingan na mag-login sa iyong account ({$recipientEmail}). Gamitin ang sumusunod na verification code para makumpleto ang proseso:</p>
                     <div style='text-align: center; margin: 30px 0; padding: 18px; background-color: #f8f9fa; border: 1px dashed #0C2340; border-radius: 6px;'>
-                        <span style='font-size: 28px; font-weight: 800; letter-spacing: 6px; color: #0C2340;'>{$otpCode}</span>
+                        <span style='font-size: 32px; font-weight: 800; letter-spacing: 8px; color: #0C2340;'>{$otpCode}</span>
                     </div>
-                    <p style='font-size: 12px; color: #718096; font-style: italic; line-height: 1.5;'>Ang code na ito ay may bisa lamang sa loob ng 5 minuto. Mangyaring huwag ibahagi ang code na ito sa kahit kanino.</p>
+                    <p style='font-size: 12px; color: #718096; font-style: italic; line-height: 1.5;'>Ang code na ito ay may bisa lamang sa loob ng 2 minuto. Mangyaring huwag ibahagi ang code na ito sa kahit kanino.</p>
                     <hr style='border: none; border-top: 1px solid #dee2e6; margin: 25px 0;'>
                     <p style='font-size: 10.5px; color: #a0aec0; text-align: center;'>Ito ay isang awtomatikong email mula sa ORLMS Portal ng Lungsod ng San Jose del Monte, Bulacan.</p>
                 </div>
             ";
-            $mail->AltBody = "Magandang araw {$recipientName},\n\nAng iyong MFA Verification code ay: {$otpCode}\n\nIto ay may bisa sa loob ng 5 minuto.";
+            $mail->AltBody = "Magandang araw {$recipientName},\n\nAng iyong MFA Verification code para sa {$recipientEmail} ay: {$otpCode}\n\nIto ay may bisa sa loob ng 2 minuto.";
 
             $mail->send();
             return true;
         } catch (\Exception $e) {
             error_log('MFA SMTP Error sending to ' . $recipientEmail . ': ' . $mail->ErrorInfo);
+            return false;
+        }
+    }
+
+    /**
+     * Sends the Password Reset code to the user's email via SMTP using PHPMailer.
+     *
+     * @param  string $recipientEmail
+     * @param  string $recipientName
+     * @param  int    $resetCode
+     * @return bool
+     */
+    private function sendResetPasswordEmail(string $recipientEmail, string $recipientName, int $resetCode): bool
+    {
+        $mail = new \PHPMailer\PHPMailer\PHPMailer(true);
+
+        try {
+            $mail->isSMTP();
+            $mail->Host       = SMTP_HOST;
+            $mail->SMTPAuth   = true;
+            $mail->Username   = SMTP_USER;
+            $mail->Password   = SMTP_PASS;
+            $mail->SMTPSecure = \PHPMailer\PHPMailer\PHPMailer::ENCRYPTION_STARTTLS;
+            $mail->Port       = SMTP_PORT;
+            $mail->Timeout    = 8;
+
+            // If recipient is admin@orlms.ph or internal municipal domain, dispatch to active demo inbox (orlms2026@gmail.com)
+            $targetAddress = $recipientEmail;
+            if (str_ends_with(strtolower($recipientEmail), '@orlms.ph') || str_ends_with(strtolower($recipientEmail), '@csjdm.gov.ph')) {
+                $targetAddress = 'orlms2026@gmail.com';
+            }
+
+            $mail->setFrom(SMTP_USER, SMTP_FROM_NAME);
+            $mail->addAddress($targetAddress, $recipientName);
+
+            $mail->isHTML(true);
+            $mail->Subject = 'Password Reset Code - CSJDM ORLMS';
+            $mail->Body    = "
+                <div style='font-family: Arial, sans-serif; max-width: 500px; margin: auto; padding: 25px; border: 1px solid #dee2e6; border-top: 5px solid #0C2340; border-radius: 8px; background-color: #ffffff;'>
+                    <div style='text-align: center; margin-bottom: 25px; border-bottom: 1px solid #eee; padding-bottom: 15px;'>
+                        <h2 style='color: #0C2340; margin: 0; font-size: 20px;'>CSJDM Sangguniang Panlungsod</h2>
+                        <p style='color: #F2A900; font-size: 11px; font-weight: bold; text-transform: uppercase; margin: 5px 0 0 0; letter-spacing: 0.8px;'>Password Reset Request</p>
+                    </div>
+                    <p style='font-size: 14px; color: #333333;'>Magandang araw, <strong>{$recipientName}</strong>,</p>
+                    <p style='font-size: 13.5px; color: #4a5568; line-height: 1.6;'>Nakatanggap kami ng kahilingan na i-reset ang iyong password sa ORLMS. Gamitin ang sumusunod na 6-digit Reset Code:</p>
+                    <div style='text-align: center; margin: 30px 0; padding: 18px; background-color: #f8f9fa; border: 1px dashed #0C2340; border-radius: 6px;'>
+                        <span style='font-size: 32px; font-weight: 800; letter-spacing: 8px; color: #0C2340;'>{$resetCode}</span>
+                    </div>
+                    <p style='font-size: 12px; color: #718096; font-style: italic; line-height: 1.5;'>Ang code na ito ay may bisa lamang sa loob ng 15 minuto. Kung hindi mo hiniling ito, huwag pansinin ang mensaheng ito.</p>
+                    <hr style='border: none; border-top: 1px solid #dee2e6; margin: 25px 0;'>
+                    <p style='font-size: 10.5px; color: #a0aec0; text-align: center;'>Ito ay isang awtomatikong email mula sa ORLMS Portal ng Lungsod ng San Jose del Monte, Bulacan.</p>
+                </div>
+            ";
+            $mail->AltBody = "Magandang araw {$recipientName},\n\nAng iyong Password Reset code ay: {$resetCode}\n\nIto ay may bisa sa loob ng 15 minuto.";
+
+            $mail->send();
+            return true;
+        } catch (\Exception $e) {
+            error_log('Reset SMTP Error sending to ' . $recipientEmail . ': ' . $mail->ErrorInfo);
             return false;
         }
     }

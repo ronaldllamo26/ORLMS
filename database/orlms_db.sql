@@ -26,8 +26,10 @@ CREATE TABLE IF NOT EXISTS `users` (
     `password`   VARCHAR(255)    NOT NULL,
     `role`       ENUM('super_admin','legislative_staff','committee_member','sp_member')
                                  NOT NULL DEFAULT 'legislative_staff',
-    `is_active`  TINYINT(1)      NOT NULL DEFAULT 1,
-    `created_at` DATETIME        NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `is_active`              TINYINT(1)      NOT NULL DEFAULT 1,
+    `failed_login_attempts`  INT UNSIGNED    NOT NULL DEFAULT 0,
+    `lockout_until`          DATETIME        DEFAULT NULL,
+    `created_at`             DATETIME        NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (`id`),
     UNIQUE KEY `uk_users_email` (`email`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -264,24 +266,45 @@ CREATE TABLE IF NOT EXISTS `public_consultations` (
 -- ─────────────────────────────────────────────────────────────────────────────
 -- DEFAULT ADMIN ACCOUNT
 -- Email:    admin@orlms.ph
--- Password: Admin@123 (bcrypt hashed)
+-- Password: Password@123 (bcrypt hashed)
 -- ─────────────────────────────────────────────────────────────────────────────
-INSERT INTO `users` (`name`, `email`, `password`, `role`, `is_active`)
+INSERT INTO `users` (`name`, `email`, `password`, `role`, `is_active`, `failed_login_attempts`, `lockout_until`)
 VALUES (
     'Administrator',
     'admin@orlms.ph',
-    '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',
+    '$2y$10$bSXh4J6aWUinRivGh4bR9O6jhLWJeDxj5DVpHgxJTmRKSAckifUTO',
     'super_admin',
-    1
+    1,
+    0,
+    NULL
 );
+
+-- ─────────────────────────────────────────────────────────────────────────────
+-- TABLE 11: data_deletion_requests (Data Privacy Act of 2012 / RA 10173 Compliance)
+-- ─────────────────────────────────────────────────────────────────────────────
+CREATE TABLE IF NOT EXISTS `data_deletion_requests` (
+    `id`              INT AUTO_INCREMENT PRIMARY KEY,
+    `ticket_no`       VARCHAR(30) NOT NULL UNIQUE,
+    `requester_name`  VARCHAR(150) NOT NULL,
+    `requester_email` VARCHAR(150) NOT NULL,
+    `requester_phone` VARCHAR(50) NULL,
+    `request_type`    VARCHAR(50) NOT NULL DEFAULT 'erasure',
+    `reason`          TEXT NOT NULL,
+    `status`          ENUM('pending', 'in_review', 'completed', 'rejected') NOT NULL DEFAULT 'pending',
+    `admin_notes`     TEXT NULL,
+    `ip_address`      VARCHAR(45) NULL,
+    `created_at`      DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `updated_at`      DATETIME NULL ON UPDATE CURRENT_TIMESTAMP,
+    KEY `idx_ddr_email` (`requester_email`),
+    KEY `idx_ddr_status` (`status`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ============================================================================
 -- DONE! 🎉
--- 10 tables created + 1 default admin account
+-- 11 tables created + 1 default admin account
 --
 -- Default login:
 --   Email:    admin@orlms.ph
---   Password: password
--- 
--- (Change the password after first login!)
+--   Password: Password@123
+-- ============================================================================
 -- ============================================================================

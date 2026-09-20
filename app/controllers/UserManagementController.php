@@ -72,8 +72,16 @@ class UserManagementController extends Controller
             ])) {
                 $errors['role'] = 'Please select a valid role.';
             }
-            if (strlen($input['password']) < 8) {
-                $errors['password'] = 'Password must be at least 8 characters.';
+            if (!empty($input['password'])) {
+                if (!class_exists('AuthController')) {
+                    require_once __DIR__ . '/AuthController.php';
+                }
+                $pwdCheck = AuthController::validatePasswordStrength($input['password']);
+                if (!$pwdCheck['valid']) {
+                    $errors['password'] = $pwdCheck['message'];
+                }
+            } else {
+                $errors['password'] = 'Password is required.';
             }
             if ($input['password'] !== $input['confirm']) {
                 $errors['confirm'] = 'Passwords do not match.';
@@ -149,8 +157,12 @@ class UserManagementController extends Controller
                 $errors['role'] = 'Please select a valid role.';
             }
             if (!empty($newPassword)) {
-                if (strlen($newPassword) < 8) {
-                    $errors['new_password'] = 'New password must be at least 8 characters.';
+                if (!class_exists('AuthController')) {
+                    require_once __DIR__ . '/AuthController.php';
+                }
+                $pwdCheck = AuthController::validatePasswordStrength($newPassword);
+                if (!$pwdCheck['valid']) {
+                    $errors['new_password'] = $pwdCheck['message'];
                 } elseif ($newPassword !== $confirmPwd) {
                     $errors['new_password_confirm'] = 'Passwords do not match.';
                 }

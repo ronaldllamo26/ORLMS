@@ -54,3 +54,6 @@ ngrok.exe
 # Scratch / test artifacts
 scratch/
 
+# Runtime storage & temp archives
+storage/
+*.zip

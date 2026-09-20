@@ -114,10 +114,16 @@ $input  = $input ?? [];
                             <label for="new_password" class="form-label">New Password</label>
                             <input type="password" id="new_password" name="new_password"
                                    class="form-control" minlength="8"
-                                   placeholder="Minimum 8 characters"
+                                   placeholder="Min 8 chars, 1 uppercase, 1 lowercase, 1 number, 1 symbol"
                                    autocomplete="new-password">
+                            <div id="caps-lock-warning" class="hidden mt-1 text-warning small font-weight-bold" style="display:none; color:#d97706;">
+                                <i class="bi bi-exclamation-triangle-fill"></i> Naka-ON ang Caps Lock (Caps Lock is ON)
+                            </div>
+                            <small class="form-text text-muted" style="font-size:11px; display:block; margin-top:4px;">
+                                Dapat may hindi bababa sa 8 karakter, may uppercase (Caps Lock), lowercase, numero, at special symbol (!@#$%^&*).
+                            </small>
                             <?php if (!empty($errors['new_password'])): ?>
-                            <span class="form-error">
+                            <span class="form-error text-danger small font-weight-bold d-block mt-1">
                                 <?= htmlspecialchars($errors['new_password']) ?>
                             </span>
                             <?php endif; ?>
@@ -223,3 +229,22 @@ $input  = $input ?? [];
     </div>
 
 </div>
+
+<script>
+    const newPwdInput = document.getElementById('new_password');
+    const capsWarning = document.getElementById('caps-lock-warning');
+    if (newPwdInput && capsWarning) {
+        ['keydown', 'keyup'].forEach(evt => {
+            newPwdInput.addEventListener(evt, function(e) {
+                if (e.getModifierState && e.getModifierState('CapsLock')) {
+                    capsWarning.style.display = 'block';
+                } else {
+                    capsWarning.style.display = 'none';
+                }
+            });
+        });
+        newPwdInput.addEventListener('blur', function() {
+            capsWarning.style.display = 'none';
+        });
+    }
+</script>

@@ -28,7 +28,180 @@ class UserModel extends Model
      */
     public function findByEmail(string $email): array|false
     {
+        $this->ensureSecurityColumns();
         return $this->findOneWhere('email', $email);
+    }
+
+    /**
+     * Check if a user's account is currently locked out due to excessive failed attempts.
+     *
+     * @param  array $user
+     * @return bool
+     */
+    public function isAccountLocked(array $user): bool
+    {
+        if (!empty($user['lockout_until'])) {
+            return strtotime($user['lockout_until']) > time();
+        }
+        return false;
+    }
+
+    /**
+    /**
+     * Get the remaining lockout duration in seconds.
+     *
+     * @param  array $user
+     * @return int
+     */
+    public function getRemainingLockoutSeconds(array $user): int
+    {
+        if (!empty($user['lockout_until'])) {
+            $diff = strtotime($user['lockout_until']) - time();
+            return max(0, $diff);
+        }
+        return 0;
+    }
+
+    /**
+     * Get the remaining lockout duration in minutes.
+     *
+     * @param  array $user
+     * @return int
+     */
+    public function getRemainingLockoutMinutes(array $user): int
+    {
+        return (int) ceil($this->getRemainingLockoutSeconds($user) / 60);
+    }
+
+    /**
+     * Record a failed login attempt for a user.
+     * If attempts reach 3 or more, locks the account.
+     * NOTE: Temporarily configured to 30 SECONDS for fast live oral defense demonstration
+     * (Standard production policy: 15 MINUTES).
+     *
+     * @param  int $userId
+     * @return array ['count' => int, 'locked' => bool, 'lockout_until' => ?string]
+     */
+    public function incrementFailedAttempts(int $userId): array
+    {
+        $this->ensureSecurityColumns();
+        $user = $this->findById($userId);
+        $currentAttempts = (int) ($user['failed_login_attempts'] ?? 0);
+        $newAttempts = $currentAttempts + 1;
+        $locked = false;
+        $lockoutUntil = null;
+
+        $db = \Database::getInstance()->getConnection();
+        if ($newAttempts >= 3) {
+            $locked = true;
+            // 30 SECONDS for live oral defense demonstration (15 MINUTE in standard production)
+            $stmt = $db->prepare(
+                "UPDATE users 
+                 SET failed_login_attempts = :attempts, 
+                     lockout_until = DATE_ADD(NOW(), INTERVAL 30 SECOND) 
+                 WHERE id = :id"
+            );
+            $stmt->execute([':attempts' => $newAttempts, ':id' => $userId]);
+
+            $updatedUser = $this->findById($userId);
+            $lockoutUntil = $updatedUser['lockout_until'] ?? date('Y-m-d H:i:s', time() + 30);
+
+            $this->logAudit(
+                $userId,
+                'ACCOUNT_LOCKED',
+                'users',
+                $userId,
+                ['failed_attempts' => $currentAttempts],
+                ['failed_attempts' => $newAttempts, 'lockout_until' => $lockoutUntil, 'note' => '30s demonstration lockout']
+            );
+        } else {
+            $stmt = $db->prepare("UPDATE users SET failed_login_attempts = :attempts WHERE id = :id");
+            $stmt->execute([':attempts' => $newAttempts, ':id' => $userId]);
+        }
+
+        return [
+            'count'         => $newAttempts,
+            'locked'        => $locked,
+            'lockout_until' => $lockoutUntil,
+        ];
+    }
+
+    /**
+     * Reset failed login attempts and clear lockout for a user upon successful authentication.
+     *
+     * @param  int $userId
+     * @return void
+     */
+    public function resetFailedAttempts(int $userId): void
+    {
+        $this->ensureSecurityColumns();
+        $db = \Database::getInstance()->getConnection();
+        $stmt = $db->prepare("UPDATE users SET failed_login_attempts = 0, lockout_until = NULL WHERE id = :id");
+        $stmt->execute([':id' => $userId]);
+    }
+
+    /**
+     * Safely ensure the users table has failed_login_attempts and lockout_until columns.
+     */
+    public function ensureSecurityColumns(): void
+    {
+        static $ensured = false;
+        if ($ensured) {
+            return;
+        }
+        try {
+            $db = \Database::getInstance()->getConnection();
+            $db->exec("ALTER TABLE users ADD COLUMN `failed_login_attempts` INT UNSIGNED NOT NULL DEFAULT 0");
+        } catch (\Throwable $e) {}
+        try {
+            $db = \Database::getInstance()->getConnection();
+            $db->exec("ALTER TABLE users ADD COLUMN `lockout_until` DATETIME DEFAULT NULL");
+        } catch (\Throwable $e) {}
+
+        // Ensure data_deletion_requests table exists for RA 10173 compliance
+        try {
+            $db = \Database::getInstance()->getConnection();
+            $db->exec("CREATE TABLE IF NOT EXISTS `data_deletion_requests` (
+                `id` INT AUTO_INCREMENT PRIMARY KEY,
+                `ticket_no` VARCHAR(30) NOT NULL UNIQUE,
+                `requester_name` VARCHAR(150) NOT NULL,
+                `requester_email` VARCHAR(150) NOT NULL,
+                `requester_phone` VARCHAR(50) NULL,
+                `request_type` VARCHAR(50) NOT NULL DEFAULT 'erasure',
+                `reason` TEXT NOT NULL,
+                `status` ENUM('pending', 'in_review', 'completed', 'rejected') NOT NULL DEFAULT 'pending',
+                `admin_notes` TEXT NULL,
+                `ip_address` VARCHAR(45) NULL,
+                `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                `updated_at` DATETIME NULL ON UPDATE CURRENT_TIMESTAMP
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+        } catch (\Throwable $e) {}
+
+        // Ensure default oral defense demo admin account exists with Password@123
+        try {
+            $db = \Database::getInstance()->getConnection();
+            $checkStmt = $db->prepare("SELECT id FROM users WHERE email = 'admin@orlms.ph' LIMIT 1");
+            $checkStmt->execute();
+            $adminUser = $checkStmt->fetch();
+
+            $hashedPwd = password_hash('Password@123', PASSWORD_BCRYPT);
+            if ($adminUser) {
+                $updStmt = $db->prepare(
+                    "UPDATE users 
+                     SET password = :pwd, is_active = 1, failed_login_attempts = 0, lockout_until = NULL 
+                     WHERE email = 'admin@orlms.ph'"
+                );
+                $updStmt->execute([':pwd' => $hashedPwd]);
+            } else {
+                $insStmt = $db->prepare(
+                    "INSERT INTO users (name, email, password, role, is_active, failed_login_attempts, lockout_until) 
+                     VALUES ('Administrator', 'admin@orlms.ph', :pwd, 'super_admin', 1, 0, NULL)"
+                );
+                $insStmt->execute([':pwd' => $hashedPwd]);
+            }
+        } catch (\Throwable $e) {}
+
+        $ensured = true;
     }
 
     // ─────────────────────────────────────────────────────────────────────────
