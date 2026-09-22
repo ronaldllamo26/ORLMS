@@ -236,7 +236,7 @@ try {
         $passHash = password_hash('password', PASSWORD_BCRYPT);
         $users = [
             ['name' => 'Administrator', 'email' => 'admin@orlms.ph', 'role' => 'super_admin'],
-            ['name' => 'Super Administrator', 'email' => 'superadmin@csjdm.gov.ph', 'role' => 'super_admin'],
+            ['name' => 'System Administrator', 'email' => 'superadmin@csjdm.gov.ph', 'role' => 'super_admin'],
             ['name' => 'Legislative Staff', 'email' => 'staff@csjdm.gov.ph', 'role' => 'legislative_staff'],
             ['name' => 'Committee Chair', 'email' => 'committee@csjdm.gov.ph', 'role' => 'committee_member'],
             ['name' => 'SP Member', 'email' => 'spmember@csjdm.gov.ph', 'role' => 'sp_member']

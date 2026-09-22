@@ -104,7 +104,7 @@ $sc = $statusColors[$status] ?? $statusColors['draft'];
                         </button>
                     </form>
                     <div style="font-size:11px; text-align:center; color:var(--color-text-muted); margin-top:8px;">
-                        Once submitted, this amendment will go to the Super Admin for approval.
+                        Once submitted, this amendment will go to the System Administrator for approval.
                     </div>
                 <?php endif; ?>
 
