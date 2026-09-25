@@ -64,7 +64,7 @@ class PublicationsController extends Controller
              FROM ordinances o
              LEFT JOIN users u ON o.author_id = u.id
              LEFT JOIN publications p ON p.document_type='ordinance' AND p.document_id=o.id
-             WHERE o.status IN ('enacted', 'published') AND p.id IS NULL
+             WHERE o.status = 'published' AND p.id IS NULL
              ORDER BY o.updated_at DESC"
         );
         $stmtOrd->execute();
@@ -166,8 +166,18 @@ class PublicationsController extends Controller
         $model    = $this->model($type === 'ordinance' ? 'OrdinanceModel' : 'ResolutionModel');
         $document = $model->getByIdWithAuthor((int) $id);
 
-        if (!$document || !in_array($document['status'], [STATUS_ENACTED, STATUS_PUBLISHED])) {
-            $this->flash('error', 'Only enacted or approved for publication documents can be published.');
+        if (!$document) {
+            $this->flash('error', 'Document not found.');
+            $this->redirect('publications');
+        }
+
+        if ($type === 'ordinance' && $document['status'] !== STATUS_PUBLISHED) {
+            $this->flash('error', 'Action Blocked: This ordinance must first complete Mayor\'s signature and Provincial Review in Post-Enactment Tracking before it can be published.');
+            $this->redirect('publications');
+        }
+
+        if ($type === 'resolution' && !in_array($document['status'], [STATUS_ENACTED, STATUS_PUBLISHED])) {
+            $this->flash('error', 'Only enacted resolutions can be published.');
             $this->redirect('publications');
         }
 
@@ -267,7 +277,7 @@ class PublicationsController extends Controller
                 $userModel = $this->model('UserModel');
                 $userModel->logAudit(
                     $this->userId(), 'PUBLISH', $type . 's', (int) $id,
-                    ['status' => STATUS_ENACTED],
+                    ['status' => $document['status']],
                     ['status' => STATUS_PUBLISHED, 'ref' => $input['publication_ref']]
                 );
 

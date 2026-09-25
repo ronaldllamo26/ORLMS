@@ -180,8 +180,7 @@ $docId   = $document['id'] ?? 0;
                             border-radius:var(--radius); border:1px solid var(--color-border-light);
                             font-size:12px; color:var(--color-text-muted); line-height:1.6;">
                     <strong style="color:var(--color-primary);">Note:</strong>
-                    Publishing this document will change its status from
-                    <strong>Enacted</strong> to <strong>Published</strong>.
+                    Publishing this document will record the official publication details and release it to the Citizen Public Portal.
                     This action is permanent and will be recorded in the audit log.
                 </div>
             </div>
