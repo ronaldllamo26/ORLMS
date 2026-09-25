@@ -64,7 +64,7 @@ class PublicationsController extends Controller
              FROM ordinances o
              LEFT JOIN users u ON o.author_id = u.id
              LEFT JOIN publications p ON p.document_type='ordinance' AND p.document_id=o.id
-             WHERE o.status = 'enacted' AND p.id IS NULL
+             WHERE o.status IN ('enacted', 'published') AND p.id IS NULL
              ORDER BY o.updated_at DESC"
         );
         $stmtOrd->execute();
@@ -76,7 +76,7 @@ class PublicationsController extends Controller
              FROM resolutions r
              LEFT JOIN users u ON r.author_id = u.id
              LEFT JOIN publications p ON p.document_type='resolution' AND p.document_id=r.id
-             WHERE r.status = 'enacted' AND p.id IS NULL
+             WHERE r.status IN ('enacted', 'published') AND p.id IS NULL
              ORDER BY r.updated_at DESC"
         );
         $stmtRes->execute();
@@ -166,8 +166,8 @@ class PublicationsController extends Controller
         $model    = $this->model($type === 'ordinance' ? 'OrdinanceModel' : 'ResolutionModel');
         $document = $model->getByIdWithAuthor((int) $id);
 
-        if (!$document || $document['status'] !== STATUS_ENACTED) {
-            $this->flash('error', 'Only enacted documents can be published.');
+        if (!$document || !in_array($document['status'], [STATUS_ENACTED, STATUS_PUBLISHED])) {
+            $this->flash('error', 'Only enacted or approved for publication documents can be published.');
             $this->redirect('publications');
         }
 
