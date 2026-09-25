@@ -216,6 +216,11 @@ class ReviewController extends Controller
     // RETURN — Return document for revision (back to draft)
     // ─────────────────────────────────────────────────────────────────────────
 
+    public function return(string $type, string $id): void
+    {
+        $this->returnDoc($type, $id);
+    }
+
     public function returnDoc(string $type, string $id): void
     {
         $this->requireRole([ROLE_SP_MEMBER, ROLE_COMMITTEE_MEMBER, ROLE_SUPER_ADMIN]);

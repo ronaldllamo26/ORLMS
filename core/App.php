@@ -134,6 +134,9 @@ class App
             if (method_exists($controller, $requestedMethod)) {
                 $method = $requestedMethod;
                 array_shift($url);
+            } elseif (method_exists($controller, $requestedMethod . 'Doc')) {
+                $method = $requestedMethod . 'Doc';
+                array_shift($url);
             } else {
                 // Method not found — show 404
                 $this->notFound($controllerName . '::' . $requestedMethod . '()');

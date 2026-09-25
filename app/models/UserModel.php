@@ -177,29 +177,55 @@ class UserModel extends Model
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
         } catch (\Throwable $e) {}
 
-        // Ensure default oral defense demo admin accounts exist with Password@123
+        // Ensure default oral defense demo accounts exist with Password@123 for all roles
         try {
             $db = \Database::getInstance()->getConnection();
             $hashedPwd = password_hash('Password@123', PASSWORD_BCRYPT);
 
-            foreach (['admin@csjdm.gov.ph', 'admin@orlms.ph'] as $adminEmail) {
-                $checkStmt = $db->prepare("SELECT id FROM users WHERE email = :email LIMIT 1");
-                $checkStmt->execute([':email' => $adminEmail]);
-                $adminUser = $checkStmt->fetch();
+            $defaultAccounts = [
+                // Super Admin
+                ['name' => 'City Administrator', 'email' => 'admin@csjdm.gov.ph', 'role' => 'super_admin'],
+                ['name' => 'Administrator', 'email' => 'admin@orlms.ph', 'role' => 'super_admin'],
+                ['name' => 'Super Administrator', 'email' => 'superadmin@csjdm.gov.ph', 'role' => 'super_admin'],
+                // Legislative Staff
+                ['name' => 'Legislative Staff', 'email' => 'staff@csjdm.gov.ph', 'role' => 'legislative_staff'],
+                ['name' => 'Legislative Staff', 'email' => 'staff@orlms.ph', 'role' => 'legislative_staff'],
+                // Committee Member / Chair
+                ['name' => 'Committee Chair', 'email' => 'committee@csjdm.gov.ph', 'role' => 'committee_member'],
+                ['name' => 'Committee Member', 'email' => 'committee@orlms.ph', 'role' => 'committee_member'],
+                // SP Member
+                ['name' => 'Hon. SP Member', 'email' => 'spmember@csjdm.gov.ph', 'role' => 'sp_member'],
+                ['name' => 'Hon. SP Member', 'email' => 'spmember@orlms.ph', 'role' => 'sp_member'],
+            ];
 
-                if ($adminUser) {
+            foreach ($defaultAccounts as $acc) {
+                $checkStmt = $db->prepare("SELECT id FROM users WHERE email = :email LIMIT 1");
+                $checkStmt->execute([':email' => $acc['email']]);
+                $user = $checkStmt->fetch();
+
+                if ($user) {
                     $updStmt = $db->prepare(
                         "UPDATE users 
-                         SET password = :pwd, is_active = 1, failed_login_attempts = 0, lockout_until = NULL 
+                         SET name = :name, password = :pwd, role = :role, is_active = 1, failed_login_attempts = 0, lockout_until = NULL 
                          WHERE email = :email"
                     );
-                    $updStmt->execute([':pwd' => $hashedPwd, ':email' => $adminEmail]);
+                    $updStmt->execute([
+                        ':name'  => $acc['name'],
+                        ':pwd'   => $hashedPwd,
+                        ':role'  => $acc['role'],
+                        ':email' => $acc['email'],
+                    ]);
                 } else {
                     $insStmt = $db->prepare(
                         "INSERT INTO users (name, email, password, role, is_active, failed_login_attempts, lockout_until) 
-                         VALUES ('City Administrator', :email, :pwd, 'super_admin', 1, 0, NULL)"
+                         VALUES (:name, :email, :pwd, :role, 1, 0, NULL)"
                     );
-                    $insStmt->execute([':email' => $adminEmail, ':pwd' => $hashedPwd]);
+                    $insStmt->execute([
+                        ':name'  => $acc['name'],
+                        ':email' => $acc['email'],
+                        ':pwd'   => $hashedPwd,
+                        ':role'  => $acc['role'],
+                    ]);
                 }
             }
         } catch (\Throwable $e) {}
