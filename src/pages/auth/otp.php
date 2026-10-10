@@ -203,10 +203,9 @@
     <!-- Body -->
     <div class="login-body">
         
-        <!-- Flash Success Notification (if resent) -->
         <?php if (isset($_SESSION['flash'])): ?>
-            <div class="success-alert">
-                <i class="bi bi-check-circle-fill"></i>
+            <div class="<?= ($_SESSION['flash']['type'] ?? 'success') === 'error' ? 'error-alert' : 'success-alert' ?>">
+                <i class="bi <?= ($_SESSION['flash']['type'] ?? 'success') === 'error' ? 'bi-exclamation-triangle-fill' : 'bi-check-circle-fill' ?>"></i>
                 <div><?= htmlspecialchars($_SESSION['flash']['message']) ?></div>
             </div>
             <?php unset($_SESSION['flash']); ?>

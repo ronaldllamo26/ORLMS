@@ -383,6 +383,63 @@ def build_pdf(filename="ORLMS_Capstone_Panel_Defense_QA_Guide.pdf"):
         ('RIGHTPADDING', (0, 0), (-1, -1), 9),
     ]))
     story.append(tips_table)
+    story.append(Spacer(1, 14))
+
+    # =========================================================================
+    # PART 5: 🎯 CRUCIAL SPOTLIGHT: POST-ENACTMENT, PUBLICATIONS GUARD & AI STANDARDS
+    # =========================================================================
+    story.append(Paragraph("PART 5: 🎯 CRUCIAL HIGHLIGHTS FOR TODAY'S DEFENSE", section_header_style))
+    story.append(Paragraph("<font size='8' color='#64748B'><i>(Espesyal na gabay para sa Presenter: Post-Enactment, Workflow Guard, Amendments, at AI Legal Benchmarks)</i></font>", badge_style))
+
+    crucial_qa = [
+        (
+            "1. Para saan ang Post-Enactment Tracking at bakit may 3 kategorya sa dropdown?",
+            "Nagsisilbing <b>Digital Twin</b> ito para sa mga offline at statutory na proseso matapos maipasa ang panukala sa 3rd reading. Nahahati ito sa tatlong antas ng hurisdiksyon ayon sa RA 7160:<br/>"
+            "• <b>Level 1 (Local Signatures):</b> Pirmahan sa loob ng City Hall—Certipikasyon ni Vice Mayor/Secretary at Desisyon ni Mayor (Signed o Vetoed).<br/>"
+            "• <b>Level 2 (Provincial Review):</b> Mandatory review ng Sangguniang Panlalawigan ng Bulacan sa Malolos dahil ang CSJDM ay isang component city.<br/>"
+            "• <b>Level 3 (Final Step):</b> 'Mark for Publication / Posting'—ang opisyal na hudyat na lusot na sa lahat ng legal checks at handa nang ilathala sa publiko."
+        ),
+        (
+            "2. Ano ang pinagkaiba ng proseso ng Ordinansa sa Resolusyon?",
+            "• <b>Ordinance (Lokal na Batas):</b> Mahigpit na obligado sa batas na dumaan sa <b>buong statutory chain</b>—pirma ni Mayor, Provincial Review ng Bulacan, at Public Posting/Publication bago magkabisa.<br/>"
+            "• <b>Resolution (Sentimyento o Awtorisasyon):</b> Hindi batas kundi pahayag lamang ng opinyon o tiyak na awtoridad ng Sanggunian. Hindi ito kailangan ng Provincial review at may bisa agad oras na ma-certify ng Presiding Officer."
+        ),
+        (
+            "3. Bakit may Strict Workflow Guard sa Publications? (Bawal ma-publish nang walang pirma si Mayor)",
+            "Dahil ayon sa <b>Section 54 ng RA 7160</b>, labag sa batas na ilabas sa publiko bilang umiiral na batas ang isang ordinansang hindi pa pinipirmahan ng Mayor. Upang maiwasan ang <b>human error</b>, <b>mahigpit na hinaharang ng system ang ordinansa</b> mula sa Publications module at Citizen Portal hangga't hindi ito minamarkahan sa Post-Enactment Tracking."
+        ),
+        (
+            "4. Saan galing ang batayan ng 5 Clauses sa AI Completeness Check?",
+            "Naka-angkla ito sa <b>DILG Manual on Local Legislation</b> at <b>Republic Act No. 7160 (Sec. 54 & 59)</b>:<br/>"
+            "1. <b>WHEREAS Clause:</b> Legal at factual justification.<br/>"
+            "2. <b>Enacting Clause (NOW THEREFORE):</b> Pormal na paggagawad ng kapangyarihan (kung wala ito, null & void ang batas).<br/>"
+            "3. <b>Separability Clause:</b> Pinapanatiling may bisa ang ibang seksyon kung may isang mapawalang-bisa sa korte.<br/>"
+            "4. <b>Repealing Clause:</b> Nagpapawalang-bisa sa mga lumang salungat na ordinansa.<br/>"
+            "5. <b>Effectivity Clause:</b> Tiyak na petsa ng pagpapatupad (alinsunod sa Sec. 59, RA 7160)."
+        ),
+        (
+            "5. Kapag may Amendment o Revision, nababago ba ang text ng orihinal na batas?",
+            "<b>HINDI binubura o binabago ang original text</b> dahil sa legal principle ng <b>Document Immutability</b>—ang pinirmahang kopya ay isang historical artifact. Sa halip, inililink ng system ang <b>Approved Amendment record</b> pabalik sa target ordinance para sa kumpletong <b>versioning at traceability</b> nang walang data tampering."
+        ),
+    ]
+
+    for q, a in crucial_qa:
+        qa_data = [
+            [Paragraph(f"<b>Q:</b> {q}", q_straight_style)],
+            [Paragraph(f"<b>Ans:</b> {a}", ans_straight_style)]
+        ]
+        qa_box = Table(qa_data, colWidths=[512])
+        qa_box.setStyle(TableStyle([
+            ('BACKGROUND', (0, 0), (-1, -1), colors.HexColor("#FEF3C7")),
+            ('BOX', (0, 0), (-1, -1), 0.75, colors.HexColor("#D97706")),
+            ('LINEBELOW', (0, 0), (-1, 0), 0.5, colors.HexColor("#FDE68A")),
+            ('TOPPADDING', (0, 0), (-1, -1), 4),
+            ('BOTTOMPADDING', (0, 0), (-1, -1), 4),
+            ('LEFTPADDING', (0, 0), (-1, -1), 6),
+            ('RIGHTPADDING', (0, 0), (-1, -1), 6),
+        ]))
+        story.append(qa_box)
+        story.append(Spacer(1, 4))
 
     # Build PDF
     doc.build(story, canvasmaker=NumberedCanvas)

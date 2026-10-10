@@ -145,7 +145,10 @@ class AuthController extends Controller
                     $_SESSION['otp_expires']    = time() + 120; // 2 minutes expiration
 
                     // Send the real OTP via Gmail SMTP
-                    $this->sendOtpEmail($user['email'], $user['name'], $otpCode);
+                    $sent = $this->sendOtpEmail($user['email'], $user['name'], $otpCode);
+                    if (!$sent) {
+                        $this->flash('error', 'Hindi maipadala ang verification code sa email. Pakisuri ang koneksyon o pindutin ang "Resend Code" sa ibaba.');
+                    }
 
                     // Redirect to OTP verification view
                     $this->redirect('auth/otp');
